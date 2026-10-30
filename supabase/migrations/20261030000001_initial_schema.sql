@@ -6,8 +6,17 @@
 -- ==============================================================================
 -- 1. EXTENSIONS
 -- ==============================================================================
-create extension if not exists "uuid-ossp";
-create extension if not exists "pgcrypto";
+do $$ begin
+  create extension if not exists "uuid-ossp";
+exception
+  when others then null;
+end $$;
+
+do $$ begin
+  create extension if not exists "pgcrypto";
+exception
+  when others then null;
+end $$;
 
 
 -- ==============================================================================
@@ -112,7 +121,7 @@ create table if not exists public.student_profiles (
   course text not null default 'B.Tech',
   branch text not null,
   graduation_year integer not null check (graduation_year >= 2020 and graduation_year <= 2035),
-  cgpa numeric(3, 2) not null check (cgpa >= 0.00 and cgpa <= 10.00),
+  cgpa numeric(4, 2) not null check (cgpa >= 0.00 and cgpa <= 10.00),
   active_backlogs integer not null default 0 check (active_backlogs >= 0),
   phone text,
   bio text,
@@ -204,7 +213,7 @@ create table if not exists public.job_postings (
 create table if not exists public.job_eligibility_rules (
   id uuid primary key default gen_random_uuid(),
   job_id uuid not null references public.job_postings(id) on delete cascade unique,
-  minimum_cgpa numeric(3, 2) not null default 0.00 check (minimum_cgpa >= 0.00 and minimum_cgpa <= 10.00),
+  minimum_cgpa numeric(4, 2) not null default 0.00 check (minimum_cgpa >= 0.00 and minimum_cgpa <= 10.00),
   maximum_backlogs integer not null default 0 check (maximum_backlogs >= 0),
   allowed_branches text[] not null default '{}',
   allowed_graduation_years integer[] not null default '{}',

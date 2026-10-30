@@ -40,31 +40,26 @@ if (brokenEndRegex.test(sql)) {
 }
 
 // 4. Match exact PostgreSQL function signatures for GRANT statements
-const exactGrants = `-- ------------------------------------------------------------------------------
--- Function Privilege Restrictions (Least Privilege / No Public Execution)
--- ------------------------------------------------------------------------------
-revoke execute on all functions in schema public from public;
+const exactGrants = `revoke execute on all functions in schema public from public;
 
-grant execute on function public.current_user_role() to authenticated, service_role;
-grant execute on function public.is_admin() to authenticated, service_role;
-grant execute on function public.get_student_profile_id() to authenticated, service_role;
-grant execute on function public.is_recruiter_for_company(uuid) to authenticated, service_role;
-grant execute on function public.is_recruiter_for_job(uuid) to authenticated, service_role;
-grant execute on function public.is_recruiter_for_application(uuid) to authenticated, service_role;
-grant execute on function public.is_recruiter_for_student_resume(uuid) to authenticated, service_role;
+grant execute on function public.current_user_role() to anon, authenticated, service_role;
+grant execute on function public.is_admin() to anon, authenticated, service_role;
+grant execute on function public.get_student_profile_id() to anon, authenticated, service_role;
+grant execute on function public.is_recruiter_for_company(uuid) to anon, authenticated, service_role;
+grant execute on function public.is_recruiter_for_job(uuid) to anon, authenticated, service_role;
+grant execute on function public.is_recruiter_for_application(uuid) to anon, authenticated, service_role;
+grant execute on function public.is_recruiter_for_student_resume(uuid) to anon, authenticated, service_role;
 
 grant execute on function public.evaluate_job_eligibility(uuid, uuid) to authenticated, service_role;
 grant execute on function public.submit_application(uuid) to authenticated, service_role;
 grant execute on function public.update_application_status(uuid, application_status_type, text) to authenticated, service_role;
 grant execute on function public.withdraw_application(uuid) to authenticated, service_role;
 grant execute on function public.schedule_interview(uuid, timestamptz, int, interview_mode_type, text, text, text, text) to authenticated, service_role;
-grant execute on function public.get_placement_analytics() to authenticated, service_role;
+grant execute on function public.get_placement_analytics() to authenticated, service_role;`;
 
-grant execute on function public.seed_synthetic_batch() to postgres, service_role;`;
-
-const grantBlockRegex = /-- Function Privilege Restrictions[\s\S]*?grant execute on function public\.seed_synthetic_batch\(\) to postgres, service_role;/;
+const grantBlockRegex = /revoke execute on all functions in schema public from public;[\s\S]*?grant execute on function public\.get_placement_analytics\(\) to authenticated, service_role;/;
 if (grantBlockRegex.test(sql)) {
-  sql = sql.replace(grantBlockRegex, () => exactGrants.replace(/-- ------------------------------------------------------------------------------\r?\n-- Function Privilege Restrictions[^\n]*\r?\n-- ------------------------------------------------------------------------------\r?\n/, ''));
+  sql = sql.replace(grantBlockRegex, () => exactGrants);
   console.log('✓ Synchronized all GRANT EXECUTE statements with exact parameter signatures');
 }
 

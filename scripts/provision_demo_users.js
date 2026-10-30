@@ -165,7 +165,7 @@ async function provisionDemoUsers() {
       .upsert({
         recruiter_user_id: recruiterUserId,
         company_id: novaTechCompanyId,
-        role_title: 'Lead Technical Recruiter',
+        membership_role: 'recruiter',
         approved_at: new Date().toISOString(),
       }, { onConflict: 'recruiter_user_id,company_id' });
 

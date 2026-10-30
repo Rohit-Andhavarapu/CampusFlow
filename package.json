@@ -20,5 +20,9 @@
     "saas"
   ],
   "author": "Antigravity Team",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.2.16",
+    "pgsql-parser": "^14.0.0"
+  }
 }

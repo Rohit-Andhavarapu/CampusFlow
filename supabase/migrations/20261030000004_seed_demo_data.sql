@@ -66,6 +66,8 @@ begin
 end;
 $$ language plpgsql security definer set search_path = public;
 
+grant execute on function public.seed_synthetic_batch() to postgres, service_role;
+
 
 -- ==============================================================================
 -- 11. RECRUITMENT ECOSYSTEM SEED DATA (INDEPENDENT OF AUTH PROVISIONING)

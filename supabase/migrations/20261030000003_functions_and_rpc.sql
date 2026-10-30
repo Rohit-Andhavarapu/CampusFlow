@@ -66,16 +66,12 @@ create trigger on_auth_user_created
 create or replace function public.protect_profile_role()
 returns trigger as $$
 declare
-  v_db_user text := current_user;
   v_jwt_role text := coalesce(auth.role(), '');
 begin
   if new.role is distinct from old.role then
-    -- Allow direct database superusers/maintenance roles, trusted service_role key, or authenticated placement administrators
-    if v_db_user in ('postgres', 'supabase_admin') or
-       v_jwt_role = 'service_role' or
-       public.is_admin() then
-      return new;
-    else
+    -- When called via web client/PostgREST, auth.role() is 'authenticated' or 'anon'.
+    -- Only the trusted service_role key or an authenticated placement administrator can alter user roles.
+    if v_jwt_role in ('authenticated', 'anon') and not public.is_admin() then
       raise exception 'Forbidden: Privilege escalation denied. Only placement administrators or trusted backend services can modify user roles.';
     end if;
   end if;
@@ -92,7 +88,6 @@ create trigger trg_protect_profile_role
 create or replace function public.protect_student_academic_records()
 returns trigger as $$
 declare
-  v_db_user text := current_user;
   v_jwt_role text := coalesce(auth.role(), '');
 begin
   if (new.cgpa is distinct from old.cgpa) or
@@ -101,11 +96,7 @@ begin
      (new.branch is distinct from old.branch) or
      (new.graduation_year is distinct from old.graduation_year) or
      (new.course is distinct from old.course) then
-    if v_db_user in ('postgres', 'supabase_admin') or
-       v_jwt_role = 'service_role' or
-       public.is_admin() then
-      return new;
-    else
+    if v_jwt_role in ('authenticated', 'anon') and not public.is_admin() then
       raise exception 'Forbidden: Verified academic records (CGPA, Roll Number, Branch, Graduation Year, Backlogs) cannot be modified by students. Contact the Training & Placement Cell.';
     end if;
   end if;
@@ -784,13 +775,13 @@ $$ language plpgsql stable security definer set search_path = public;
 -- ------------------------------------------------------------------------------
 revoke execute on all functions in schema public from public;
 
-grant execute on function public.current_user_role() to authenticated, service_role;
-grant execute on function public.is_admin() to authenticated, service_role;
-grant execute on function public.get_student_profile_id() to authenticated, service_role;
-grant execute on function public.is_recruiter_for_company(uuid) to authenticated, service_role;
-grant execute on function public.is_recruiter_for_job(uuid) to authenticated, service_role;
-grant execute on function public.is_recruiter_for_application(uuid) to authenticated, service_role;
-grant execute on function public.is_recruiter_for_student_resume(uuid) to authenticated, service_role;
+grant execute on function public.current_user_role() to anon, authenticated, service_role;
+grant execute on function public.is_admin() to anon, authenticated, service_role;
+grant execute on function public.get_student_profile_id() to anon, authenticated, service_role;
+grant execute on function public.is_recruiter_for_company(uuid) to anon, authenticated, service_role;
+grant execute on function public.is_recruiter_for_job(uuid) to anon, authenticated, service_role;
+grant execute on function public.is_recruiter_for_application(uuid) to anon, authenticated, service_role;
+grant execute on function public.is_recruiter_for_student_resume(uuid) to anon, authenticated, service_role;
 
 grant execute on function public.evaluate_job_eligibility(uuid, uuid) to authenticated, service_role;
 grant execute on function public.submit_application(uuid) to authenticated, service_role;
@@ -798,5 +789,3 @@ grant execute on function public.update_application_status(uuid, application_sta
 grant execute on function public.withdraw_application(uuid) to authenticated, service_role;
 grant execute on function public.schedule_interview(uuid, timestamptz, int, interview_mode_type, text, text, text, text) to authenticated, service_role;
 grant execute on function public.get_placement_analytics() to authenticated, service_role;
-
-grant execute on function public.seed_synthetic_batch() to postgres, service_role;
