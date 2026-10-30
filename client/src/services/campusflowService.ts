@@ -67,6 +67,21 @@ export const authService = {
     return { user, error: null };
   },
 
+  async signInWithGoogle(): Promise<{ error: string | null }> {
+    if (!isSupabaseConfigured()) {
+      return { error: 'Supabase credentials not configured in environment' };
+    }
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+
+    return { error: error ? error.message : null };
+  },
+
   async signUp(fullName: string, email: string, password: string): Promise<{ user: User | null; error: string | null; confirmationRequired?: boolean }> {
     if (!isSupabaseConfigured()) {
       return { user: mockUsers.student, error: null };
@@ -97,6 +112,27 @@ export const authService = {
       error: null,
       confirmationRequired: !data.session,
     };
+  },
+
+  async resetPasswordForEmail(email: string): Promise<{ error: string | null }> {
+    if (!isSupabaseConfigured()) {
+      return { error: null };
+    }
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+
+    return { error: error ? error.message : null };
+  },
+
+  async updatePassword(password: string): Promise<{ error: string | null }> {
+    if (!isSupabaseConfigured()) {
+      return { error: null };
+    }
+
+    const { error } = await supabase.auth.updateUser({ password });
+    return { error: error ? error.message : null };
   },
 
   async signOut(): Promise<void> {

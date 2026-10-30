@@ -17,7 +17,7 @@ import {
   mockNotifications,
   mockUsers,
 } from '../data/mockData';
-import { isSupabaseConfigured } from '../services/supabase';
+import { isSupabaseConfigured, supabase } from '../services/supabase';
 import {
   applicationService,
   authService,
@@ -41,6 +41,7 @@ interface AppContextType {
   isAuthenticated: boolean;
   switchRole: (role: UserRole, silent?: boolean) => void;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string; role?: UserRole }>;
+  loginWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   signup: (fullName: string, email: string, password: string) => Promise<{ success: boolean; error?: string; confirmationRequired?: boolean }>;
   logout: () => Promise<void>;
   jobs: JobPosting[];
@@ -76,7 +77,8 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentRole, setCurrentRole] = useState<UserRole>('student');
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [activeUser, setActiveUser] = useState<User | null>(null);
   const [jobs, setJobs] = useState<JobPosting[]>(mockJobPostings);
   const [applications, setApplications] = useState<Application[]>(initialApplications);
   const [interviews, setInterviews] = useState<Interview[]>(initialInterviews);
@@ -91,33 +93,70 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     admin: { email: 'placements@campus.edu', pass: 'CampusFlow2026!' },
   };
 
-  // Load from Supabase on mount if configured and authenticate default demo persona
+  // Inspect existing authenticated session on mount without forced demo login
   useEffect(() => {
     if (isDatabaseConnected) {
       const initApp = async () => {
         try {
-          await authService.signIn('aarav.sharma@campus.edu', 'CampusFlow2026!');
-          const [remoteJobs, remoteProfile, remoteApps, remoteInts, remoteNotifs] = await Promise.all([
-            jobsService.fetchJobs(),
-            studentService.getStudentProfile(),
-            applicationService.fetchApplications(),
-            interviewService.fetchInterviews(),
-            notificationService.fetchNotifications(),
-          ]);
+          // Check for existing authenticated session
+          const { data: sessionData } = await supabase.auth.getSession();
+          if (sessionData?.session?.user) {
+            const remoteUser = await authService.getCurrentUser();
+            if (remoteUser) {
+              setIsAuthenticated(true);
+              setCurrentRole(remoteUser.role);
+              setActiveUser(remoteUser);
+
+              const [remoteJobs, remoteProfile, remoteApps, remoteInts, remoteNotifs] = await Promise.all([
+                jobsService.fetchJobs(),
+                remoteUser.role === 'student' ? studentService.getStudentProfile(remoteUser.id) : null,
+                applicationService.fetchApplications(),
+                interviewService.fetchInterviews(),
+                notificationService.fetchNotifications(),
+              ]);
+
+              if (remoteJobs && remoteJobs.length > 0) setJobs(remoteJobs);
+              if (remoteProfile) setStudentProfile(remoteProfile);
+              if (remoteApps && remoteApps.length > 0) setApplications(remoteApps);
+              if (remoteInts && remoteInts.length > 0) setInterviews(remoteInts);
+              if (remoteNotifs && remoteNotifs.length > 0) setNotifications(remoteNotifs);
+              return;
+            }
+          }
+
+          // Unauthenticated visitor: fetch public active recruitment jobs
+          setIsAuthenticated(false);
+          const remoteJobs = await jobsService.fetchJobs();
           if (remoteJobs && remoteJobs.length > 0) setJobs(remoteJobs);
-          if (remoteProfile) setStudentProfile(remoteProfile);
-          if (remoteApps && remoteApps.length > 0) setApplications(remoteApps);
-          if (remoteInts && remoteInts.length > 0) setInterviews(remoteInts);
-          if (remoteNotifs && remoteNotifs.length > 0) setNotifications(remoteNotifs);
         } catch (err) {
-          console.error('Initialization error:', err);
+          console.error('Session initialization error:', err);
+          setIsAuthenticated(false);
         }
       };
       initApp();
+
+      // Listen for auth state changes (OAuth callbacks, login, logout)
+      const { data: authListener } = supabase.auth.onAuthStateChange(async (event: any, session: any) => {
+        if (event === 'SIGNED_IN' && session?.user) {
+          const user = await authService.getCurrentUser();
+          if (user) {
+            setIsAuthenticated(true);
+            setCurrentRole(user.role);
+            setActiveUser(user);
+          }
+        } else if (event === 'SIGNED_OUT') {
+          setIsAuthenticated(false);
+          setActiveUser(null);
+        }
+      });
+
+      return () => {
+        authListener.subscription.unsubscribe();
+      };
     }
   }, [isDatabaseConnected]);
 
-  const currentUser = mockUsers[currentRole];
+  const currentUser = activeUser || mockUsers[currentRole];
 
   const showToast = (type: ToastInfo['type'], title: string, message?: string) => {
     const id = 'toast_' + Date.now() + Math.random().toString(36).substring(2, 6);
@@ -173,6 +212,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
       setIsAuthenticated(true);
       setCurrentRole(res.user.role);
+      setActiveUser(res.user);
       const [remoteApps, remoteInts, remoteNotifs] = await Promise.all([
         applicationService.fetchApplications(),
         interviewService.fetchInterviews(),
@@ -182,13 +222,26 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (remoteInts) setInterviews(remoteInts);
       if (remoteNotifs) setNotifications(remoteNotifs);
       if (res.user.role === 'student') {
-        const remoteProfile = await studentService.getStudentProfile();
+        const remoteProfile = await studentService.getStudentProfile(res.user.id);
         if (remoteProfile) setStudentProfile(remoteProfile);
       }
       showToast('success', `Welcome back, ${res.user.name}`, `Signed in as ${res.user.role.toUpperCase()}`);
       return { success: true, role: res.user.role };
     } catch (err: any) {
       return { success: false, error: err.message || 'Authentication error' };
+    }
+  };
+
+  const loginWithGoogle = async () => {
+    try {
+      const res = await authService.signInWithGoogle();
+      if (res.error) {
+        showToast('error', 'Google Sign-In Error', res.error);
+        return { success: false, error: res.error };
+      }
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Google OAuth failed' };
     }
   };
 
@@ -206,6 +259,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (res.user) {
         setIsAuthenticated(true);
         setCurrentRole('student');
+        setActiveUser(res.user);
         showToast('success', 'Account Created', `Welcome to CampusFlow, ${fullName}!`);
         return { success: true, confirmationRequired: false };
       }
@@ -218,6 +272,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const logout = async () => {
     await authService.signOut();
     setIsAuthenticated(false);
+    setActiveUser(null);
     showToast('info', 'Signed Out', 'You have been logged out of CampusFlow.');
   };
 
@@ -594,6 +649,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         isAuthenticated,
         switchRole,
         login,
+        loginWithGoogle,
         signup,
         logout,
         jobs,
