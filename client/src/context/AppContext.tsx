@@ -20,6 +20,7 @@ import {
 import { isSupabaseConfigured } from '../services/supabase';
 import {
   applicationService,
+  authService,
   interviewService,
   jobsService,
   studentService,
@@ -78,9 +79,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [toasts, setToasts] = useState<ToastInfo[]>([]);
   const isDatabaseConnected = isSupabaseConfigured();
 
-  // Load from Supabase on mount if configured
+  const demoRoleCredentials: Record<UserRole, { email: string; pass: string }> = {
+    student: { email: 'aarav.sharma@campus.edu', pass: 'CampusFlow2026!' },
+    recruiter: { email: 'priya.nair@novatech.io', pass: 'CampusFlow2026!' },
+    admin: { email: 'placements@campus.edu', pass: 'CampusFlow2026!' },
+  };
+
+  // Load from Supabase on mount if configured and authenticate default demo persona
   useEffect(() => {
     if (isDatabaseConnected) {
+      authService.signIn('aarav.sharma@campus.edu', 'CampusFlow2026!').catch(() => {});
+
       jobsService.fetchJobs().then((remoteJobs) => {
         if (remoteJobs && remoteJobs.length > 0) setJobs(remoteJobs);
       }).catch(console.error);
@@ -105,7 +114,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
-  const switchRole = (role: UserRole, silent = false) => {
+  const switchRole = async (role: UserRole, silent = false) => {
     setCurrentRole(role);
     if (!silent) {
       showToast(
@@ -113,6 +122,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         `Switched Persona to ${role.charAt(0).toUpperCase() + role.slice(1)}`,
         `Acting as ${mockUsers[role].name}`
       );
+    }
+    // Synchronize underlying Supabase Auth session with the selected demo persona
+    if (isDatabaseConnected) {
+      try {
+        const creds = demoRoleCredentials[role];
+        await authService.signIn(creds.email, creds.pass);
+      } catch (err) {
+        console.warn('Backend persona authentication sync warning:', err);
+      }
     }
   };
 

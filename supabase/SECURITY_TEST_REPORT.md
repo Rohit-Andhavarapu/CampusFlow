@@ -152,7 +152,11 @@ Resumes contain sensitive Personally Identifiable Information (phone numbers, re
 
 ## 6. Verification Test Suite Execution Log
 
-### Test Suite 1: `tests/supabase_integration_test.js`
+> [!NOTE]
+> **Execution Mode Clarification:**  
+> The 68 assertions in `tests/supabase_integration_test.js` and the 11 steps in `tests/e2e_recruitment_lifecycle.js` were executed locally using static SQL AST parsing, file analysis, and in-memory JavaScript state machine simulation. **They did NOT execute live network transactions against the remote Supabase database.** Remote endpoint reachability (GoTrue v2.197.0 and PostgREST v14.18) was confirmed via read-only HTTP health checks. Live database execution is performed by running `CAMPUSFLOW_MASTER_DEPLOYMENT_FIXED.sql` in the Supabase SQL Editor followed by `node scripts/provision_demo_users.js`.
+
+### Test Suite 1: `tests/supabase_integration_test.js` (Static Analysis & Logic Verification)
 - **Total Assertions:** 68
 - **Results:**
   - Migration Files & SQL Schema Verification: 15 / 15 Passed

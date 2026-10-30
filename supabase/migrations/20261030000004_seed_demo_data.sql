@@ -1,7 +1,7 @@
 -- ==============================================================================
 -- CampusFlow V4 - Supabase Migration: 004_seed_demo_data.sql
 -- Problem Statement: HACK-P410 (Campus Recruitment Portal)
--- Seed Data: Synthetic University Directory, Verified Demo Accounts, Production Drives
+-- Seed Data: Synthetic University Directory & Enterprise Recruitment Infrastructure
 -- ==============================================================================
 
 -- ==============================================================================
@@ -63,19 +63,12 @@ begin
       on conflict (student_id, job_id) do nothing;
     end if;
   end loop;
-end;
-$$ language plpgsql security definer set search_path = public;
-
 -- ==============================================================================
--- 11. DEMO ACCOUNTS & SYNTHETIC SEED DATA
+-- 11. RECRUITMENT ECOSYSTEM SEED DATA (INDEPENDENT OF AUTH PROVISIONING)
 -- ==============================================================================
-do $$
+do 
 declare
-  -- STRICTLY VALID HEXADECIMAL UUIDS FOR ALL ENTITIES
-  v_student_auth_id uuid := 'a0000000-0000-4000-a000-000000000001';
-  v_recruiter_auth_id uuid := 'b0000000-0000-4000-a000-000000000001';
-  v_admin_auth_id uuid := 'c0000000-0000-4000-a000-000000000001';
-
+  -- STRICTLY VALID HEXADECIMAL UUIDS FOR RECRUITMENT INFRASTRUCTURE
   v_company_aetos uuid := '11111111-1111-4111-a111-111111111111';
   v_company_nova uuid := '22222222-2222-4222-a222-222222222222';
   v_company_agnext uuid := '33333333-3333-4333-a333-333333333333';
@@ -94,179 +87,8 @@ declare
   v_job_orbit_analyst uuid := '40000000-0000-4000-a000-000000000001';
   v_job_medrenova_cv uuid := '50000000-0000-4000-a000-000000000001';
   v_job_vertex_fs uuid := '60000000-0000-4000-a000-000000000001';
-
-  v_primary_student_id uuid;
-  v_app_1 uuid := 'a1000000-0000-4000-a000-000000000001';
-  v_app_2 uuid := 'a2000000-0000-4000-a000-000000000002';
-  v_app_3 uuid := 'a3000000-0000-4000-a000-000000000003';
-  v_app_4 uuid := 'a4000000-0000-4000-a000-000000000004';
 begin
-  -- 1. Create Demo Users in auth.users with Password "CampusFlow2026!"
-  begin
-    insert into auth.users (
-      instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
-      raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
-      confirmation_token, email_change, email_change_token_new, recovery_token
-    )
-    values
-      (
-        '00000000-0000-0000-0000-000000000000',
-        v_student_auth_id,
-        'authenticated', 'authenticated',
-        'aarav.sharma@campus.edu',
-        crypt('CampusFlow2026!', gen_salt('bf')),
-        now(),
-        '{"provider":"email","providers":["email"]}'::jsonb,
-        '{"full_name":"Aarav Sharma"}'::jsonb,
-        now(), now(), '', '', '', ''
-      ),
-      (
-        '00000000-0000-0000-0000-000000000000',
-        v_recruiter_auth_id,
-        'authenticated', 'authenticated',
-        'priya.nair@novatech.io',
-        crypt('CampusFlow2026!', gen_salt('bf')),
-        now(),
-        '{"provider":"email","providers":["email"]}'::jsonb,
-        '{"full_name":"Priya Nair"}'::jsonb,
-        now(), now(), '', '', '', ''
-      ),
-      (
-        '00000000-0000-0000-0000-000000000000',
-        v_admin_auth_id,
-        'authenticated', 'authenticated',
-        'placements@campus.edu',
-        crypt('CampusFlow2026!', gen_salt('bf')),
-        now(),
-        '{"provider":"email","providers":["email"]}'::jsonb,
-        '{"full_name":"Dr. Rajesh Rao"}'::jsonb,
-        now(), now(), '', '', '', ''
-      )
-    on conflict (id) do update set
-      email = excluded.email,
-      encrypted_password = excluded.encrypted_password,
-      updated_at = now();
-
-    -- Ensure matching auth.identities exist for password-based GoTrue authentication
-    insert into auth.identities (
-      id, user_id, identity_data, provider, provider_id, last_sign_in_at, created_at, updated_at
-    )
-    values
-      (
-        v_student_auth_id::text,
-        v_student_auth_id,
-        jsonb_build_object('sub', v_student_auth_id::text, 'email', 'aarav.sharma@campus.edu'),
-        'email',
-        v_student_auth_id::text,
-        now(), now(), now()
-      ),
-      (
-        v_recruiter_auth_id::text,
-        v_recruiter_auth_id,
-        jsonb_build_object('sub', v_recruiter_auth_id::text, 'email', 'priya.nair@novatech.io'),
-        'email',
-        v_recruiter_auth_id::text,
-        now(), now(), now()
-      ),
-      (
-        v_admin_auth_id::text,
-        v_admin_auth_id,
-        jsonb_build_object('sub', v_admin_auth_id::text, 'email', 'placements@campus.edu'),
-        'email',
-        v_admin_auth_id::text,
-        now(), now(), now()
-      )
-    on conflict do nothing;
-  exception
-    when others then
-      raise notice 'Notice: auth.users managed externally: %', sqlerrm;
-  end;
-
-  -- 2. Insert Profiles with Trusted Administrative Roles
-  insert into public.profiles (id, email, full_name, role, avatar_path)
-  values
-    (v_student_auth_id, 'aarav.sharma@campus.edu', 'Aarav Sharma', 'student', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'),
-    (v_recruiter_auth_id, 'priya.nair@novatech.io', 'Priya Nair', 'recruiter', 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80'),
-    (v_admin_auth_id, 'placements@campus.edu', 'Dr. Rajesh Rao', 'placement_admin', 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80')
-  on conflict (id) do update set
-    email = excluded.email,
-    full_name = excluded.full_name,
-    role = excluded.role;
-
-  -- Remove any accidental student profiles created for recruiter or placement_admin
-  delete from public.student_profiles where user_id in (v_recruiter_auth_id, v_admin_auth_id);
-
-  -- 3. Upsert Student Profile for Aarav Sharma
-  insert into public.student_profiles (
-    id, user_id, full_name, email, roll_number, course, branch,
-    graduation_year, cgpa, active_backlogs, phone, bio,
-    github_url, linkedin_url, portfolio_url
-  )
-  values (
-    'e0000000-0000-4000-a000-000000000001',
-    v_student_auth_id,
-    'Aarav Sharma',
-    'aarav.sharma@campus.edu',
-    'N25H02A0325',
-    'B.Tech',
-    'Computer Science & Engineering',
-    2026,
-    8.85,
-    0,
-    '+91 98765 43210',
-    'Final-year computer science undergrad passionate about building high-performance web systems, Agentic AI, and distributed applications.',
-    'https://github.com/aarav-sharma',
-    'https://linkedin.com/in/aarav-sharma-campus',
-    'https://aaravsharma.dev'
-  )
-  on conflict (user_id) do update set
-    roll_number = excluded.roll_number,
-    cgpa = excluded.cgpa,
-    full_name = excluded.full_name,
-    email = excluded.email,
-    course = excluded.course,
-    branch = excluded.branch,
-    graduation_year = excluded.graduation_year,
-    phone = excluded.phone,
-    bio = excluded.bio,
-    github_url = excluded.github_url,
-    linkedin_url = excluded.linkedin_url,
-    portfolio_url = excluded.portfolio_url
-  returning id into v_primary_student_id;
-
-  -- Skills
-  insert into public.student_skills (student_id, skill_name)
-  values
-    (v_primary_student_id, 'React'),
-    (v_primary_student_id, 'TypeScript'),
-    (v_primary_student_id, 'Node.js'),
-    (v_primary_student_id, 'Python'),
-    (v_primary_student_id, 'Agentic AI'),
-    (v_primary_student_id, 'PostgreSQL'),
-    (v_primary_student_id, 'Tailwind CSS'),
-    (v_primary_student_id, 'Docker')
-  on conflict (student_id, skill_name) do nothing;
-
-  -- Projects
-  insert into public.student_projects (student_id, title, description, project_url, technologies)
-  values
-    (
-      v_primary_student_id,
-      'Distributed Log Aggregator',
-      'High-throughput streaming analytics platform handling 15k events/sec using Go, Kafka, and ClickHouse.',
-      'https://github.com/aarav-sharma/dist-logger',
-      array['Go', 'Kafka', 'ClickHouse', 'Docker']
-    ),
-    (
-      v_primary_student_id,
-      'Autonomous Code Refactoring Agent',
-      'LLM-powered tool using tree-sitter AST queries to automate TypeScript migrations and dead code removal.',
-      'https://github.com/aarav-sharma/auto-refactor',
-      array['TypeScript', 'Python', 'AST', 'OpenAI API']
-    )
-  on conflict do nothing;
-
-  -- 4. Companies
+  -- 1. Empaneled Hiring Organizations (Companies)
   insert into public.companies (id, name, industry, description, website, logo_path, status)
   values
     (v_company_aetos, 'Aetos DigiLog', 'Artificial Intelligence & Defense Tech', 'Next-generation intelligent autonomy and multi-agent coordination systems.', 'https://aetosdigilog.com', 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=128&auto=format&fit=crop&q=80', 'active'),
@@ -274,220 +96,159 @@ begin
     (v_company_agnext, 'AgNext Technologies', 'AgriTech & Automation', 'Deep-tech computer vision and spectroscopy analytics for agricultural value chains.', 'https://agnext.com', 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=128&auto=format&fit=crop&q=80', 'active'),
     (v_company_orbit, 'Orbit Analytics', 'Data Intelligence & Analytics', 'Enterprise business intelligence and decision-intelligence platform.', 'https://orbitanalytics.com', 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=128&auto=format&fit=crop&q=80', 'active'),
     (v_company_medrenova, 'MedRenova Diagnostics', 'HealthTech & Medical Imaging', 'AI-assisted medical pathology and diagnostic imaging platforms.', 'https://medrenova.health', 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=128&auto=format&fit=crop&q=80', 'active'),
-    (v_company_vertex, 'Vertex Digital Labs', 'Full-Stack Software Engineering', 'High-velocity digital product engineering and distributed systems studio.', 'https://vertexdigital.io', 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=128&auto=format&fit=crop&q=80', 'active')
+    (v_company_vertex, 'Vertex Solutions', 'FinTech & High-Frequency Trading', 'Ultra-low-latency financial systems and quantitative risk management.', 'https://vertexsolutions.com', 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=128&auto=format&fit=crop&q=80', 'active')
   on conflict (id) do update set
     name = excluded.name,
-    industry = excluded.industry;
+    industry = excluded.industry,
+    status = excluded.status;
 
-  -- 5. Recruiter Company Memberships
-  insert into public.recruiter_company_memberships (recruiter_user_id, company_id, membership_role, approved_at)
+  -- 2. Campus Recruitment Drives
+  insert into public.recruitment_drives (id, company_id, title, start_date, end_date, status)
   values
-    (v_recruiter_auth_id, v_company_nova, 'lead_recruiter', now()),
-    (v_recruiter_auth_id, v_company_aetos, 'guest_interviewer', now())
-  on conflict (recruiter_user_id, company_id) do nothing;
+    (v_drive_aetos, v_company_aetos, 'Aetos Autonomous Systems Campus Drive 2026', now() - interval '14 days', now() + interval '30 days', 'active'),
+    (v_drive_nova, v_company_nova, 'NovaTech Enterprise Engineering Hiring 2026', now() - interval '20 days', now() + interval '25 days', 'active'),
+    (v_drive_orbit, v_company_orbit, 'Orbit Data & Analytics Placement Drive 2026', now() - interval '5 days', now() + interval '40 days', 'active')
+  on conflict (id) do update set
+    title = excluded.title,
+    status = excluded.status;
 
-  -- 6. Recruitment Drives
-  insert into public.recruitment_drives (id, company_id, title, description, start_date, end_date, status, created_by)
-  values
-    (v_drive_aetos, v_company_aetos, 'Aetos AI Campus Fellowship 2026', 'Campus-wide drive for undergraduate AI engineers and research fellows.', now() - interval '10 days', now() + interval '30 days', 'active', v_admin_auth_id),
-    (v_drive_nova, v_company_nova, 'NovaTech Early Careers Drive 2026', 'Tier-1 recruitment for software development trainees and cloud architects.', now() - interval '5 days', now() + interval '45 days', 'active', v_admin_auth_id),
-    (v_drive_orbit, v_company_orbit, 'Orbit Data Analytics Drive', 'Selection pipeline for business analysts and data engineers.', now() - interval '2 days', now() + interval '20 days', 'active', v_admin_auth_id)
-  on conflict (id) do nothing;
-
-  -- 7. Job Postings & Eligibility Rules
-  -- Job 1: AI Intern (Aetos DigiLog)
+  -- 3. Job Postings
   insert into public.job_postings (
-    id, company_id, drive_id, created_by, title, description,
+    id, company_id, drive_id, title, description,
     responsibilities, employment_type, work_mode, location,
     compensation_min, compensation_max, compensation_period, currency,
     openings, deadline, status
   )
-  values (
-    v_job_aetos, v_company_aetos, v_drive_aetos, v_admin_auth_id,
-    'AI Intern',
-    'Join our Core Research Group building autonomous agentic workflows and specialized domain models for mission planning.',
-    array['Design and deploy agentic decision loops with LangGraph and Python', 'Evaluate model alignment against synthetic execution benchmarks', 'Collaborate with senior researchers on latency and token optimization'],
-    'Internship', 'Hybrid', 'Bengaluru, Karnataka (Hybrid)',
-    25000.00, 30000.00, 'monthly', 'INR',
-    4, now() + interval '14 days', 'active'
-  ) on conflict (id) do nothing;
+  values
+    (
+      v_job_aetos, v_company_aetos, v_drive_aetos,
+      'Graduate AI Engineer (Agentic Systems)',
+      'Design, benchmark, and deploy multi-agent coordination systems, autonomous workflows, and LLM orchestration tools for enterprise and defense applications.',
+      array['Design multi-agent autonomous control loops', 'Implement evaluation harnesses for LLM reasoning', 'Build production distributed services in Python and TypeScript'],
+      'Full-time', 'Hybrid', 'Bengaluru, Karnataka (Hybrid)',
+      1800000.00, 2400000.00, 'annual', 'INR',
+      5, now() + interval '21 days', 'active'
+    ),
+    (
+      v_job_nova_swe, v_company_nova, v_drive_nova,
+      'Software Engineer Trainee',
+      'Design, develop, and scale high-availability enterprise services handling millions of operations daily.',
+      array['Build fault-tolerant microservices in Node.js and TypeScript', 'Optimize SQL queries and PostgreSQL database indexes', 'Participate in code reviews, CI/CD pipelines, and design critiques'],
+      'Full-time', 'On-site', 'Hyderabad, Telangana (On-site)',
+      1400000.00, 1800000.00, 'annual', 'INR',
+      10, now() + interval '21 days', 'active'
+    ),
+    (
+      v_job_nova_cloud, v_company_nova, v_drive_nova,
+      'Cloud Infrastructure Specialist',
+      'Architect Kubernetes-native infrastructure, automate CI/CD pipelines, and manage hybrid multi-region cloud networks.',
+      array['Manage cloud environments and Kubernetes clusters', 'Implement infrastructure as code with Terraform', 'Build automated observability and alerting with Prometheus'],
+      'Full-time', 'Remote', 'Remote (India)',
+      1500000.00, 2000000.00, 'annual', 'INR',
+      4, now() + interval '18 days', 'active'
+    ),
+    (
+      v_job_orbit_analyst, v_company_orbit, v_drive_orbit,
+      'Data Analyst Trainee',
+      'Transform complex operational data into actionable dashboards and automated decision workflows.',
+      array['Write complex analytical SQL queries and build ETL scripts', 'Create interactive executive dashboards using Tableau and Python', 'Analyze product usage trends and present insights to stakeholders'],
+      'Full-time', 'Hybrid', 'Pune, Maharashtra (Hybrid)',
+      900000.00, 1200000.00, 'annual', 'INR',
+      5, now() + interval '25 days', 'active'
+    ),
+    (
+      v_job_agnext_ai, v_company_agnext, null,
+      'AI Automation Intern',
+      'Automate testing, instrumentation, and continuous verification of deployed edge-AI models.',
+      array['Build automated edge deployment pipelines', 'Implement performance instrumentation and telemetry', 'Evaluate model drift across agricultural dataset batches'],
+      'Internship', 'Remote', 'Remote (India)',
+      15000.00, 20000.00, 'monthly', 'INR',
+      3, now() - interval '2 days', 'closed'
+    ),
+    (
+      v_job_medrenova_cv, v_company_medrenova, null,
+      'Medical Imaging AI Research Engineer',
+      'Train deep neural networks for digital pathology scan classification and anatomical structure segmentation under HIPAA guidelines.',
+      array['Develop computer vision models with PyTorch', 'Annotate medical scan datasets', 'Optimize models for edge inference on clinical hardware'],
+      'Full-time', 'Hybrid', 'Bengaluru, Karnataka (Hybrid)',
+      2000000.00, 2800000.00, 'annual', 'INR',
+      2, now() + interval '30 days', 'active'
+    ),
+    (
+      v_job_vertex_fs, v_company_vertex, null,
+      'Quantitative Systems Engineer',
+      'Build low-latency execution engines, order-matching algorithms, and high-frequency risk monitoring pipelines using modern C++ and Rust.',
+      array['Implement low-latency socket networking', 'Optimize cache locality and data structures', 'Maintain 99.999% uptime trading services'],
+      'Full-time', 'On-site', 'Mumbai, Maharashtra (On-site)',
+      2400000.00, 3200000.00, 'annual', 'INR',
+      4, now() + interval '15 days', 'active'
+    )
+  on conflict (id) do update set
+    title = excluded.title,
+    status = excluded.status;
 
+  -- 4. Job Eligibility Rules
   insert into public.job_eligibility_rules (
     job_id, minimum_cgpa, maximum_backlogs, allowed_branches, allowed_graduation_years, required_skills
   )
-  values (
-    v_job_aetos, 8.00, 0,
-    array['Computer Science & Engineering', 'Artificial Intelligence & Data Science'],
-    array[2026],
-    array['Python', 'Agentic AI']
-  ) on conflict (job_id) do nothing;
-
-  -- Job 2: Software Engineer Trainee (NovaTech Systems)
-  insert into public.job_postings (
-    id, company_id, drive_id, created_by, title, description,
-    responsibilities, employment_type, work_mode, location,
-    compensation_min, compensation_max, compensation_period, currency,
-    openings, deadline, status
-  )
-  values (
-    v_job_nova_swe, v_company_nova, v_drive_nova, v_recruiter_auth_id,
-    'Software Engineer Trainee',
-    'Design, develop, and scale high-availability enterprise services handling millions of operations daily.',
-    array['Build fault-tolerant microservices in Node.js and TypeScript', 'Optimize SQL queries and PostgreSQL database indexes', 'Participate in code reviews, CI/CD pipelines, and design critiques'],
-    'Full-time', 'On-site', 'Hyderabad, Telangana (On-site)',
-    1400000.00, 1800000.00, 'annual', 'INR',
-    10, now() + interval '21 days', 'active'
-  ) on conflict (id) do nothing;
-
-  insert into public.job_eligibility_rules (
-    job_id, minimum_cgpa, maximum_backlogs, allowed_branches, allowed_graduation_years, required_skills
-  )
-  values (
-    v_job_nova_swe, 7.50, 0,
-    array['Computer Science & Engineering', 'Information Technology', 'Artificial Intelligence & Data Science'],
-    array[2026],
-    array['TypeScript', 'React', 'Node.js']
-  ) on conflict (job_id) do nothing;
-
-  -- Job 3: Data Analyst Trainee (Orbit Analytics)
-  insert into public.job_postings (
-    id, company_id, drive_id, created_by, title, description,
-    responsibilities, employment_type, work_mode, location,
-    compensation_min, compensation_max, compensation_period, currency,
-    openings, deadline, status
-  )
-  values (
-    v_job_orbit_analyst, v_company_orbit, v_drive_orbit, v_admin_auth_id,
-    'Data Analyst Trainee',
-    'Transform complex operational data into actionable dashboards and automated decision workflows.',
-    array['Write complex analytical SQL queries and build ETL scripts', 'Create interactive executive dashboards using Tableau and Python', 'Analyze product usage trends and present insights to stakeholders'],
-    'Full-time', 'Hybrid', 'Pune, Maharashtra (Hybrid)',
-    900000.00, 1200000.00, 'annual', 'INR',
-    5, now() + interval '25 days', 'active'
-  ) on conflict (id) do nothing;
-
-  insert into public.job_eligibility_rules (
-    job_id, minimum_cgpa, maximum_backlogs, allowed_branches, allowed_graduation_years, required_skills
-  )
-  values (
-    v_job_orbit_analyst, 7.20, 1,
-    array[]::text[],
-    array[2026],
-    array['SQL', 'Python']
-  ) on conflict (job_id) do nothing;
-
-  -- Job 4: AI Automation Intern (AgNext Technologies)
-  insert into public.job_postings (
-    id, company_id, drive_id, created_by, title, description,
-    responsibilities, employment_type, work_mode, location,
-    compensation_min, compensation_max, compensation_period, currency,
-    openings, deadline, status
-  )
-  values (
-    v_job_agnext_ai, v_company_agnext, null, v_admin_auth_id,
-    'AI Automation Intern',
-    'Automate testing, instrumentation, and continuous verification of deployed edge-AI models.',
-    array['Build automated edge deployment pipelines', 'Implement performance instrumentation and telemetry', 'Evaluate model drift across agricultural dataset batches'],
-    'Internship', 'Remote', 'Remote (India)',
-    15000.00, 20000.00, 'monthly', 'INR',
-    3, now() - interval '2 days', 'closed'
-  ) on conflict (id) do nothing;
-
-  insert into public.job_eligibility_rules (
-    job_id, minimum_cgpa, maximum_backlogs, allowed_branches, allowed_graduation_years, required_skills
-  )
-  values (
-    v_job_agnext_ai, 7.00, 0,
-    array['Computer Science & Engineering', 'Information Technology'],
-    array[2026],
-    array['Python']
-  ) on conflict (job_id) do nothing;
-
-  -- 8. Applications for Aarav Sharma
-  -- App 1: AI Intern (Interview Scheduled)
-  insert into public.applications (id, student_id, job_id, status, applied_at)
-  values (v_app_1, v_primary_student_id, v_job_aetos, 'interview', now() - interval '8 days')
-  on conflict (id) do nothing;
-
-  insert into public.application_status_history (application_id, previous_status, new_status, changed_by, change_reason, changed_at)
   values
-    (v_app_1, null, 'submitted', v_student_auth_id, 'Application submitted by candidate.', now() - interval '8 days'),
-    (v_app_1, 'submitted', 'shortlisted', v_recruiter_auth_id, 'Profile and AI portfolio matched requirements.', now() - interval '4 days'),
-    (v_app_1, 'shortlisted', 'interview', v_recruiter_auth_id, 'Round 1 Technical Interview scheduled.', now() - interval '1 day')
-  on conflict do nothing;
+    (
+      v_job_aetos, 8.00, 0,
+      array['Computer Science & Engineering', 'Artificial Intelligence & Data Science', 'Information Technology'],
+      array[2026],
+      array['Python', 'Agentic AI', 'PostgreSQL']
+    ),
+    (
+      v_job_nova_swe, 7.50, 0,
+      array['Computer Science & Engineering', 'Information Technology', 'Artificial Intelligence & Data Science'],
+      array[2026],
+      array['TypeScript', 'React', 'Node.js']
+    ),
+    (
+      v_job_nova_cloud, 7.00, 1,
+      array['Computer Science & Engineering', 'Information Technology', 'Electronics & Communication', 'Electrical Engineering'],
+      array[2026],
+      array['Docker', 'Kubernetes', 'Linux']
+    ),
+    (
+      v_job_orbit_analyst, 7.20, 1,
+      array[]::text[],
+      array[2026],
+      array['SQL', 'Python']
+    ),
+    (
+      v_job_agnext_ai, 7.00, 0,
+      array['Computer Science & Engineering', 'Information Technology'],
+      array[2026],
+      array['Python']
+    ),
+    (
+      v_job_medrenova_cv, 8.20, 0,
+      array['Computer Science & Engineering', 'Artificial Intelligence & Data Science'],
+      array[2026],
+      array['PyTorch', 'Computer Vision']
+    ),
+    (
+      v_job_vertex_fs, 8.50, 0,
+      array['Computer Science & Engineering', 'Information Technology'],
+      array[2026],
+      array['C++', 'Rust', 'Algorithms']
+    )
+  on conflict (job_id) do update set
+    minimum_cgpa = excluded.minimum_cgpa,
+    allowed_branches = excluded.allowed_branches;
 
-  -- App 2: Software Engineer Trainee (Shortlisted)
-  insert into public.applications (id, student_id, job_id, status, applied_at)
-  values (v_app_2, v_primary_student_id, v_job_nova_swe, 'shortlisted', now() - interval '6 days')
-  on conflict (id) do nothing;
-
-  insert into public.application_status_history (application_id, previous_status, new_status, changed_by, change_reason, changed_at)
-  values
-    (v_app_2, null, 'submitted', v_student_auth_id, 'Application submitted by candidate.', now() - interval '6 days'),
-    (v_app_2, 'submitted', 'shortlisted', v_recruiter_auth_id, 'Academic criteria verified. Shortlisted.', now() - interval '2 days')
-  on conflict do nothing;
-
-  -- App 3: Data Analyst Trainee (Submitted)
-  insert into public.applications (id, student_id, job_id, status, applied_at)
-  values (v_app_3, v_primary_student_id, v_job_orbit_analyst, 'submitted', now() - interval '3 days')
-  on conflict (id) do nothing;
-
-  insert into public.application_status_history (application_id, previous_status, new_status, changed_by, change_reason, changed_at)
-  values
-    (v_app_3, null, 'submitted', v_student_auth_id, 'Application submitted by candidate.', now() - interval '3 days')
-  on conflict do nothing;
-
-  -- App 4: AI Automation Intern (Selected)
-  insert into public.applications (id, student_id, job_id, status, applied_at)
-  values (v_app_4, v_primary_student_id, v_job_agnext_ai, 'selected', now() - interval '20 days')
-  on conflict (id) do nothing;
-
-  insert into public.application_status_history (application_id, previous_status, new_status, changed_by, change_reason, changed_at)
-  values
-    (v_app_4, null, 'submitted', v_student_auth_id, 'Application submitted.', now() - interval '20 days'),
-    (v_app_4, 'submitted', 'shortlisted', v_recruiter_auth_id, 'Shortlisted for interview.', now() - interval '15 days'),
-    (v_app_4, 'shortlisted', 'interview', v_recruiter_auth_id, 'Technical interview completed.', now() - interval '10 days'),
-    (v_app_4, 'interview', 'selected', v_recruiter_auth_id, 'Offer extended and candidate selected.', now() - interval '4 days')
-  on conflict do nothing;
-
-  -- 9. Scheduled Interview
-  insert into public.interviews (
-    id, application_id, scheduled_by, scheduled_at, duration_minutes,
-    mode, location, meeting_url, round, status, feedback
-  )
-  values (
-    'f0000000-0000-4000-a000-000000000001',
-    v_app_1,
-    v_recruiter_auth_id,
-    now() + interval '3 days',
-    60,
-    'Virtual',
-    null,
-    'https://meet.google.com/aet-osdi-log',
-    'Round 1: Technical & Agentic Architecture',
-    'scheduled',
-    'Please keep your IDE ready with your portfolio projects and be prepared to explain LangGraph or Agentic control loops.'
-  ) on conflict (id) do nothing;
-
-  -- 10. Seed Notifications
-  insert into public.notifications (user_id, title, body, category, related_entity_id, is_read, created_at)
-  values
-    (v_student_auth_id, 'Interview Scheduled', 'Aetos DigiLog scheduled your Round 1 Technical Interview.', 'interview', v_app_1::text, false, now() - interval '1 day'),
-    (v_student_auth_id, 'Offer Extended!', 'Congratulations! You have been selected for the AI Automation Intern role at AgNext Technologies.', 'application', v_app_4::text, false, now() - interval '4 days'),
-    (v_student_auth_id, 'Shortlisted by NovaTech', 'Your application for Software Engineer Trainee at NovaTech Systems has been shortlisted.', 'application', v_app_2::text, true, now() - interval '2 days'),
-    (v_recruiter_auth_id, 'New Application Received', 'Aarav Sharma submitted an application for Software Engineer Trainee.', 'application', v_app_2::text, false, now() - interval '6 days')
-  on conflict do nothing;
-
-  -- 11. Call Pre-Defined Seed Helper for 19 Synthetic Students
+  -- 5. Seed 19 Non-Login Synthetic Directory Students
   perform public.seed_synthetic_batch();
-end $$;
+
+end ;
 
 -- ==============================================================================
 -- 12. VERIFICATION QUERIES
--- ==============================================================================
+-- ============================================================================== 
 select 'Deployment verification complete.' as status,
        (select count(*) from public.companies) as companies_count,
+       (select count(*) from public.recruitment_drives) as drives_count,
        (select count(*) from public.job_postings) as jobs_count,
        (select count(*) from public.student_profiles) as students_count,
-       (select count(*) from public.applications) as applications_count,
-       (select count(*) from public.interviews) as interviews_count;
+       (select count(*) from public.applications) as applications_count;
