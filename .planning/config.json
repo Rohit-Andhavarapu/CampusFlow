@@ -1,0 +1,8 @@
+{
+  "mode": "yolo",
+  "granularity": "standard",
+  "commit_docs": true,
+  "model_profile": "quality",
+  "project_name": "CampusFlow",
+  "hackathon_id": "HACK-P410"
+}

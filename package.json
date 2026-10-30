@@ -1,0 +1,24 @@
+{
+  "name": "campusflow-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CampusFlow — Premium Campus Recruitment Management Platform (HACK-P410)",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=client",
+    "build": "npm run build --workspace=client",
+    "server:dev": "npm run dev --workspace=server",
+    "test": "npm run test --workspace=client"
+  },
+  "keywords": [
+    "campus-recruitment",
+    "placement-cell",
+    "hackathon",
+    "saas"
+  ],
+  "author": "Antigravity Team",
+  "license": "MIT"
+}

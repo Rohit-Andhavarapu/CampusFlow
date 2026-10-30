@@ -1,0 +1,190 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  Calendar,
+  Clock,
+  Video,
+  MapPin,
+  ExternalLink,
+  Sparkles,
+  Building2,
+  CheckCircle2,
+  User,
+  AlertCircle,
+} from 'lucide-react';
+import { useApp } from '../../context/AppContext';
+import { Card } from '../../components/ui/Card';
+import { Button } from '../../components/ui/Button';
+import { Badge } from '../../components/ui/Badge';
+import { Tabs } from '../../components/ui/Tabs';
+import { formatDate, formatDateTime } from '../../utils/formatters';
+
+export const StudentInterviews: React.FC = () => {
+  const { interviews, applications } = useApp();
+  const navigate = useNavigate();
+
+  const [activeTab, setActiveTab] = useState<string>('upcoming');
+
+  const upcomingInterviews = interviews.filter((i) => i.status === 'Scheduled');
+  const pastInterviews = interviews.filter((i) => i.status !== 'Scheduled');
+
+  const tabs = [
+    { id: 'upcoming', label: 'Upcoming Schedule', count: upcomingInterviews.length },
+    { id: 'past', label: 'Completed Rounds', count: pastInterviews.length },
+    { id: 'all', label: 'All Interviews', count: interviews.length },
+  ];
+
+  const displayedInterviews =
+    activeTab === 'upcoming'
+      ? upcomingInterviews
+      : activeTab === 'past'
+      ? pastInterviews
+      : interviews;
+
+  return (
+    <div className="space-y-6 pb-12">
+      {/* Header */}
+      <div className="border-b border-border/60 pb-5">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Campus Interview Schedule</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-primary-text tracking-tight mt-1">
+              Interview Command Center
+            </h1>
+            <p className="text-sm text-secondary-text mt-1">
+              Manage all virtual meet links, panel evaluations, and round schedules for your shortlisted campus drives.
+            </p>
+          </div>
+        </div>
+
+        {/* Tab row */}
+        <div className="mt-6">
+          <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
+        </div>
+      </div>
+
+      {/* Interview Cards List */}
+      {displayedInterviews.length === 0 ? (
+        <Card className="p-12 text-center flex flex-col items-center justify-center">
+          <Calendar className="w-10 h-10 text-muted-text mb-3" />
+          <h3 className="text-base font-semibold text-primary-text">No interviews in this view</h3>
+          <p className="text-xs text-secondary-text mt-1 max-w-sm">
+            When recruiters shortlist your profile for technical discussions or campus hiring rounds, your calendar invites and virtual rooms will appear here.
+          </p>
+          <Button
+            variant="outline"
+            size="sm"
+            className="mt-4"
+            onClick={() => navigate('/student/applications')}
+          >
+            Check Application Status
+          </Button>
+        </Card>
+      ) : (
+        <div className="space-y-4">
+          {displayedInterviews.map((interview) => (
+            <Card key={interview.id} className="p-6 border-border shadow-card transition-all">
+              <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
+                <div className="flex items-start gap-4">
+                  <img
+                    src={interview.companyLogo}
+                    alt={interview.companyName}
+                    className="w-14 h-14 rounded-2xl object-cover border border-border shadow-sm flex-shrink-0"
+                  />
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-secondary-text">
+                        {interview.companyName}
+                      </span>
+                      <span className="text-slate-300">•</span>
+                      <Badge
+                        variant={interview.mode === 'Virtual' ? 'brand' : 'neutral'}
+                        size="sm"
+                      >
+                        {interview.mode === 'Virtual' ? (
+                          <Video className="w-3 h-3 inline mr-1" />
+                        ) : (
+                          <MapPin className="w-3 h-3 inline mr-1" />
+                        )}
+                        {interview.mode}
+                      </Badge>
+                      <Badge
+                        variant={interview.status === 'Scheduled' ? 'warning' : 'success'}
+                        dot
+                        size="sm"
+                      >
+                        {interview.status}
+                      </Badge>
+                    </div>
+
+                    <h3 className="text-lg font-bold text-primary-text mt-1">
+                      {interview.round}
+                    </h3>
+                    <p className="text-xs font-medium text-secondary-text mt-0.5">
+                      Role: {interview.jobTitle}
+                    </p>
+
+                    <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs text-secondary-text mt-3">
+                      <span className="flex items-center gap-1.5 font-semibold text-primary-text">
+                        <Calendar className="w-4 h-4 text-brand" />
+                        {formatDateTime(interview.dateTime)}
+                      </span>
+                      <span className="flex items-center gap-1 text-muted-text">
+                        <User className="w-3.5 h-3.5" />
+                        Panel: {interview.interviewer}
+                      </span>
+                    </div>
+
+                    {interview.notes && (
+                      <div className="mt-3 p-3 rounded-lg bg-surface-secondary/60 border border-border/60 text-xs text-secondary-text">
+                        <p className="font-semibold text-primary-text mb-0.5">Candidate Preparation Instructions:</p>
+                        <p>{interview.notes}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Right Side Actions */}
+                <div className="flex flex-col sm:flex-row md:flex-col items-stretch md:items-end gap-2.5 border-t md:border-t-0 pt-3 md:pt-0 border-border/50">
+                  {interview.locationOrLink && interview.status === 'Scheduled' ? (
+                    <a
+                      href={interview.locationOrLink}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-button bg-brand text-white text-xs font-semibold hover:bg-brand-hover shadow-sm transition-all"
+                    >
+                      <Video className="w-4 h-4" />
+                      <span>Join Video Conference</span>
+                      <ExternalLink className="w-3 h-3 ml-0.5" />
+                    </a>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled
+                      className="text-xs"
+                    >
+                      Round Completed
+                    </Button>
+                  )}
+
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-xs text-secondary-text"
+                    onClick={() => navigate(`/student/applications/${interview.applicationId}`)}
+                  >
+                    View Application Dossier
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
