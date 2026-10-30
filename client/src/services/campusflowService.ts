@@ -1,6 +1,7 @@
 import { supabase, isSupabaseConfigured } from './supabase';
 import {
   Application,
+  ApplicationStatus,
   Interview,
   JobEligibilityCheck,
   JobPosting,
@@ -361,10 +362,155 @@ export const jobsService = {
   },
 };
 
+function mapDbStatusToApplicationStatus(dbStatus: string): ApplicationStatus {
+  switch (dbStatus) {
+    case 'submitted':
+      return 'Submitted';
+    case 'shortlisted':
+      return 'Shortlisted';
+    case 'interview':
+      return 'Interview';
+    case 'selected':
+      return 'Selected';
+    case 'rejected':
+      return 'Rejected';
+    case 'withdrawn':
+      return 'Withdrawn';
+    default:
+      return 'Submitted';
+  }
+}
+
 // ==============================================================================
 // 4. Applications Service
 // ==============================================================================
 export const applicationService = {
+  async fetchApplications(): Promise<Application[]> {
+    if (!isSupabaseConfigured()) {
+      return initialApplications;
+    }
+
+    const { data, error } = await supabase
+      .from('applications')
+      .select(`
+        id,
+        job_id,
+        student_id,
+        status,
+        applied_at,
+        updated_at,
+        withdrawn_at,
+        job_postings!inner (
+          id,
+          title,
+          company_id,
+          companies!inner (
+            id,
+            name,
+            logo_path
+          )
+        ),
+        student_profiles!inner (
+          id,
+          full_name,
+          roll_number,
+          branch,
+          cgpa,
+          student_skills (
+            skill_name
+          ),
+          profiles (
+            email
+          ),
+          resume_files (
+            storage_path,
+            original_filename
+          )
+        ),
+        application_status_history (
+          id,
+          previous_status,
+          new_status,
+          change_reason,
+          changed_at,
+          profiles (
+            full_name,
+            role
+          )
+        ),
+        interviews (
+          id,
+          scheduled_at,
+          round,
+          mode,
+          location,
+          meeting_url,
+          status
+        )
+      `)
+      .order('applied_at', { ascending: false });
+
+    if (error || !data) {
+      console.warn('Supabase applications fetch warning:', error);
+      return initialApplications;
+    }
+
+    return data.map((a: any) => {
+      const status = mapDbStatusToApplicationStatus(a.status);
+      const history = (a.application_status_history || []).map((h: any) => ({
+        status: mapDbStatusToApplicationStatus(h.new_status),
+        timestamp: h.changed_at,
+        description: h.change_reason || `Status updated to ${h.new_status}`,
+        author: h.profiles?.full_name || (h.profiles?.role === 'recruiter' ? 'Recruiter' : 'Placement Office'),
+      }));
+
+      if (history.length === 0) {
+        history.push({
+          status: status,
+          timestamp: a.applied_at,
+          description: `Application submitted for ${a.job_postings?.title} at ${a.job_postings?.companies?.name}.`,
+          author: 'Student',
+        });
+      }
+
+      const latestInterview = a.interviews?.[0];
+
+      return {
+        id: a.id,
+        jobId: a.job_id,
+        jobTitle: a.job_postings?.title || 'Job Posting',
+        companyName: a.job_postings?.companies?.name || 'Company',
+        companyLogo: a.job_postings?.companies?.logo_path || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=128&auto=format&fit=crop&q=80',
+        studentId: a.student_id,
+        studentName: a.student_profiles?.full_name || 'Candidate',
+        studentEmail: a.student_profiles?.profiles?.email || 'student@campus.edu',
+        studentRollNo: a.student_profiles?.roll_number || 'N/A',
+        studentBranch: a.student_profiles?.branch || 'General',
+        studentCgpa: Number(a.student_profiles?.cgpa) || 0,
+        studentResumeUrl: a.student_profiles?.resume_files?.[0]?.original_filename
+          ? `https://storage.campusflow.io/resumes/${a.student_profiles.resume_files[0].original_filename}`
+          : undefined,
+        studentSkills: a.student_profiles?.student_skills?.map((s: any) => s.skill_name) || [],
+        appliedAt: a.applied_at,
+        status: status,
+        history: history,
+        nextAction:
+          status === 'Submitted'
+            ? 'Application under employer screening.'
+            : status === 'Shortlisted'
+            ? 'Shortlisted! Awaiting technical round scheduling.'
+            : status === 'Interview'
+            ? latestInterview ? `${latestInterview.round} scheduled` : 'Interview scheduled'
+            : status === 'Selected'
+            ? 'Offer confirmed and recorded.'
+            : status === 'Rejected'
+            ? 'Application not selected to advance.'
+            : 'Application withdrawn.',
+        interviewDate: latestInterview?.scheduled_at,
+      };
+    });
+  },
+
   async submitApplication(jobId: string): Promise<{ success: boolean; message: string; applicationId?: string }> {
     if (!isSupabaseConfigured()) {
       return { success: true, message: 'Application submitted successfully', applicationId: 'app_' + Date.now() };
@@ -424,6 +570,67 @@ export const applicationService = {
 // 5. Interviews Service
 // ==============================================================================
 export const interviewService = {
+  async fetchInterviews(): Promise<Interview[]> {
+    if (!isSupabaseConfigured()) {
+      return initialInterviews;
+    }
+
+    const { data, error } = await supabase
+      .from('interviews')
+      .select(`
+        id,
+        application_id,
+        scheduled_at,
+        duration_minutes,
+        mode,
+        location,
+        meeting_url,
+        round,
+        status,
+        feedback,
+        applications!inner (
+          id,
+          student_id,
+          job_id,
+          job_postings (
+            id,
+            title,
+            companies (name, logo_path)
+          ),
+          student_profiles (
+            id,
+            full_name,
+            roll_number
+          )
+        )
+      `)
+      .order('scheduled_at', { ascending: true });
+
+    if (error || !data) {
+      console.warn('Supabase interviews fetch warning:', error);
+      return initialInterviews;
+    }
+
+    return data.map((i: any) => ({
+      id: i.id,
+      applicationId: i.application_id,
+      jobId: i.applications?.job_id || '',
+      jobTitle: i.applications?.job_postings?.title || 'Software Role',
+      companyName: i.applications?.job_postings?.companies?.name || 'Company',
+      companyLogo: i.applications?.job_postings?.companies?.logo_path || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=128&auto=format&fit=crop&q=80',
+      studentId: i.applications?.student_id || '',
+      studentName: i.applications?.student_profiles?.full_name || 'Candidate',
+      studentRollNo: i.applications?.student_profiles?.roll_number || 'N/A',
+      dateTime: i.scheduled_at,
+      mode: i.mode,
+      locationOrLink: i.mode === 'Virtual' ? (i.meeting_url || 'https://meet.google.com/interview') : (i.location || 'Campus Tech Block'),
+      round: i.round,
+      status: i.status === 'scheduled' ? 'Scheduled' : i.status === 'completed' ? 'Completed' : 'Cancelled',
+      interviewer: 'Technical Evaluation Panel',
+      notes: i.feedback || undefined,
+    }));
+  },
+
   async scheduleInterview(details: {
     applicationId: string;
     dateTime: string;
@@ -454,6 +661,101 @@ export const interviewService = {
       success: data.success,
       message: data.message,
       interviewId: data.interview_id,
+    };
+  },
+};
+
+// ==============================================================================
+// 6. Notifications Service
+// ==============================================================================
+export const notificationService = {
+  async fetchNotifications(): Promise<Notification[]> {
+    if (!isSupabaseConfigured()) {
+      return mockNotifications;
+    }
+
+    const { data, error } = await supabase
+      .from('notifications')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error || !data) {
+      console.warn('Supabase notifications fetch warning:', error);
+      return mockNotifications;
+    }
+
+    if (data.length === 0) {
+      return mockNotifications;
+    }
+
+    return data.map((n: any) => ({
+      id: n.id,
+      userId: n.user_id,
+      title: n.title,
+      message: n.body,
+      type: n.category as Notification['type'],
+      read: n.is_read,
+      createdAt: n.created_at,
+      link: n.category === 'interview' ? '/student/interviews' : (n.category === 'application' ? '/student/applications' : undefined),
+    }));
+  },
+
+  async markAsRead(notificationId: string): Promise<void> {
+    if (isSupabaseConfigured()) {
+      await supabase.from('notifications').update({ is_read: true }).eq('id', notificationId);
+    }
+  },
+
+  async markAllAsRead(): Promise<void> {
+    if (isSupabaseConfigured()) {
+      const { data } = await supabase.auth.getUser();
+      if (data?.user?.id) {
+        await supabase.from('notifications').update({ is_read: true }).eq('user_id', data.user.id);
+      }
+    }
+  },
+};
+
+// ==============================================================================
+// 7. Placement Admin Service
+// ==============================================================================
+export const adminService = {
+  async getPlacementAnalytics(): Promise<{
+    totalStudents: number;
+    placedStudents: number;
+    inProcessStudents: number;
+    unplacedStudents: number;
+    placementRate: number;
+    activeDrives: number;
+    partnerCompanies: number;
+    departmentStats: Array<{ name: string; total: number; placed: number; rate: number }>;
+  } | null> {
+    if (!isSupabaseConfigured()) {
+      return null;
+    }
+
+    const { data, error } = await supabase.rpc('get_placement_analytics');
+    if (error || !data) {
+      console.warn('Supabase get_placement_analytics RPC warning:', error);
+      return null;
+    }
+
+    return {
+      totalStudents: Number(data.total_students) || 0,
+      placedStudents: Number(data.placed_students) || 0,
+      inProcessStudents: Number(data.in_process_students) || 0,
+      unplacedStudents: Number(data.unplaced_students) || 0,
+      placementRate: Number(data.placement_rate) || 0,
+      activeDrives: Number(data.active_drives) || 0,
+      partnerCompanies: Number(data.partner_companies) || 0,
+      departmentStats: Array.isArray(data.department_stats)
+        ? data.department_stats.map((d: any) => ({
+            name: d.name,
+            total: Number(d.total) || 0,
+            placed: Number(d.placed) || 0,
+            rate: Number(d.rate) || 0,
+          }))
+        : [],
     };
   },
 };

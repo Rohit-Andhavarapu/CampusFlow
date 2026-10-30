@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   GraduationCap,
@@ -17,23 +17,43 @@ import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { syntheticStudents } from '../../data/mockData';
+import { adminService } from '../../services/campusflowService';
 
 export const AdminDashboard: React.FC = () => {
   const { jobs, applications } = useApp();
   const navigate = useNavigate();
 
-  const totalStudents = syntheticStudents.length;
-  const placedStudents = syntheticStudents.filter((s) => s.status === 'Placed').length;
-  const inProcessStudents = syntheticStudents.filter((s) => s.status === 'In Process').length;
-  const unplacedStudents = syntheticStudents.filter((s) => s.status === 'Unplaced').length;
-  const placementRate = Math.round((placedStudents / totalStudents) * 100);
+  const [liveAnalytics, setLiveAnalytics] = useState<{
+    totalStudents: number;
+    placedStudents: number;
+    inProcessStudents: number;
+    unplacedStudents: number;
+    placementRate: number;
+    activeDrives: number;
+    partnerCompanies: number;
+    departmentStats: Array<{ name: string; total: number; placed: number; rate: number }>;
+  } | null>(null);
 
-  const departmentStats = [
-    { name: 'Computer Science & Engineering', total: 10, placed: 8, rate: 80 },
-    { name: 'Information Technology', total: 5, placed: 3, rate: 60 },
-    { name: 'Artificial Intelligence & Data Science', total: 3, placed: 2, rate: 67 },
-    { name: 'Electronics & Communication', total: 2, placed: 0, rate: 0 },
-  ];
+  useEffect(() => {
+    adminService.getPlacementAnalytics().then((res) => {
+      if (res) setLiveAnalytics(res);
+    }).catch(console.error);
+  }, [applications]);
+
+  const totalStudents = liveAnalytics ? liveAnalytics.totalStudents : syntheticStudents.length;
+  const placedStudents = liveAnalytics ? liveAnalytics.placedStudents : syntheticStudents.filter((s) => s.status === 'Placed').length;
+  const inProcessStudents = liveAnalytics ? liveAnalytics.inProcessStudents : syntheticStudents.filter((s) => s.status === 'In Process').length;
+  const unplacedStudents = liveAnalytics ? liveAnalytics.unplacedStudents : syntheticStudents.filter((s) => s.status === 'Unplaced').length;
+  const placementRate = liveAnalytics ? liveAnalytics.placementRate : Math.round((placedStudents / (totalStudents || 1)) * 100);
+
+  const departmentStats = liveAnalytics && liveAnalytics.departmentStats.length > 0
+    ? liveAnalytics.departmentStats
+    : [
+        { name: 'Computer Science & Engineering', total: 10, placed: 8, rate: 80 },
+        { name: 'Information Technology', total: 5, placed: 3, rate: 60 },
+        { name: 'Artificial Intelligence & Data Science', total: 3, placed: 2, rate: 67 },
+        { name: 'Electronics & Communication', total: 2, placed: 0, rate: 0 },
+      ];
 
   return (
     <div className="space-y-8 pb-16">

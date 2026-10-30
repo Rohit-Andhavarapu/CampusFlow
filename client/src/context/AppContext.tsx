@@ -23,6 +23,7 @@ import {
   authService,
   interviewService,
   jobsService,
+  notificationService,
   studentService,
 } from '../services/campusflowService';
 
@@ -88,15 +89,26 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Load from Supabase on mount if configured and authenticate default demo persona
   useEffect(() => {
     if (isDatabaseConnected) {
-      authService.signIn('aarav.sharma@campus.edu', 'CampusFlow2026!').catch(() => {});
-
-      jobsService.fetchJobs().then((remoteJobs) => {
-        if (remoteJobs && remoteJobs.length > 0) setJobs(remoteJobs);
-      }).catch(console.error);
-
-      studentService.getStudentProfile().then((remoteProfile) => {
-        if (remoteProfile) setStudentProfile(remoteProfile);
-      }).catch(console.error);
+      const initApp = async () => {
+        try {
+          await authService.signIn('aarav.sharma@campus.edu', 'CampusFlow2026!');
+          const [remoteJobs, remoteProfile, remoteApps, remoteInts, remoteNotifs] = await Promise.all([
+            jobsService.fetchJobs(),
+            studentService.getStudentProfile(),
+            applicationService.fetchApplications(),
+            interviewService.fetchInterviews(),
+            notificationService.fetchNotifications(),
+          ]);
+          if (remoteJobs && remoteJobs.length > 0) setJobs(remoteJobs);
+          if (remoteProfile) setStudentProfile(remoteProfile);
+          if (remoteApps && remoteApps.length > 0) setApplications(remoteApps);
+          if (remoteInts && remoteInts.length > 0) setInterviews(remoteInts);
+          if (remoteNotifs && remoteNotifs.length > 0) setNotifications(remoteNotifs);
+        } catch (err) {
+          console.error('Initialization error:', err);
+        }
+      };
+      initApp();
     }
   }, [isDatabaseConnected]);
 
@@ -128,6 +140,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       try {
         const creds = demoRoleCredentials[role];
         await authService.signIn(creds.email, creds.pass);
+        const [remoteApps, remoteInts, remoteNotifs] = await Promise.all([
+          applicationService.fetchApplications(),
+          interviewService.fetchInterviews(),
+          notificationService.fetchNotifications(),
+        ]);
+        if (remoteApps) setApplications(remoteApps);
+        if (remoteInts) setInterviews(remoteInts);
+        if (remoteNotifs) setNotifications(remoteNotifs);
+        if (role === 'student') {
+          const remoteProfile = await studentService.getStudentProfile();
+          if (remoteProfile) setStudentProfile(remoteProfile);
+        }
       } catch (err) {
         console.warn('Backend persona authentication sync warning:', err);
       }
@@ -155,8 +179,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return { success: false, message: 'Already applied' };
     }
 
-    let generatedAppId = 'app_' + Date.now();
-
     // If live Supabase connection is active, submit via authoritative PostgreSQL RPC
     if (isDatabaseConnected) {
       const res = await applicationService.submitApplication(jobId);
@@ -164,9 +186,25 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         showToast('error', 'Application Denied', res.message);
         return { success: false, message: res.message };
       }
-      if (res.applicationId) generatedAppId = res.applicationId;
+
+      // Re-fetch synchronized live data from Supabase
+      const [remoteApps, remoteNotifs] = await Promise.all([
+        applicationService.fetchApplications(),
+        notificationService.fetchNotifications(),
+      ]);
+      if (remoteApps && remoteApps.length > 0) setApplications(remoteApps);
+      if (remoteNotifs && remoteNotifs.length > 0) setNotifications(remoteNotifs);
+
+      // Increment applicant count on job
+      setJobs((prev) =>
+        prev.map((j) => (j.id === jobId ? { ...j, applicantsCount: (j.applicantsCount || 0) + 1 } : j))
+      );
+
+      showToast('success', 'Application Successful!', `Applied to ${job.title} at ${job.companyName}`);
+      return { success: true, message: 'Success' };
     }
 
+    const generatedAppId = 'app_' + Date.now();
     const newApp: Application = {
       id: generatedAppId,
       jobId: job.id,
@@ -223,116 +261,124 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const withdrawApplication = async (appId: string) => {
     if (isDatabaseConnected) {
       await applicationService.withdrawApplication(appId);
+      const remoteApps = await applicationService.fetchApplications();
+      if (remoteApps && remoteApps.length > 0) setApplications(remoteApps);
+    } else {
+      setApplications((prev) =>
+        prev.map((app) => {
+          if (app.id === appId) {
+            return {
+              ...app,
+              status: 'Withdrawn' as ApplicationStatus,
+              nextAction: 'Application withdrawn by student.',
+              history: [
+                ...app.history,
+                {
+                  status: 'Withdrawn' as ApplicationStatus,
+                  timestamp: new Date().toISOString(),
+                  description: 'Application retracted by candidate.',
+                  author: 'Student',
+                },
+              ],
+            };
+          }
+          return app;
+        })
+      );
     }
-
-    setApplications((prev) =>
-      prev.map((app) => {
-        if (app.id === appId) {
-          return {
-            ...app,
-            status: 'Withdrawn' as ApplicationStatus,
-            nextAction: 'Application withdrawn by student.',
-            history: [
-              ...app.history,
-              {
-                status: 'Withdrawn' as ApplicationStatus,
-                timestamp: new Date().toISOString(),
-                description: 'Application retracted by candidate.',
-                author: 'Student',
-              },
-            ],
-          };
-        }
-        return app;
-      })
-    );
     showToast('info', 'Application Withdrawn', 'Your application status has been updated.');
   };
 
   const shortlistApplication = async (appId: string) => {
     if (isDatabaseConnected) {
       await applicationService.updateApplicationStatus(appId, 'Shortlisted', 'Shortlisted by recruitment team.');
+      const remoteApps = await applicationService.fetchApplications();
+      if (remoteApps && remoteApps.length > 0) setApplications(remoteApps);
+    } else {
+      setApplications((prev) =>
+        prev.map((app) => {
+          if (app.id === appId) {
+            return {
+              ...app,
+              status: 'Shortlisted' as ApplicationStatus,
+              nextAction: 'Shortlisted! Awaiting technical round scheduling.',
+              history: [
+                ...app.history,
+                {
+                  status: 'Shortlisted' as ApplicationStatus,
+                  timestamp: new Date().toISOString(),
+                  description: 'Candidate shortlisted by recruitment team.',
+                  author: 'Recruiter',
+                },
+              ],
+            };
+          }
+          return app;
+        })
+      );
     }
-
-    setApplications((prev) =>
-      prev.map((app) => {
-        if (app.id === appId) {
-          return {
-            ...app,
-            status: 'Shortlisted' as ApplicationStatus,
-            nextAction: 'Shortlisted! Awaiting technical round scheduling.',
-            history: [
-              ...app.history,
-              {
-                status: 'Shortlisted' as ApplicationStatus,
-                timestamp: new Date().toISOString(),
-                description: 'Candidate shortlisted by recruitment team.',
-                author: 'Recruiter',
-              },
-            ],
-          };
-        }
-        return app;
-      })
-    );
     showToast('success', 'Candidate Shortlisted', 'Candidate moved to shortlisted stage.');
   };
 
   const rejectApplication = async (appId: string) => {
     if (isDatabaseConnected) {
       await applicationService.updateApplicationStatus(appId, 'Rejected', 'Application not selected to advance.');
+      const remoteApps = await applicationService.fetchApplications();
+      if (remoteApps && remoteApps.length > 0) setApplications(remoteApps);
+    } else {
+      setApplications((prev) =>
+        prev.map((app) => {
+          if (app.id === appId) {
+            return {
+              ...app,
+              status: 'Rejected' as ApplicationStatus,
+              nextAction: 'Application declined for this recruitment cycle.',
+              history: [
+                ...app.history,
+                {
+                  status: 'Rejected' as ApplicationStatus,
+                  timestamp: new Date().toISOString(),
+                  description: 'Application was not selected to advance.',
+                  author: 'Recruiter',
+                },
+              ],
+            };
+          }
+          return app;
+        })
+      );
     }
-
-    setApplications((prev) =>
-      prev.map((app) => {
-        if (app.id === appId) {
-          return {
-            ...app,
-            status: 'Rejected' as ApplicationStatus,
-            nextAction: 'Application declined for this recruitment cycle.',
-            history: [
-              ...app.history,
-              {
-                status: 'Rejected' as ApplicationStatus,
-                timestamp: new Date().toISOString(),
-                description: 'Application was not selected to advance.',
-                author: 'Recruiter',
-              },
-            ],
-          };
-        }
-        return app;
-      })
-    );
     showToast('info', 'Status Updated', 'Candidate status updated to Rejected.');
   };
 
   const markSelected = async (appId: string) => {
     if (isDatabaseConnected) {
       await applicationService.updateApplicationStatus(appId, 'Selected', 'Offer confirmed and recorded.');
+      const remoteApps = await applicationService.fetchApplications();
+      if (remoteApps && remoteApps.length > 0) setApplications(remoteApps);
+    } else {
+      setApplications((prev) =>
+        prev.map((app) => {
+          if (app.id === appId) {
+            return {
+              ...app,
+              status: 'Selected' as ApplicationStatus,
+              nextAction: 'Official offer extended. Complete onboarding forms.',
+              history: [
+                ...app.history,
+                {
+                  status: 'Selected' as ApplicationStatus,
+                  timestamp: new Date().toISOString(),
+                  description: 'Congratulations! Candidate officially selected for the role.',
+                  author: 'Recruiter',
+                },
+              ],
+            };
+          }
+          return app;
+        })
+      );
     }
-
-    setApplications((prev) =>
-      prev.map((app) => {
-        if (app.id === appId) {
-          return {
-            ...app,
-            status: 'Selected' as ApplicationStatus,
-            nextAction: 'Official offer extended. Complete onboarding forms.',
-            history: [
-              ...app.history,
-              {
-                status: 'Selected' as ApplicationStatus,
-                timestamp: new Date().toISOString(),
-                description: 'Congratulations! Candidate officially selected for the role.',
-                author: 'Recruiter',
-              },
-            ],
-          };
-        }
-        return app;
-      })
-    );
     showToast('success', 'Candidate Selected!', 'Offer confirmed and recorded.');
   };
 
@@ -349,8 +395,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const app = applications.find((a) => a.id === appId);
     if (!app) return;
 
-    let generatedInterviewId = 'int_' + Date.now();
-
     if (isDatabaseConnected) {
       const res = await interviewService.scheduleInterview({
         applicationId: appId,
@@ -360,9 +404,26 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         round: details.round,
         notes: details.notes,
       });
-      if (res.interviewId) generatedInterviewId = res.interviewId;
+
+      if (!res.success) {
+        showToast('error', 'Scheduling Failed', res.message);
+        return;
+      }
+
+      const [remoteApps, remoteInts, remoteNotifs] = await Promise.all([
+        applicationService.fetchApplications(),
+        interviewService.fetchInterviews(),
+        notificationService.fetchNotifications(),
+      ]);
+      if (remoteApps && remoteApps.length > 0) setApplications(remoteApps);
+      if (remoteInts && remoteInts.length > 0) setInterviews(remoteInts);
+      if (remoteNotifs && remoteNotifs.length > 0) setNotifications(remoteNotifs);
+
+      showToast('success', 'Interview Scheduled', `${details.round} scheduled for candidate.`);
+      return;
     }
 
+    const generatedInterviewId = 'int_' + Date.now();
     const newInterview: Interview = {
       id: generatedInterviewId,
       applicationId: app.id,
@@ -430,26 +491,34 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (isDatabaseConnected) {
       const res = await jobsService.createJobPosting(newJobData);
       if (res.jobId) generatedJobId = res.jobId;
+      const remoteJobs = await jobsService.fetchJobs();
+      if (remoteJobs && remoteJobs.length > 0) setJobs(remoteJobs);
+    } else {
+      const newJob: JobPosting = {
+        ...newJobData,
+        id: generatedJobId,
+        createdAt: new Date().toISOString(),
+        applicantsCount: 0,
+      };
+      setJobs((prev) => [newJob, ...prev]);
     }
-
-    const newJob: JobPosting = {
-      ...newJobData,
-      id: generatedJobId,
-      createdAt: new Date().toISOString(),
-      applicantsCount: 0,
-    };
-    setJobs((prev) => [newJob, ...prev]);
-    showToast('success', 'Job Posted Successfully', `${newJob.title} is now live on the portal.`);
+    showToast('success', 'Job Posted Successfully', `${newJobData.title} is now live on the portal.`);
   };
 
   const markNotificationRead = (id: string) => {
     setNotifications((prev) =>
       prev.map((n) => (n.id === id ? { ...n, read: true } : n))
     );
+    if (isDatabaseConnected) {
+      notificationService.markAsRead(id).catch(console.error);
+    }
   };
 
   const markAllNotificationsRead = () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    if (isDatabaseConnected) {
+      notificationService.markAllAsRead().catch(console.error);
+    }
     showToast('info', 'All Caught Up', 'All notifications marked as read.');
   };
 

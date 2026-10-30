@@ -172,7 +172,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileMenu }) => {
           </button>
 
           {isNotifOpen && (
-            <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-surface rounded-card shadow-elevation-3 border border-slate-200 z-50 overflow-hidden animate-in fade-in zoom-in-95 origin-top-right duration-150">
+            <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-96 max-w-sm bg-surface rounded-card shadow-elevation-3 border border-slate-200 z-50 overflow-hidden animate-in fade-in zoom-in-95 origin-top-right duration-150">
               <div className="p-3 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
                 <div className="flex items-center gap-2">
                   <h4 className="text-xs font-bold text-ink-950">Notifications</h4>
