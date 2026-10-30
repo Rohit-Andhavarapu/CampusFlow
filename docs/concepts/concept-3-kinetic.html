@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Concept 3: Kinetic Journey Stream</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background-color: #FAFAF7;
+      color: #18181B;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    .shadow-warm {
+      box-shadow: 0 20px 45px -15px rgba(217, 119, 6, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+    .shadow-pill {
+      box-shadow: 0 8px 20px -6px rgba(217, 119, 6, 0.25);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-[#D97706]/20 selection:text-[#D97706]">
+
+  <!-- Top Humanist Bar -->
+  <header class="w-full border-b border-[#E4E4E7] bg-[#FAFAF7]/95 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 h-18 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-[#D97706] flex items-center justify-center text-white font-extrabold text-sm shadow-sm">
+          CF
+        </div>
+        <span class="font-extrabold text-lg tracking-tight text-[#18181B]">CampusFlow</span>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-8 text-[14px] font-medium text-[#52525B]">
+        <a href="#" class="text-[#18181B] font-semibold transition-colors">The Ecosystem</a>
+        <a href="#" class="hover:text-[#18181B] transition-colors">Student Story</a>
+        <a href="#" class="hover:text-[#18181B] transition-colors">Recruiter Studio</a>
+        <a href="#" class="hover:text-[#18181B] transition-colors">Cutoff Engine</a>
+        <a href="#" class="hover:text-[#18181B] transition-colors">Career Timeline</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="#" class="text-[14px] font-semibold text-[#52525B] hover:text-[#18181B] px-3 py-1.5 transition-colors">Sign In</a>
+        <a href="#" class="text-[14px] font-semibold text-white bg-[#D97706] hover:bg-[#b45309] px-5 py-2.5 rounded-full transition-all shadow-pill active:scale-95">
+          Start Your Story
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="max-w-7xl mx-auto px-6 pt-12 md:pt-16 pb-20 w-full">
+    <div class="max-w-4xl mx-auto text-center space-y-5 mb-14">
+      <div class="inline-flex items-center gap-2 text-xs font-semibold text-[#D97706] py-1 px-3.5 rounded-full bg-[#D97706]/10 border border-[#D97706]/20">
+        <span>✨</span> The New Standard for University Recruitment
+      </div>
+
+      <h1 class="text-4xl sm:text-6xl lg:text-[62px] text-[#18181B] font-extrabold tracking-[-0.03em] leading-[1.08]">
+        Your career story. In pure momentum.
+      </h1>
+
+      <p class="text-base sm:text-lg text-[#52525B] leading-relaxed max-w-2xl mx-auto font-normal">
+        CampusFlow transforms university hiring into an empowering, transparent pathway—eliminating arbitrary rejections with 100% explainable qualification matching and direct recruiter connections.
+      </p>
+
+      <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a href="#" class="w-full sm:w-auto px-7 py-3.5 rounded-full bg-[#D97706] hover:bg-[#b45309] text-white font-semibold text-sm transition-all shadow-pill active:scale-[0.98] flex items-center justify-center gap-2">
+          <span>Start Your Career Journey</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+        </a>
+        <a href="#" class="w-full sm:w-auto px-7 py-3.5 rounded-full bg-[#F3F2EB] hover:bg-[#EAE8DF] text-[#18181B] border border-[#E4E4E7] font-semibold text-sm transition-all active:scale-[0.98]">
+          Explore Cutoff Engine
+        </a>
+      </div>
+    </div>
+
+    <!-- Centerpiece: The Living Career Journey Stream -->
+    <div class="bg-white border border-[#E4E4E7] rounded-3xl p-6 sm:p-10 shadow-warm relative overflow-hidden">
+      <div class="flex items-center justify-between pb-6 border-b border-[#F4F2EC]">
+        <div>
+          <span class="text-xs font-bold text-[#D97706] uppercase tracking-wider block">The Living Career Pathway</span>
+          <h3 class="text-xl font-extrabold text-[#18181B] mt-0.5">Continuous Verification to Official Offer</h3>
+        </div>
+        <span class="px-3 py-1 rounded-full text-xs font-bold text-[#4F46E5] bg-[#4F46E5]/10">
+          State Machine: Verified
+        </span>
+      </div>
+
+      <!-- Horizontal Journey Nodes -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 pt-8 relative">
+        
+        <!-- Node 1: Pre-Screened Profile -->
+        <div class="bg-[#FAFAF7] border border-[#E4E4E7] rounded-2xl p-5 space-y-3 relative">
+          <div class="w-8 h-8 rounded-full bg-[#D97706]/15 text-[#D97706] font-bold text-xs flex items-center justify-center">
+            01
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-[#18181B]">Aarav Sharma</h4>
+            <p class="text-xs text-[#52525B]">Verified 8.85 CGPA • CSE</p>
+          </div>
+          <div class="pt-2 text-[11px] text-[#059669] font-semibold flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+            0 Backlogs Cleared
+          </div>
+        </div>
+
+        <!-- Node 2: Opportunity Matching -->
+        <div class="bg-[#FAFAF7] border border-[#E4E4E7] rounded-2xl p-5 space-y-3 relative">
+          <div class="w-8 h-8 rounded-full bg-[#4F46E5]/15 text-[#4F46E5] font-bold text-xs flex items-center justify-center">
+            02
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-[#18181B]">NovaTech Systems</h4>
+            <p class="text-xs text-[#52525B]">Software Engineer Trainee</p>
+          </div>
+          <div class="pt-2 text-[11px] text-[#4F46E5] font-semibold flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+            Cutoff Met (8.85 &gt; 8.00)
+          </div>
+        </div>
+
+        <!-- Node 3: Technical Round -->
+        <div class="bg-[#FAFAF7] border border-[#E4E4E7] rounded-2xl p-5 space-y-3 relative">
+          <div class="w-8 h-8 rounded-full bg-[#059669]/15 text-[#059669] font-bold text-xs flex items-center justify-center">
+            03
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-[#18181B]">Interview Dispatch</h4>
+            <p class="text-xs text-[#52525B]">Google Meet Confirmed</p>
+          </div>
+          <div class="pt-2 text-[11px] text-[#D97706] font-semibold flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            Nov 02, 2026 • 2:00 PM
+          </div>
+        </div>
+
+        <!-- Node 4: Full-Time Offer -->
+        <div class="bg-[#FAFAF7] border border-[#D97706]/40 rounded-2xl p-5 space-y-3 relative shadow-sm">
+          <div class="w-8 h-8 rounded-full bg-[#D97706] text-white font-bold text-xs flex items-center justify-center">
+            04
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-[#18181B]">Official Offer</h4>
+            <p class="text-xs text-[#52525B]">₹18.0 LPA Package</p>
+          </div>
+          <div class="pt-2 text-[11px] text-[#D97706] font-bold flex items-center gap-1">
+            <span>🎉</span>
+            Tamper-Proof Sealed
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-[#E4E4E7] py-6 text-center text-xs text-[#52525B] bg-[#FAFAF7]">
+    CampusFlow V4.0 • Kinetic Journey Stream • Google Antigravity Pre-Design Audit
+  </footer>
+
+</body>
+</html>

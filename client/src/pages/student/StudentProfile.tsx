@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   User,
   GraduationCap,
@@ -50,6 +50,27 @@ export const StudentProfile: React.FC<{ activeTabProp?: string }> = ({ activeTab
   // Simulated resume upload state
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedResumeName, setUploadedResumeName] = useState(studentProfile.resumeFileName);
+
+  // Sync state whenever studentProfile updates from database
+  useEffect(() => {
+    setFormData({
+      fullName: studentProfile.fullName,
+      rollNo: studentProfile.rollNo,
+      email: studentProfile.email,
+      phone: studentProfile.phone,
+      degree: studentProfile.degree,
+      branch: studentProfile.branch,
+      graduationYear: studentProfile.graduationYear,
+      cgpa: studentProfile.cgpa,
+      backlogs: studentProfile.backlogs,
+      bio: studentProfile.bio,
+      githubUrl: studentProfile.githubUrl,
+      linkedinUrl: studentProfile.linkedinUrl,
+      portfolioUrl: studentProfile.portfolioUrl,
+    });
+    setSkills(studentProfile.skills);
+    setUploadedResumeName(studentProfile.resumeFileName);
+  }, [studentProfile]);
 
   const tabs = [
     { id: 'profile', label: 'Academic & Personal Info' },

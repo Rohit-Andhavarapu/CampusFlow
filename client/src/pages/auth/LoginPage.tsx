@@ -11,7 +11,6 @@ import {
   AlertCircle,
   Loader2,
   CheckCircle2,
-  Sparkles,
 } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
@@ -45,7 +44,7 @@ export const LoginPage: React.FC = () => {
       const dest = from || `/${res.role}/dashboard`;
       navigate(dest, { replace: true });
     } else {
-      setErrorMessage(res.error || 'Invalid email or password. Please try again.');
+      setErrorMessage(res.error || 'Invalid email or password. Please verify your credentials.');
     }
   };
 
@@ -57,198 +56,195 @@ export const LoginPage: React.FC = () => {
     if (!res.success) {
       setIsGoogleLoading(false);
       setErrorMessage(
-        res.error || 'Google authentication could not be initiated. Check Supabase provider configuration.'
+        res.error || 'Google authentication could not be initiated. Check Supabase OAuth configuration.'
       );
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#060B12] text-white flex flex-col lg:flex-row">
-      {/* Left Column: Immersive Brand & Product Visual (Desktop) */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-[#090E17] border-r border-white/10 flex-col justify-between p-12 lg:p-16 overflow-hidden">
-        {/* Subtle Ambient Radial Glow */}
-        <div className="absolute -top-32 -left-32 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-
+    <div className="min-h-screen bg-[#FAF8F5] text-[#1A1A1A] flex flex-col lg:flex-row selection:bg-[#14432A]/15 selection:text-[#14432A]">
+      {/* Left Column: Academic Prestige Brand & Editorial Visual (Desktop) */}
+      <div className="hidden lg:flex lg:w-1/2 relative bg-[#FFFDF9] border-r linen-rule flex-col justify-between p-12 lg:p-16 overflow-hidden">
         {/* Brand Header */}
         <div className="relative z-10">
-          <Link to="/" className="inline-flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-[#0F766E] border border-[#72F4D1]/40 flex items-center justify-center shadow-lg transition-transform group-hover:scale-105">
-              <ShieldCheck className="w-5 h-5 text-[#72F4D1]" />
+          <Link to="/" className="inline-flex items-center gap-3.5 group">
+            <div className="w-10 h-10 rounded-md bg-[#14432A] flex items-center justify-center text-[#EBE5D8] font-serif-prestige font-semibold text-lg shadow-sm border border-[#0F3521] transition-transform group-hover:scale-105">
+              CF
             </div>
             <div>
-              <span className="text-xl font-extrabold tracking-tight text-white block">CampusFlow</span>
-              <span className="text-[10px] text-teal-300 font-semibold uppercase tracking-wider block">
-                Next-Gen Recruitment
+              <span className="font-serif-prestige font-semibold text-xl tracking-tight text-[#14432A] block leading-none">
+                CampusFlow
+              </span>
+              <span className="text-[10px] uppercase tracking-[0.16em] text-[#6B7280] font-semibold block mt-1">
+                University Talent Folio
               </span>
             </div>
           </Link>
         </div>
 
-        {/* Central Visual Presentation */}
+        {/* Central Narrative Block */}
         <div className="relative z-10 max-w-lg space-y-6 my-auto">
-          <h2 className="text-3xl xl:text-4xl font-extrabold text-white tracking-tight leading-tight">
-            The unified recruitment workspace for higher education.
+          <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#14432A] py-1 px-3.5 rounded-full bg-[#14432A]/8 border border-[#14432A]/15">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#14432A]"></span>
+            <span>Authoritative Placement Portal</span>
+          </div>
+
+          <h2 className="font-serif-prestige text-3xl xl:text-4xl font-semibold text-[#14432A] tracking-tight leading-tight">
+            Where academic achievement <span className="italic font-normal">meets transparent opportunity.</span>
           </h2>
-          <p className="text-sm text-slate-300 leading-relaxed">
-            Sign in to access your verified career pipeline. From transparent qualification checks to high-density candidate evaluation and accreditation tracking.
+
+          <p className="text-sm text-[#4B5563] leading-relaxed">
+            Sign in to access your synchronized recruitment workstation. From pre-screened student eligibility checks to enterprise interview dispatch and offer confirmations.
           </p>
 
-          <div className="space-y-3 pt-4">
-            <div className="flex items-center gap-3 text-xs text-slate-300">
-              <div className="w-6 h-6 rounded-lg bg-teal-500/10 border border-teal-500/30 flex items-center justify-center text-[#72F4D1] flex-shrink-0">
+          <div className="space-y-3 pt-2">
+            <div className="flex items-center gap-3 text-xs text-[#4B5563]">
+              <div className="w-6 h-6 rounded-md bg-[#14432A]/10 text-[#14432A] flex items-center justify-center flex-shrink-0">
                 <CheckCircle2 className="w-4 h-4" />
               </div>
-              <span>Pre-screened student eligibility matching genuine employer cutoffs.</span>
+              <span>Pre-screened student credentials matched directly against verified employer cutoffs.</span>
             </div>
-            <div className="flex items-center gap-3 text-xs text-slate-300">
-              <div className="w-6 h-6 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-[#59D9FF] flex-shrink-0">
+            <div className="flex items-center gap-3 text-xs text-[#4B5563]">
+              <div className="w-6 h-6 rounded-md bg-[#14432A]/10 text-[#14432A] flex items-center justify-center flex-shrink-0">
                 <CheckCircle2 className="w-4 h-4" />
               </div>
-              <span>Ashby-grade applicant queue with live Google Meet interview triggers.</span>
+              <span>Automated Google Meet room generation for confirmed interview rounds.</span>
             </div>
-            <div className="flex items-center gap-3 text-xs text-slate-300">
-              <div className="w-6 h-6 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-300 flex-shrink-0">
+            <div className="flex items-center gap-3 text-xs text-[#4B5563]">
+              <div className="w-6 h-6 rounded-md bg-[#14432A]/10 text-[#14432A] flex items-center justify-center flex-shrink-0">
                 <CheckCircle2 className="w-4 h-4" />
               </div>
-              <span>Row Level Security (RLS) ensuring strict cross-role data isolation.</span>
+              <span>Row-Level Security (RLS) ensuring strict cross-role privacy and authentication.</span>
             </div>
           </div>
         </div>
 
         {/* Footer Meta */}
-        <div className="relative z-10 flex items-center justify-between text-xs text-slate-500">
+        <div className="relative z-10 flex items-center justify-between text-xs text-[#6B7280]">
           <span>CampusFlow Platform v4.0</span>
-          <span>End-to-End Cryptographic Security</span>
+          <span>PostgreSQL Row-Level Security Enforced</span>
         </div>
       </div>
 
-      {/* Right Column: Accessible, High-Craft Authentication Form */}
+      {/* Right Column: Refined Authentication Form */}
       <div className="w-full lg:w-1/2 flex flex-col justify-center px-6 sm:px-12 lg:px-16 py-12">
         <div className="w-full max-w-md mx-auto">
           {/* Mobile Brand Link */}
           <div className="lg:hidden mb-8">
             <Link to="/" className="inline-flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#0F766E] border border-[#72F4D1]/40 flex items-center justify-center text-[#72F4D1]">
-                <ShieldCheck className="w-4 h-4" />
+              <div className="w-8 h-8 rounded-md bg-[#14432A] flex items-center justify-center text-[#EBE5D8] font-serif-prestige font-bold text-sm">
+                CF
               </div>
-              <span className="text-lg font-extrabold text-white">CampusFlow</span>
+              <span className="font-serif-prestige font-semibold text-lg text-[#14432A]">
+                CampusFlow
+              </span>
             </Link>
           </div>
 
           <div className="mb-8">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              Welcome back
+            <h1 className="font-serif-prestige text-2xl sm:text-3xl font-bold text-[#14432A] tracking-tight">
+              Sign In to Your Account
             </h1>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1.5">
+            <p className="text-xs sm:text-sm text-[#6B7280] mt-1.5 font-normal">
               Enter your credentials to access your verified portal.
             </p>
           </div>
 
           {/* Error Banner */}
           {errorMessage && (
-            <div className="mb-6 p-4 rounded-xl bg-rose-950/70 border border-rose-500/40 flex items-start gap-3 text-xs text-rose-300">
-              <AlertCircle className="w-4 h-4 text-rose-400 flex-shrink-0 mt-0.5" />
-              <div className="flex-1">
-                <p className="font-semibold text-rose-200">Sign in error</p>
-                <p className="mt-0.5 text-slate-300">{errorMessage}</p>
-              </div>
+            <div className="mb-6 p-4 rounded-lg bg-[#FEF2F2] border border-[#FECACA] flex items-start gap-3 text-xs text-[#991B1B]">
+              <AlertCircle className="w-4 h-4 text-[#DC2626] flex-shrink-0 mt-0.5" />
+              <div className="leading-relaxed">{errorMessage}</div>
             </div>
           )}
 
-          {/* Social Sign-In: Google OAuth */}
+          {/* Google OAuth Button */}
           <button
             type="button"
             onClick={handleGoogleSignIn}
             disabled={isGoogleLoading || isLoading}
-            className="w-full py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/15 text-white text-xs sm:text-sm font-semibold transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-3 disabled:opacity-50"
+            className="w-full py-3 px-4 rounded-md bg-[#FFFDF9] parchment-border hover:bg-[#F2EFE8] text-xs sm:text-sm font-semibold text-[#1A1A1A] transition-colors flex items-center justify-center gap-3 shadow-sm disabled:opacity-60 mb-6"
           >
             {isGoogleLoading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin text-white" />
-                <span>Connecting to Google...</span>
-              </>
+              <Loader2 className="w-4 h-4 animate-spin text-[#14432A]" />
             ) : (
-              <>
-                {/* Official Google Vector Logo */}
-                <svg className="w-4 h-4" viewBox="0 0 24 24">
-                  <path
-                    fill="#4285F4"
-                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                  />
-                  <path
-                    fill="#34A853"
-                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                  />
-                  <path
-                    fill="#FBBC05"
-                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
-                  />
-                  <path
-                    fill="#EA4335"
-                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-                  />
-                </svg>
-                <span>Continue with Google</span>
-              </>
+              <svg className="w-4 h-4" viewBox="0 0 24 24">
+                <path
+                  fill="#4285F4"
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                />
+              </svg>
             )}
+            <span>Continue with Google</span>
           </button>
 
-          {/* Visual Divider */}
-          <div className="relative my-6 text-center">
+          <div className="relative mb-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/10" />
+              <div className="w-full border-t linen-rule"></div>
             </div>
-            <span className="relative px-3 bg-[#060B12] text-[11px] uppercase tracking-wider text-slate-500 font-semibold">
-              Or continue with email
-            </span>
+            <div className="relative flex justify-center text-xs">
+              <span className="bg-[#FAF8F5] px-3 text-[#6B7280]">
+                Or continue with institutional email
+              </span>
+            </div>
           </div>
 
           {/* Email / Password Form */}
           <form onSubmit={handleEmailSubmit} className="space-y-4">
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1.5">
-                Email Address
+              <label className="block text-xs font-semibold text-[#14432A] mb-1.5">
+                Official Email Address
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="student@campusflow.edu"
+                  placeholder="aarav.sharma@campus.edu"
                   required
-                  autoComplete="email"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-[#72F4D1] transition-colors"
+                  className="w-full px-3.5 py-2.5 rounded-md bg-[#FFFDF9] parchment-border text-sm text-[#1A1A1A] placeholder-[#9CA3AF] focus:outline-none focus:border-[#14432A] focus:ring-1 focus:ring-[#14432A] transition-colors"
                 />
+                <Mail className="absolute right-3.5 top-3 w-4 h-4 text-[#9CA3AF] pointer-events-none" />
               </div>
             </div>
 
             <div>
-              <div className="flex justify-between items-center mb-1.5">
-                <label className="text-xs font-semibold text-slate-300">Password</label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-semibold text-[#14432A]">
+                  Password
+                </label>
                 <Link
                   to="/forgot-password"
-                  className="text-xs text-teal-400 hover:text-teal-300 transition-colors"
+                  className="text-xs text-[#14432A] hover:underline font-medium"
                 >
                   Forgot password?
                 </Link>
               </div>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
+                  placeholder="Enter your password"
                   required
-                  autoComplete="current-password"
-                  className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-[#72F4D1] transition-colors"
+                  className="w-full px-3.5 py-2.5 rounded-md bg-[#FFFDF9] parchment-border text-sm text-[#1A1A1A] placeholder-[#9CA3AF] focus:outline-none focus:border-[#14432A] focus:ring-1 focus:ring-[#14432A] transition-colors"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-3 text-slate-500 hover:text-slate-300 transition-colors"
+                  className="absolute right-3.5 top-3 text-[#9CA3AF] hover:text-[#14432A] transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -258,33 +254,31 @@ export const LoginPage: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading || isGoogleLoading}
-              className="w-full py-2.5 px-4 rounded-xl bg-[#0F766E] hover:bg-[#115e59] text-white text-sm font-semibold transition-all duration-150 active:scale-[0.98] flex items-center justify-center gap-2 shadow-lg disabled:opacity-50"
+              className="w-full py-3 px-4 rounded-md bg-[#14432A] hover:bg-[#0F3521] text-white text-xs sm:text-sm font-semibold transition-all shadow-sm flex items-center justify-center gap-2 active:scale-98 disabled:opacity-60 border border-[#0F3521] mt-2"
             >
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Verifying Credentials...</span>
+                  <span>Signing In...</span>
                 </>
               ) : (
                 <>
-                  <span>Sign In</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span>Sign In to Portal</span>
+                  <ArrowRight className="w-4 h-4 text-[#C5A880]" />
                 </>
               )}
             </button>
           </form>
 
-          {/* Registration Prompt */}
-          <div className="mt-8 pt-6 border-t border-white/10 text-center">
-            <p className="text-xs text-slate-400">
-              Don't have an account yet?{' '}
-              <Link to="/signup" className="text-[#72F4D1] font-semibold hover:underline">
-                Register as a Student
-              </Link>
-            </p>
-            <p className="text-[11px] text-slate-500 mt-2">
-              Corporate recruiters and placement teams are provisioned by institutional administrators.
-            </p>
+          {/* Student Signup Link */}
+          <div className="mt-8 pt-6 border-t linen-rule text-center text-xs text-[#6B7280]">
+            <span>Don't have an account yet? </span>
+            <Link
+              to="/signup"
+              className="font-semibold text-[#14432A] hover:underline ml-1"
+            >
+              Register as Student →
+            </Link>
           </div>
         </div>
       </div>

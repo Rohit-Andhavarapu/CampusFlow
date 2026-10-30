@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Direction B: Cinematic Prestige — CampusFlow</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FAF7F2;
+      color: #1A1A1A;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-serif-cinematic {
+      font-family: 'Newsreader', Georgia, serif;
+    }
+    .shadow-cinematic-main {
+      box-shadow: 
+        0 4px 6px -1px rgba(15, 56, 34, 0.04),
+        0 15px 35px -5px rgba(15, 56, 34, 0.08),
+        0 40px 80px -15px rgba(15, 56, 34, 0.12),
+        0 0 0 1px rgba(15, 56, 34, 0.06);
+    }
+    .shadow-floating-card {
+      box-shadow: 
+        0 10px 25px -3px rgba(24, 24, 27, 0.08),
+        0 4px 6px -2px rgba(24, 24, 27, 0.04),
+        0 0 0 1px rgba(229, 224, 213, 0.9);
+    }
+    .parchment-border-bold {
+      border: 1px solid #E5E0D5;
+    }
+    .gold-accent-border {
+      border-color: #C5A880;
+    }
+    .pulse-amber {
+      box-shadow: 0 0 0 0 rgba(197, 168, 128, 0.6);
+      animation: pulse-ring 2.5s infinite;
+    }
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(197, 168, 128, 0.6); }
+      70% { box-shadow: 0 0 0 10px rgba(197, 168, 128, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(197, 168, 128, 0); }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-[#0F3822]/15 selection:text-[#0F3822]">
+
+  <!-- Top Cinematic Editorial Header -->
+  <header class="w-full border-b border-[#E8E2D5] bg-[#FAF7F2]/95 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Crest & Identity -->
+      <div class="flex items-center gap-3.5">
+        <div class="w-10 h-10 rounded-lg bg-[#0F3822] flex items-center justify-center text-[#EFEBE1] font-serif-cinematic font-bold text-xl shadow-md border border-[#0A2617]">
+          CF
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-serif-cinematic font-bold text-xl sm:text-2xl tracking-tight text-[#0F3822]">CampusFlow</span>
+            <span class="hidden sm:inline-flex px-2 py-0.5 rounded text-[10px] font-bold text-[#0F3822] bg-[#0F3822]/10 border border-[#0F3822]/20">
+              V4 CINEMATIC
+            </span>
+          </div>
+          <span class="text-[10px] tracking-[0.18em] uppercase text-[#736F66] font-semibold hidden sm:block mt-0.5">
+            The Verified Career Transformation
+          </span>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="hidden md:flex items-center gap-8 text-[13px] font-semibold text-[#57534A]">
+        <a href="#" class="text-[#0F3822] font-bold transition-colors">Career Story</a>
+        <a href="#" class="hover:text-[#0F3822] transition-colors">The Dossier</a>
+        <a href="#" class="hover:text-[#0F3822] transition-colors">Cutoff Diagnostics</a>
+        <a href="#" class="hover:text-[#0F3822] transition-colors">Recruiter Desk</a>
+        <a href="#" class="hover:text-[#0F3822] transition-colors">Live Dashboard</a>
+      </nav>
+
+      <!-- Authenticated Gateways (Genuine Auth) -->
+      <div class="flex items-center gap-2 sm:gap-4">
+        <a href="#" class="text-xs sm:text-[13px] font-semibold text-[#57534A] hover:text-[#0F3822] px-2 sm:px-3 py-1.5 sm:py-2 transition-colors">
+          Sign In
+        </a>
+        <a href="#" class="text-xs sm:text-[13px] font-bold text-white bg-[#0F3822] hover:bg-[#0A2617] px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-lg transition-all shadow-md active:scale-95 flex items-center gap-1.5 border border-[#0A2617]">
+          <span>Register</span>
+          <svg class="w-3.5 h-3.5 text-[#D8C2A0]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Storyline Section -->
+  <main class="max-w-7xl mx-auto px-6 lg:px-8 pt-12 md:pt-16 pb-20 w-full">
+    
+    <!-- Top Narrative Banner (Apple-Inspired Cinematic Masthead) -->
+    <div class="max-w-4xl mx-auto text-center space-y-5 mb-14">
+      
+      <!-- Live Story Tag -->
+      <div class="inline-flex items-center gap-2.5 text-xs font-semibold text-[#0F3822] py-1.5 px-4 rounded-full bg-[#0F3822]/8 border border-[#0F3822]/20">
+        <span class="w-2 h-2 rounded-full bg-[#0F3822] pulse-amber"></span>
+        <span>The Authoritative Campus Placement Platform</span>
+      </div>
+
+      <!-- Heroic Serif Headline -->
+      <h1 class="font-serif-cinematic text-4xl sm:text-6xl lg:text-[62px] text-[#0F3822] leading-[1.08] tracking-[-0.025em] font-semibold">
+        From academic record to <span class="italic font-normal">career triumph.</span>
+      </h1>
+
+      <!-- Cinematic Narrative Copy -->
+      <p class="text-base sm:text-lg text-[#57534A] leading-relaxed max-w-2xl mx-auto font-normal">
+        CampusFlow transforms your verified university transcript into high-velocity career momentum—pairing mathematical cutoff matching with direct recruiter scheduling and verified offers.
+      </p>
+
+      <!-- CTAs & Action Cluster -->
+      <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3.5">
+        <a href="#" class="w-full sm:w-auto px-7 py-3.5 rounded-lg bg-[#0F3822] hover:bg-[#0A2617] text-white font-bold text-sm transition-all shadow-md active:scale-98 flex items-center justify-center gap-2">
+          <span>Start Your Career Journey</span>
+          <svg class="w-4 h-4 text-[#D8C2A0]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </a>
+        <a href="#" class="w-full sm:w-auto px-7 py-3.5 rounded-lg bg-[#EFECE3] hover:bg-[#E5E1D5] text-[#0F3822] parchment-border-bold font-semibold text-sm transition-all flex items-center justify-center">
+          Explore Cutoff Engine
+        </a>
+      </div>
+
+      <!-- 4-Stage Career Momentum Track (Concept 3 Storytelling in Cinematic Editorial Style) -->
+      <div class="pt-8 max-w-3xl mx-auto">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
+          <div class="bg-white/80 parchment-border-bold rounded-lg p-3">
+            <span class="text-[10px] font-bold text-[#0F3822] uppercase tracking-wider block">Stage 01</span>
+            <span class="text-xs font-bold text-[#1A1A1A] block mt-0.5">Verified Transcript</span>
+            <span class="text-[11px] text-[#047857] font-medium block mt-1">8.85 CGPA Cleared</span>
+          </div>
+          <div class="bg-white/80 parchment-border-bold rounded-lg p-3">
+            <span class="text-[10px] font-bold text-[#0F3822] uppercase tracking-wider block">Stage 02</span>
+            <span class="text-xs font-bold text-[#1A1A1A] block mt-0.5">Cutoff Clearance</span>
+            <span class="text-[11px] text-[#047857] font-medium block mt-1">Matched 3 Companies</span>
+          </div>
+          <div class="bg-white/80 parchment-border-bold rounded-lg p-3">
+            <span class="text-[10px] font-bold text-[#0F3822] uppercase tracking-wider block">Stage 03</span>
+            <span class="text-xs font-bold text-[#1A1A1A] block mt-0.5">Interview Dispatch</span>
+            <span class="text-[11px] text-[#0F3822] font-medium block mt-1">Google Meet Active</span>
+          </div>
+          <div class="bg-white/80 border border-[#C5A880] rounded-lg p-3 shadow-sm bg-gradient-to-br from-[#FFFDF9] to-[#F7F2E7]">
+            <span class="text-[10px] font-bold text-[#92400E] uppercase tracking-wider block">Stage 04</span>
+            <span class="text-xs font-bold text-[#1A1A1A] block mt-0.5">Official Offer</span>
+            <span class="text-[11px] text-[#92400E] font-bold block mt-1">₹18.0 LPA Signed</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Centerpiece Visual: The Grand Transformation Folio -->
+    <div class="max-w-5xl mx-auto bg-[#FFFDF9] parchment-border-bold rounded-2xl p-6 sm:p-10 shadow-cinematic-main relative overflow-hidden">
+      
+      <!-- Folio Header Bar -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-[#E8E2D5] gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-[#0F3822] flex items-center justify-center text-[#D8C2A0] font-serif-cinematic font-bold text-sm">
+            AS
+          </div>
+          <div>
+            <h3 class="font-serif-cinematic text-xl font-bold text-[#0F3822]">
+              Aarav Sharma • Verified Academic Portfolio
+            </h3>
+            <span class="text-xs text-[#736F66] font-medium">B.Tech Computer Science & Engineering • Roll N25H02A0325</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="px-3 py-1 rounded-full text-xs font-bold text-[#047857] bg-[#ECFDF5] border border-[#A7F3D0]">
+            Cutoff Qualified (+0.85 Margin)
+          </span>
+        </div>
+      </div>
+
+      <!-- Main Folio Grid: Academic Credentials transforming into Recruiter Decision -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 pt-8">
+        
+        <!-- Left: Verified Academic Credentials & Metrics (5 Cols) -->
+        <div class="md:col-span-5 space-y-4">
+          <div class="bg-[#FAF7F2] parchment-border-bold rounded-xl p-5 space-y-3.5">
+            <span class="text-xs font-bold text-[#0F3822] uppercase tracking-wider block">
+              Official University Record
+            </span>
+
+            <div class="grid grid-cols-2 gap-3 pt-1">
+              <div class="p-3 bg-white rounded-lg border border-[#E8E2D5]">
+                <span class="text-[11px] text-[#736F66] block">Cumulative GPA</span>
+                <span class="font-serif-cinematic text-2xl font-bold text-[#0F3822] block mt-0.5">8.85</span>
+                <span class="text-[10px] text-[#047857] font-semibold">Scale of 10.00</span>
+              </div>
+              <div class="p-3 bg-white rounded-lg border border-[#E8E2D5]">
+                <span class="text-[11px] text-[#736F66] block">Active Backlogs</span>
+                <span class="font-serif-cinematic text-2xl font-bold text-[#047857] block mt-0.5">0</span>
+                <span class="text-[10px] text-[#047857] font-semibold">Clean Academic Record</span>
+              </div>
+            </div>
+
+            <!-- Verified Technical Capabilities -->
+            <div class="pt-2">
+              <span class="text-[11px] text-[#736F66] block font-semibold uppercase tracking-wider">Verified Specializations</span>
+              <div class="flex flex-wrap gap-1.5 mt-2 text-xs">
+                <span class="px-2 py-0.5 bg-white border border-[#E8E2D5] rounded text-[#0F3822] font-medium">React & TypeScript</span>
+                <span class="px-2 py-0.5 bg-white border border-[#E8E2D5] rounded text-[#0F3822] font-medium">PostgreSQL & DB Architecture</span>
+                <span class="px-2 py-0.5 bg-white border border-[#E8E2D5] rounded text-[#0F3822] font-medium">Distributed Systems</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Active Recruiter Interview & Offer Dispatch (7 Cols) -->
+        <div class="md:col-span-7 space-y-4">
+          
+          <!-- Recruiter Station Card: NovaTech Systems -->
+          <div class="bg-[#FAF7F2] parchment-border-bold rounded-xl p-5 shadow-floating-card space-y-4">
+            
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#E8E2D5]">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-base text-[#1A1A1A]">NovaTech Systems</span>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold text-[#047857] bg-[#ECFDF5] border border-[#A7F3D0]">
+                    SHORTLISTED
+                  </span>
+                </div>
+                <p class="text-xs text-[#736F66] mt-0.5">Software Engineer Trainee • Drive ID: #DRIVE-2026-AUTUMN</p>
+              </div>
+              <div class="text-left sm:text-right">
+                <span class="font-serif-cinematic text-xl font-bold text-[#0F3822] block">₹18.0 LPA</span>
+                <span class="text-[11px] text-[#736F66]">Annual Compensation</span>
+              </div>
+            </div>
+
+            <!-- Interview Dispatch Block -->
+            <div class="p-3.5 bg-white rounded-lg border border-[#E8E2D5] space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-bold text-[#0F3822] flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-[#0F3822]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                  Round 2: Technical Interview Dispatch
+                </span>
+                <span class="text-[#047857] font-semibold text-[11px]">Confirmed Slot</span>
+              </div>
+              
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1 text-xs">
+                <div class="flex items-center gap-2 font-mono text-[#57534A] text-[11px]">
+                  <span class="w-2 h-2 rounded-full bg-[#10B981]"></span>
+                  <span>meet.google.com/novatech-tech-0325</span>
+                </div>
+                <span class="text-[#736F66]">Nov 02, 2026 • 2:00 PM IST</span>
+              </div>
+            </div>
+
+            <!-- Recruiter Action Row -->
+            <div class="flex items-center justify-between pt-1">
+              <span class="text-xs text-[#736F66]">Recruiter: Priya Nair (Talent Lead)</span>
+              <div class="flex items-center gap-2">
+                <button class="px-4 py-2 bg-[#0F3822] hover:bg-[#0A2617] text-white text-xs font-bold rounded-md shadow-sm transition-all flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 text-[#D8C2A0]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                  <span>Extend Official Offer</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Bottom Micro-Bar -->
+      <div class="mt-6 pt-4 border-t border-[#E8E2D5] flex flex-wrap items-center justify-between text-[11px] text-[#736F66] gap-2">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-[#047857]"></span>
+          <span>Live Synchronized with CampusFlow PostgreSQL Database</span>
+        </div>
+        <span>Aarav Sharma (B.Tech CSE) • Autumn 2026 Drive</span>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Editorial Footnote -->
+  <footer class="w-full border-t border-[#E8E2D5] bg-[#EFECE3] py-6">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#736F66]">
+      <div>
+        <p class="font-bold text-[#0F3822]">CampusFlow Cinematic Prestige V4</p>
+        <p class="mt-0.5">Academic Prestige × World-Class Product Launch Storytelling.</p>
+      </div>
+      <div class="flex items-center gap-6">
+        <span>Ivory & Forest Green</span>
+        <span>•</span>
+        <span>Genuine Auth</span>
+        <span>•</span>
+        <span>Zero Unverified Claims</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

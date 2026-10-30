@@ -71,9 +71,23 @@ export default {
           border: '#BFDBFE',
           text: '#1E40AF',
         },
+        prestige: {
+          ivory: '#FAF8F5',
+          paper: '#FFFDF9',
+          green: '#14432A',
+          'green-dark': '#0F3521',
+          'green-light': '#1C5938',
+          linen: '#E8E4DC',
+          rule: '#ECE8E0',
+          charcoal: '#1A1A1A',
+          muted: '#6B7280',
+          gold: '#C5A880',
+        },
       },
       fontFamily: {
+        'serif-prestige': ['Newsreader', 'Georgia', 'serif'],
         sans: [
+          'Plus Jakarta Sans',
           'Inter',
           '-apple-system',
           'BlinkMacSystemFont',
@@ -92,6 +106,10 @@ export default {
         ],
       },
       boxShadow: {
+        // Academic Prestige Folio Elevation
+        'folio': '0 2px 4px rgba(20, 67, 42, 0.02), 0 10px 24px -4px rgba(20, 67, 42, 0.06), 0 30px 60px -12px rgba(20, 67, 42, 0.08), 0 0 0 1px rgba(20, 67, 42, 0.05)',
+        'subsheet': '0 4px 14px -2px rgba(24, 24, 27, 0.04), 0 0 0 1px rgba(229, 226, 219, 0.9)',
+
         // Multi-Layer Elevation Hierarchy (Prompt Section 3)
         'elevation-0': 'none',
         'elevation-1': '0 1px 2px -1px rgba(11, 15, 23, 0.05), 0 1px 3px 0 rgba(11, 15, 23, 0.04)',

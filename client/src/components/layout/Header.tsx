@@ -10,6 +10,7 @@ import {
   Layers,
   ChevronDown,
   User as UserIcon,
+  LogOut,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { UserRole } from '../../types';
@@ -24,6 +25,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileMenu }) => {
     currentRole,
     currentUser,
     switchRole,
+    logout,
     notifications,
     markNotificationRead,
     markAllNotificationsRead,
@@ -65,7 +67,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileMenu }) => {
   };
 
   return (
-    <header className="sticky top-0 z-30 h-14 bg-surface/90 backdrop-blur-md border-b border-border/80 px-4 sm:px-6 flex items-center justify-between">
+    <header className="sticky top-0 z-30 h-14 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-6 flex items-center justify-between flex-shrink-0">
       {/* Left: Mobile menu toggle + Global Search input */}
       <div className="flex items-center gap-3">
         <button
@@ -227,7 +229,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileMenu }) => {
         </div>
 
         {/* User Persona Chip */}
-        <div className="hidden sm:flex items-center gap-2.5 pl-2 border-l border-slate-200">
+        <div className="hidden sm:flex items-center gap-2 pl-2 border-l border-slate-200">
           <img
             src={currentUser.avatar}
             alt={currentUser.name}
@@ -239,10 +241,20 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileMenu }) => {
             </p>
             <p className="text-[10px] font-mono text-slate-500 mt-0.5 leading-none">
               {currentUser.role === 'student'
-                ? (currentUser as any).rollNo
+                ? (currentUser as any).rollNo || currentUser.email
                 : (currentUser as any).designation || 'Placement Office'}
             </p>
           </div>
+          <button
+            onClick={async () => {
+              await logout();
+              navigate('/');
+            }}
+            className="p-1.5 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors ml-1"
+            title="Sign Out"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+          </button>
         </div>
       </div>
     </header>

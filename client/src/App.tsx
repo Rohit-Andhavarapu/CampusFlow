@@ -61,6 +61,7 @@ export const App: React.FC = () => {
 
           {/* Isolated Hackathon Evaluation Persona Sandbox */}
           <Route path="/demo" element={<DemoLoginPage />} />
+          <Route path="/demo-login" element={<Navigate to="/demo" replace />} />
 
           {/* Authenticated Workspace Shell Protected Routes */}
           <Route element={<ProtectedRoute />}>

@@ -21,6 +21,21 @@ import {
 import { checkJobEligibility } from '../utils/formatters';
 
 // ==============================================================================
+// Authoritative Demo Account Allowlist (Hackathon Provisioned Demonstration Accounts)
+// Real authenticated users must NEVER inherit or access data from these accounts!
+// ==============================================================================
+export const DEMO_USER_IDS = new Set<string>([
+  '28296879-9cd1-43ef-bb8e-7939cb71d213', // aarav.sharma@campus.edu (Student)
+  '25daf6ec-9db8-4343-9328-72d44faf0d29', // priya.nair@novatech.io (Recruiter)
+  '4a122f0c-2150-47b4-9e67-59470cb336c2', // placements@campus.edu (Admin)
+]);
+
+export function isDemoUserId(userId?: string | null): boolean {
+  if (!userId) return false;
+  return DEMO_USER_IDS.has(userId);
+}
+
+// ==============================================================================
 // 1. Authentication Service
 // ==============================================================================
 export const authService = {
@@ -151,8 +166,13 @@ export const studentService = {
       return initialStudentProfile;
     }
 
-    const targetUserId = userId || (await supabase.auth.getUser()).data.user?.id;
-    if (!targetUserId) return initialStudentProfile;
+    const { data: authData } = await supabase.auth.getUser();
+    const targetUserId = userId || authData.user?.id;
+    if (!targetUserId) {
+      return initialStudentProfile;
+    }
+
+    const isDemo = isDemoUserId(targetUserId);
 
     const { data: sp, error } = await supabase
       .from('student_profiles')
@@ -164,25 +184,54 @@ export const studentService = {
         resume_files(original_filename, file_size, uploaded_at)
       `)
       .eq('user_id', targetUserId)
-      .single();
+      .maybeSingle();
 
     if (error || !sp) {
-      return initialStudentProfile;
+      // If designated demo account and database had an issue, fallback to seeded demo profile
+      if (isDemo) {
+        return initialStudentProfile;
+      }
+
+      // For real authenticated users, fetch user's basic profile details
+      const { data: baseProfile } = await supabase
+        .from('profiles')
+        .select('full_name, email')
+        .eq('id', targetUserId)
+        .maybeSingle();
+
+      return {
+        fullName: baseProfile?.full_name || authData.user?.user_metadata?.full_name || 'Student Candidate',
+        rollNo: '',
+        email: baseProfile?.email || authData.user?.email || '',
+        phone: '',
+        college: 'National Institute of Technology',
+        degree: '',
+        branch: '',
+        graduationYear: 2026,
+        cgpa: 0,
+        backlogs: 0,
+        bio: '',
+        skills: [],
+        githubUrl: '',
+        linkedinUrl: '',
+        portfolioUrl: '',
+        projects: [],
+      };
     }
 
     const latestResume = sp.resume_files?.[0];
 
     return {
-      fullName: sp.profiles?.full_name || 'Student Candidate',
-      rollNo: sp.roll_number,
-      email: sp.profiles?.email || '',
+      fullName: (sp as any).profiles?.full_name || (sp as any).full_name || 'Student Candidate',
+      rollNo: sp.roll_number || '',
+      email: (sp as any).profiles?.email || (sp as any).email || '',
       phone: sp.phone || '',
       college: 'National Institute of Technology',
-      degree: sp.course,
-      branch: sp.branch,
-      graduationYear: sp.graduation_year,
-      cgpa: Number(sp.cgpa),
-      backlogs: sp.active_backlogs,
+      degree: sp.course || 'B.Tech',
+      branch: sp.branch || '',
+      graduationYear: sp.graduation_year || 2026,
+      cgpa: Number(sp.cgpa) || 0,
+      backlogs: sp.active_backlogs || 0,
       bio: sp.bio || '',
       skills: sp.student_skills?.map((s: { skill_name: string }) => s.skill_name) || [],
       githubUrl: sp.github_url || '',
@@ -520,7 +569,11 @@ export const applicationService = {
 
     if (error || !data) {
       console.warn('Supabase applications fetch warning:', error);
-      return initialApplications;
+      const { data: authData } = await supabase.auth.getUser();
+      if (isDemoUserId(authData.user?.id)) {
+        return initialApplications;
+      }
+      return [];
     }
 
     return data.map((a: any) => {
@@ -676,7 +729,11 @@ export const interviewService = {
 
     if (error || !data) {
       console.warn('Supabase interviews fetch warning:', error);
-      return initialInterviews;
+      const { data: authData } = await supabase.auth.getUser();
+      if (isDemoUserId(authData.user?.id)) {
+        return initialInterviews;
+      }
+      return [];
     }
 
     return data.map((i: any) => ({
@@ -749,11 +806,15 @@ export const notificationService = {
 
     if (error || !data) {
       console.warn('Supabase notifications fetch warning:', error);
-      return mockNotifications;
+      const { data: authData } = await supabase.auth.getUser();
+      if (isDemoUserId(authData.user?.id)) {
+        return mockNotifications;
+      }
+      return [];
     }
 
     if (data.length === 0) {
-      return mockNotifications;
+      return [];
     }
 
     return data.map((n: any) => ({

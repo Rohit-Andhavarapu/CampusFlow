@@ -34,33 +34,49 @@ export const StudentDashboard: React.FC = () => {
   const upcomingInterviews = interviews.filter((i) => i.status === 'Scheduled');
   const selectedOffers = applications.filter((a) => a.status === 'Selected');
 
-  // Profile readiness calculation
-  let profileScore = 20;
+  // Profile readiness calculation (True 0-100% based on actual profile data)
+  let profileScore = 0;
+  if (studentProfile.cgpa && studentProfile.cgpa > 0) profileScore += 20;
   if (studentProfile.skills.length >= 3) profileScore += 25;
+  else if (studentProfile.skills.length > 0) profileScore += 10;
   if (studentProfile.resumeFileName) profileScore += 30;
   if (studentProfile.projects.length >= 1) profileScore += 15;
   if (studentProfile.githubUrl || studentProfile.portfolioUrl) profileScore += 10;
 
+  const isProfileIncomplete = !studentProfile.branch || !studentProfile.cgpa || studentProfile.cgpa === 0;
   const nextInterview = upcomingInterviews.length > 0 ? upcomingInterviews[0] : null;
   const recommendedJobs = eligibleJobs.slice(0, 3);
   const recentApplications = applications.slice(0, 3);
 
   return (
     <div className="space-y-6 pb-12">
-      {/* Editorial Header — Confident Typography Without Banned Kickers */}
+      {/* Editorial Header — Confident Typography */}
       <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4 pb-4 border-b border-slate-200/80">
         <div className="min-w-0">
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight font-sans break-words">
             Career Overview — {currentUser.name}
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 mt-1 font-normal flex flex-wrap items-center gap-x-2">
-            <span>{studentProfile.degree} in {studentProfile.branch}</span>
-            <span>•</span>
-            <span>Verified CGPA <strong className="text-slate-900 font-bold">{studentProfile.cgpa}</strong></span>
-            <span>•</span>
-            <span>Roll No: <span className="font-mono text-slate-700">{studentProfile.rollNo}</span></span>
-            <span>•</span>
-            <span>Class of {studentProfile.graduationYear}</span>
+            {studentProfile.branch ? (
+              <>
+                <span>{studentProfile.degree || 'B.Tech'} in {studentProfile.branch}</span>
+                <span>•</span>
+                <span>Verified CGPA <strong className="text-slate-900 font-bold">{studentProfile.cgpa}</strong></span>
+                {studentProfile.rollNo && (
+                  <>
+                    <span>•</span>
+                    <span>Roll No: <span className="font-mono text-slate-700">{studentProfile.rollNo}</span></span>
+                  </>
+                )}
+                <span>•</span>
+                <span>Class of {studentProfile.graduationYear}</span>
+              </>
+            ) : (
+              <span className="text-amber-700 font-medium flex items-center gap-1.5">
+                <AlertCircle className="w-3.5 h-3.5" />
+                Profile setup required to unlock automated eligibility verification
+              </span>
+            )}
           </p>
         </div>
 
@@ -79,10 +95,35 @@ export const StudentDashboard: React.FC = () => {
             leftIcon={<FileText className="w-3.5 h-3.5" />}
             onClick={() => navigate('/student/applications')}
           >
-            Track Applications
+            Track Applications ({submittedCount})
           </Button>
         </div>
       </div>
+
+      {/* Incomplete Profile Callout Banner */}
+      {isProfileIncomplete && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50/80 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-2xs">
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-lg bg-amber-100 text-amber-800 flex-shrink-0 mt-0.5">
+              <AlertCircle className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-amber-950">Complete Your Academic Profile</h3>
+              <p className="text-xs text-amber-800/90 mt-0.5 max-w-xl">
+                Add your degree program, branch, verified CGPA, and master resume to activate automated cutoff matching and unlock applications across live campus drives.
+              </p>
+            </div>
+          </div>
+          <Button
+            variant="primary"
+            size="sm"
+            className="flex-shrink-0 bg-amber-700 hover:bg-amber-800 text-white border-amber-800"
+            onClick={() => navigate('/student/profile')}
+          >
+            Complete Profile Now
+          </Button>
+        </div>
+      )}
 
       {/* LEAD-ANSWER ARCHITECTURE: Active Next Action Command Hero */}
       {nextInterview ? (
@@ -271,42 +312,90 @@ export const StudentDashboard: React.FC = () => {
           </span>
         </div>
 
-        {/* 4 Pipeline Stages */}
+        {/* 4 Pipeline Stages — Fully Dynamic Real-Time Progression */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
           <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200/90">
             <div className="flex items-center justify-between text-xs">
               <span className="font-mono text-[10px] text-slate-500 font-semibold uppercase">Stage 1</span>
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              {studentProfile.cgpa > 0 ? (
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              ) : (
+                <Clock className="w-4 h-4 text-slate-400" />
+              )}
             </div>
             <p className="font-bold text-slate-900 text-xs mt-2">Academic Audit</p>
-            <p className="text-[11px] text-slate-500 mt-0.5">CGPA {studentProfile.cgpa} Verified</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">
+              {studentProfile.cgpa > 0 ? `CGPA ${studentProfile.cgpa} Recorded` : 'Pending Verification'}
+            </p>
           </div>
 
           <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200/90">
             <div className="flex items-center justify-between text-xs">
               <span className="font-mono text-[10px] text-slate-500 font-semibold uppercase">Stage 2</span>
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              {submittedCount > 0 ? (
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              ) : (
+                <Clock className="w-4 h-4 text-slate-400" />
+              )}
             </div>
             <p className="font-bold text-slate-900 text-xs mt-2">Applications Submitted</p>
-            <p className="text-[11px] text-slate-500 mt-0.5">{submittedCount} Campus Roles</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">
+              {submittedCount > 0 ? `${submittedCount} Campus Roles` : '0 Applications'}
+            </p>
           </div>
 
-          <div className="p-3.5 rounded-lg bg-teal-50/80 border border-teal-200/90">
+          <div className={`p-3.5 rounded-lg border ${
+            upcomingInterviews.length > 0 
+              ? 'bg-teal-50/80 border-teal-200/90' 
+              : 'bg-slate-50 border-slate-200/90'
+          }`}>
             <div className="flex items-center justify-between text-xs">
-              <span className="font-mono text-[10px] text-teal-800 font-semibold uppercase">Stage 3</span>
-              <span className="w-2.5 h-2.5 rounded-full bg-teal-600 animate-pulse" />
+              <span className={`font-mono text-[10px] font-semibold uppercase ${
+                upcomingInterviews.length > 0 ? 'text-teal-800' : 'text-slate-500'
+              }`}>Stage 3</span>
+              {upcomingInterviews.length > 0 ? (
+                <span className="w-2.5 h-2.5 rounded-full bg-teal-600 animate-pulse" />
+              ) : (
+                <Clock className="w-4 h-4 text-slate-400" />
+              )}
             </div>
-            <p className="font-bold text-teal-950 text-xs mt-2">Evaluations Active</p>
-            <p className="text-[11px] text-teal-800 mt-0.5">1 Round Scheduled</p>
+            <p className={`font-bold text-xs mt-2 ${
+              upcomingInterviews.length > 0 ? 'text-teal-950' : 'text-slate-900'
+            }`}>Evaluations Active</p>
+            <p className={`text-[11px] mt-0.5 ${
+              upcomingInterviews.length > 0 ? 'text-teal-800' : 'text-slate-500'
+            }`}>
+              {upcomingInterviews.length > 0 
+                ? `${upcomingInterviews.length} Round${upcomingInterviews.length > 1 ? 's' : ''} Scheduled` 
+                : 'No Active Rounds'}
+            </p>
           </div>
 
-          <div className="p-3.5 rounded-lg bg-emerald-50/80 border border-emerald-200/90">
+          <div className={`p-3.5 rounded-lg border ${
+            selectedOffers.length > 0 
+              ? 'bg-emerald-50/80 border-emerald-200/90' 
+              : 'bg-slate-50 border-slate-200/90'
+          }`}>
             <div className="flex items-center justify-between text-xs">
-              <span className="font-mono text-[10px] text-emerald-800 font-semibold uppercase">Stage 4</span>
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              <span className={`font-mono text-[10px] font-semibold uppercase ${
+                selectedOffers.length > 0 ? 'text-emerald-800' : 'text-slate-500'
+              }`}>Stage 4</span>
+              {selectedOffers.length > 0 ? (
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              ) : (
+                <Clock className="w-4 h-4 text-slate-400" />
+              )}
             </div>
-            <p className="font-bold text-emerald-950 text-xs mt-2">Offer Released</p>
-            <p className="text-[11px] text-emerald-800 mt-0.5">AgNext Technologies</p>
+            <p className={`font-bold text-xs mt-2 ${
+              selectedOffers.length > 0 ? 'text-emerald-950' : 'text-slate-900'
+            }`}>
+              {selectedOffers.length > 0 ? 'Offer Released' : 'Offer Status'}
+            </p>
+            <p className={`text-[11px] mt-0.5 ${
+              selectedOffers.length > 0 ? 'text-emerald-800' : 'text-slate-500'
+            }`}>
+              {selectedOffers.length > 0 ? selectedOffers[0].companyName : 'Awaiting Selection'}
+            </p>
           </div>
         </div>
       </div>
@@ -426,33 +515,55 @@ export const StudentDashboard: React.FC = () => {
             <div className="mt-4 space-y-2.5">
               <div className="flex items-center justify-between text-xs">
                 <span className="flex items-center gap-2 text-slate-700">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  {studentProfile.cgpa > 0 ? (
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  ) : (
+                    <AlertCircle className="w-3.5 h-3.5 text-slate-400" />
+                  )}
                   Academic CGPA & Clearance
                 </span>
-                <span className="font-mono text-slate-600 text-[11px] font-semibold">{studentProfile.cgpa} CGPA</span>
+                <span className="font-mono text-slate-600 text-[11px] font-semibold">
+                  {studentProfile.cgpa > 0 ? `${studentProfile.cgpa} CGPA` : 'Not recorded'}
+                </span>
               </div>
               <div className="flex items-center justify-between text-xs">
                 <span className="flex items-center gap-2 text-slate-700">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  {studentProfile.resumeFileName ? (
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  ) : (
+                    <AlertCircle className="w-3.5 h-3.5 text-slate-400" />
+                  )}
                   Placement Master Resume
                 </span>
-                <span className="font-mono text-slate-600 text-[11px]">PDF Attached</span>
+                <span className="font-mono text-slate-600 text-[11px]">
+                  {studentProfile.resumeFileName ? 'PDF Attached' : 'Pending upload'}
+                </span>
               </div>
               <div className="flex items-center justify-between text-xs">
                 <span className="flex items-center gap-2 text-slate-700">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  {studentProfile.skills.length >= 3 ? (
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  ) : (
+                    <AlertCircle className="w-3.5 h-3.5 text-slate-400" />
+                  )}
                   Technical Competencies
                 </span>
                 <span className="font-mono text-slate-600 text-[11px]">
-                  {studentProfile.skills.length} tagged
+                  {studentProfile.skills.length > 0 ? `${studentProfile.skills.length} tagged` : 'None tagged'}
                 </span>
               </div>
               <div className="flex items-center justify-between text-xs">
                 <span className="flex items-center gap-2 text-slate-700">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  {(studentProfile.githubUrl || studentProfile.portfolioUrl) ? (
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  ) : (
+                    <AlertCircle className="w-3.5 h-3.5 text-slate-400" />
+                  )}
                   GitHub & Portfolio Verified
                 </span>
-                <span className="font-mono text-slate-600 text-[11px]">Attached</span>
+                <span className="font-mono text-slate-600 text-[11px]">
+                  {(studentProfile.githubUrl || studentProfile.portfolioUrl) ? 'Attached' : 'Not linked'}
+                </span>
               </div>
             </div>
 
@@ -485,35 +596,55 @@ export const StudentDashboard: React.FC = () => {
               </span>
             </div>
 
-            <div className="divide-y divide-slate-100 mt-1">
-              {recentApplications.map((app) => {
-                const badgeStyle = getStatusBadgeStyle(app.status);
-                return (
-                  <div
-                    key={app.id}
-                    onClick={() => navigate(`/student/applications/${app.id}`)}
-                    className="py-3 first:pt-2 last:pb-0 cursor-pointer hover:bg-slate-50/80 rounded-lg px-2 -mx-2 transition-colors"
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0">
-                        <p className="text-xs font-bold text-slate-900 truncate">{app.jobTitle}</p>
-                        <p className="text-[11px] text-slate-500 truncate">{app.companyName}</p>
+            {recentApplications.length === 0 ? (
+              <div className="py-6 text-center">
+                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mx-auto mb-2">
+                  <FileText className="w-5 h-5" />
+                </div>
+                <p className="text-xs font-bold text-slate-800">No applications yet</p>
+                <p className="text-[11px] text-slate-500 mt-1 max-w-xs mx-auto">
+                  Browse verified campus opportunities matching your profile and submit your first application.
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-3 text-xs"
+                  onClick={() => navigate('/student/opportunities')}
+                >
+                  Explore Opportunities
+                </Button>
+              </div>
+            ) : (
+              <div className="divide-y divide-slate-100 mt-1">
+                {recentApplications.map((app) => {
+                  const badgeStyle = getStatusBadgeStyle(app.status);
+                  return (
+                    <div
+                      key={app.id}
+                      onClick={() => navigate(`/student/applications/${app.id}`)}
+                      className="py-3 first:pt-2 last:pb-0 cursor-pointer hover:bg-slate-50/80 rounded-lg px-2 -mx-2 transition-colors"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold text-slate-900 truncate">{app.jobTitle}</p>
+                          <p className="text-[11px] text-slate-500 truncate">{app.companyName}</p>
+                        </div>
+                        <span
+                          className={`text-[10px] px-2 py-0.5 rounded font-semibold border flex items-center gap-1 ${badgeStyle.bg} ${badgeStyle.text} ${badgeStyle.border}`}
+                        >
+                          <span className={`w-1.5 h-1.5 rounded-full ${badgeStyle.dot}`} />
+                          {app.status}
+                        </span>
                       </div>
-                      <span
-                        className={`text-[10px] px-2 py-0.5 rounded font-semibold border flex items-center gap-1 ${badgeStyle.bg} ${badgeStyle.text} ${badgeStyle.border}`}
-                      >
-                        <span className={`w-1.5 h-1.5 rounded-full ${badgeStyle.dot}`} />
-                        {app.status}
-                      </span>
-                    </div>
 
-                    <p className="text-[11px] text-slate-500 mt-1 truncate">
-                      {app.nextAction || 'Under recruiter review.'}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
+                      <p className="text-[11px] text-slate-500 mt-1 truncate">
+                        {app.nextAction || 'Under recruiter review.'}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
       </div>

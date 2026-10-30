@@ -25,6 +25,7 @@ import {
   jobsService,
   notificationService,
   studentService,
+  isDemoUserId,
 } from '../services/campusflowService';
 
 interface ToastInfo {
@@ -34,8 +35,28 @@ interface ToastInfo {
   message?: string;
 }
 
+const emptyStudentProfile: StudentProfileData = {
+  fullName: '',
+  rollNo: '',
+  email: '',
+  phone: '',
+  college: 'National Institute of Technology',
+  degree: 'B.Tech',
+  branch: '',
+  graduationYear: 2026,
+  cgpa: 0,
+  backlogs: 0,
+  bio: '',
+  skills: [],
+  githubUrl: '',
+  linkedinUrl: '',
+  portfolioUrl: '',
+  projects: [],
+};
+
 interface AppContextType {
   currentRole: UserRole;
+  setCurrentRole: (role: UserRole) => void;
   currentUser: User;
   isDatabaseConnected: boolean;
   isAuthenticated: boolean;
@@ -80,10 +101,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [activeUser, setActiveUser] = useState<User | null>(null);
   const [jobs, setJobs] = useState<JobPosting[]>(mockJobPostings);
-  const [applications, setApplications] = useState<Application[]>(initialApplications);
-  const [interviews, setInterviews] = useState<Interview[]>(initialInterviews);
-  const [notifications, setNotifications] = useState<Notification[]>(mockNotifications);
-  const [studentProfile, setStudentProfile] = useState<StudentProfileData>(initialStudentProfile);
+  const [applications, setApplications] = useState<Application[]>([]);
+  const [interviews, setInterviews] = useState<Interview[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [studentProfile, setStudentProfile] = useState<StudentProfileData>(emptyStudentProfile);
   const [toasts, setToasts] = useState<ToastInfo[]>([]);
   const isDatabaseConnected = isSupabaseConfigured();
 
@@ -117,20 +138,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
               if (remoteJobs && remoteJobs.length > 0) setJobs(remoteJobs);
               if (remoteProfile) setStudentProfile(remoteProfile);
-              if (remoteApps && remoteApps.length > 0) setApplications(remoteApps);
-              if (remoteInts && remoteInts.length > 0) setInterviews(remoteInts);
-              if (remoteNotifs && remoteNotifs.length > 0) setNotifications(remoteNotifs);
+              setApplications(remoteApps || []);
+              setInterviews(remoteInts || []);
+              setNotifications(remoteNotifs || []);
               return;
             }
           }
 
-          // Unauthenticated visitor: fetch public active recruitment jobs
+          // Unauthenticated visitor: fetch public active recruitment jobs and clean state
           setIsAuthenticated(false);
+          setActiveUser(null);
+          setApplications([]);
+          setInterviews([]);
+          setNotifications([]);
+          setStudentProfile(emptyStudentProfile);
           const remoteJobs = await jobsService.fetchJobs();
           if (remoteJobs && remoteJobs.length > 0) setJobs(remoteJobs);
         } catch (err) {
           console.error('Session initialization error:', err);
           setIsAuthenticated(false);
+          setActiveUser(null);
+          setApplications([]);
+          setInterviews([]);
+          setNotifications([]);
         }
       };
       initApp();
@@ -143,10 +173,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             setIsAuthenticated(true);
             setCurrentRole(user.role);
             setActiveUser(user);
+            const [remoteApps, remoteInts, remoteNotifs, remoteProf] = await Promise.all([
+              applicationService.fetchApplications(),
+              interviewService.fetchInterviews(),
+              notificationService.fetchNotifications(),
+              user.role === 'student' ? studentService.getStudentProfile(user.id) : null,
+            ]);
+            setApplications(remoteApps || []);
+            setInterviews(remoteInts || []);
+            setNotifications(remoteNotifs || []);
+            if (remoteProf) setStudentProfile(remoteProf);
           }
         } else if (event === 'SIGNED_OUT') {
           setIsAuthenticated(false);
           setActiveUser(null);
+          setApplications([]);
+          setInterviews([]);
+          setNotifications([]);
+          setStudentProfile(emptyStudentProfile);
         }
       });
 
@@ -171,6 +215,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const switchRole = async (role: UserRole, silent = false) => {
+    // If a real non-demo user is logged in, DO NOT overwrite their session with demo credentials
+    if (activeUser && !isDemoUserId(activeUser.id)) {
+      setCurrentRole(role);
+      return;
+    }
+
     setCurrentRole(role);
     setIsAuthenticated(true);
     if (!silent) {
@@ -185,14 +235,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       try {
         const creds = demoRoleCredentials[role];
         await authService.signIn(creds.email, creds.pass);
+        const remoteUser = await authService.getCurrentUser();
+        if (remoteUser) setActiveUser(remoteUser);
         const [remoteApps, remoteInts, remoteNotifs] = await Promise.all([
           applicationService.fetchApplications(),
           interviewService.fetchInterviews(),
           notificationService.fetchNotifications(),
         ]);
-        if (remoteApps) setApplications(remoteApps);
-        if (remoteInts) setInterviews(remoteInts);
-        if (remoteNotifs) setNotifications(remoteNotifs);
+        setApplications(remoteApps || []);
+        setInterviews(remoteInts || []);
+        setNotifications(remoteNotifs || []);
         if (role === 'student') {
           const remoteProfile = await studentService.getStudentProfile();
           if (remoteProfile) setStudentProfile(remoteProfile);
@@ -218,9 +270,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         interviewService.fetchInterviews(),
         notificationService.fetchNotifications(),
       ]);
-      if (remoteApps) setApplications(remoteApps);
-      if (remoteInts) setInterviews(remoteInts);
-      if (remoteNotifs) setNotifications(remoteNotifs);
+      setApplications(remoteApps || []);
+      setInterviews(remoteInts || []);
+      setNotifications(remoteNotifs || []);
       if (res.user.role === 'student') {
         const remoteProfile = await studentService.getStudentProfile(res.user.id);
         if (remoteProfile) setStudentProfile(remoteProfile);
@@ -260,6 +312,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setIsAuthenticated(true);
         setCurrentRole('student');
         setActiveUser(res.user);
+        setApplications([]);
+        setInterviews([]);
+        setNotifications([]);
+        const cleanProf = await studentService.getStudentProfile(res.user.id);
+        setStudentProfile(cleanProf);
         showToast('success', 'Account Created', `Welcome to CampusFlow, ${fullName}!`);
         return { success: true, confirmationRequired: false };
       }
@@ -270,9 +327,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const logout = async () => {
-    await authService.signOut();
+    try {
+      await authService.signOut();
+    } catch (e) {
+      console.warn('SignOut error:', e);
+    }
     setIsAuthenticated(false);
     setActiveUser(null);
+    setApplications([]);
+    setInterviews([]);
+    setNotifications([]);
+    setStudentProfile(emptyStudentProfile);
     showToast('info', 'Signed Out', 'You have been logged out of CampusFlow.');
   };
 
@@ -644,6 +709,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     <AppContext.Provider
       value={{
         currentRole,
+        setCurrentRole,
         currentUser,
         isDatabaseConnected,
         isAuthenticated,
