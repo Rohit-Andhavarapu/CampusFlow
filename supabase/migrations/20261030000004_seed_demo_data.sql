@@ -63,10 +63,14 @@ begin
       on conflict (student_id, job_id) do nothing;
     end if;
   end loop;
+end;
+$$ language plpgsql security definer set search_path = public;
+
+
 -- ==============================================================================
 -- 11. RECRUITMENT ECOSYSTEM SEED DATA (INDEPENDENT OF AUTH PROVISIONING)
 -- ==============================================================================
-do 
+do $$
 declare
   -- STRICTLY VALID HEXADECIMAL UUIDS FOR RECRUITMENT INFRASTRUCTURE
   v_company_aetos uuid := '11111111-1111-4111-a111-111111111111';
@@ -241,7 +245,7 @@ begin
   -- 5. Seed 19 Non-Login Synthetic Directory Students
   perform public.seed_synthetic_batch();
 
-end ;
+end $$;
 
 -- ==============================================================================
 -- 12. VERIFICATION QUERIES

@@ -9,6 +9,7 @@
 create extension if not exists "uuid-ossp";
 create extension if not exists "pgcrypto";
 
+
 -- ==============================================================================
 -- 2. ENUMS & DOMAIN TYPES
 -- ==============================================================================
@@ -84,6 +85,7 @@ do $$ begin
 exception
   when duplicate_object then null;
 end $$;
+
 
 -- ==============================================================================
 -- 3. TABLES (14 NORMALIZED RELATIONAL ENTITIES)
@@ -273,6 +275,7 @@ create table if not exists public.resume_files (
   uploaded_at timestamptz not null default now()
 );
 
+
 -- ==============================================================================
 -- 4. CONSTRAINTS & INDEXES
 -- ==============================================================================
@@ -298,4 +301,3 @@ create index if not exists idx_interviews_application on public.interviews(appli
 create index if not exists idx_interviews_scheduled on public.interviews(scheduled_at);
 create index if not exists idx_notifications_user_read on public.notifications(user_id, is_read);
 create index if not exists idx_resumes_student on public.resume_files(student_id);
-

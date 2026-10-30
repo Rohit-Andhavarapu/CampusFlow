@@ -1403,8 +1403,6 @@ end;
 $$ language plpgsql stable security definer set search_path = public;
 
 -- ------------------------------------------------------------------------------
--- Function Privilege Restrictions (Least Privilege / No Public Execution)
--- ------------------------------------------------------------------------------
 revoke execute on all functions in schema public from public;
 
 grant execute on function public.current_user_role() to authenticated, service_role;
@@ -1416,11 +1414,11 @@ grant execute on function public.is_recruiter_for_application(uuid) to authentic
 grant execute on function public.is_recruiter_for_student_resume(uuid) to authenticated, service_role;
 
 grant execute on function public.evaluate_job_eligibility(uuid, uuid) to authenticated, service_role;
-grant execute on function public.submit_application(uuid, uuid, uuid, text) to authenticated, service_role;
-grant execute on function public.update_application_status(uuid, application_status_type, text, text) to authenticated, service_role;
-grant execute on function public.withdraw_application(uuid, text) to authenticated, service_role;
-grant execute on function public.schedule_interview(uuid, text, timestamptz, text, text, text) to authenticated, service_role;
-grant execute on function public.get_placement_analytics(uuid) to authenticated, service_role;
+grant execute on function public.submit_application(uuid) to authenticated, service_role;
+grant execute on function public.update_application_status(uuid, application_status_type, text) to authenticated, service_role;
+grant execute on function public.withdraw_application(uuid) to authenticated, service_role;
+grant execute on function public.schedule_interview(uuid, timestamptz, int, interview_mode_type, text, text, text, text) to authenticated, service_role;
+grant execute on function public.get_placement_analytics() to authenticated, service_role;
 
 grant execute on function public.seed_synthetic_batch() to postgres, service_role;
 
@@ -1531,10 +1529,13 @@ begin
       on conflict (student_id, job_id) do nothing;
     end if;
   end loop;
+end;
+$$ language plpgsql security definer set search_path = public;
+
 -- ==============================================================================
 -- 11. RECRUITMENT ECOSYSTEM SEED DATA (INDEPENDENT OF AUTH PROVISIONING)
 -- ==============================================================================
-do 
+do $$
 declare
   -- STRICTLY VALID HEXADECIMAL UUIDS FOR RECRUITMENT INFRASTRUCTURE
   v_company_aetos uuid := '11111111-1111-4111-a111-111111111111';
@@ -1709,8 +1710,7 @@ begin
   -- 5. Seed 19 Non-Login Synthetic Directory Students
   perform public.seed_synthetic_batch();
 
-end ;
-
+end $$;
 -- ==============================================================================
 -- 12. VERIFICATION QUERIES
 -- ============================================================================== 

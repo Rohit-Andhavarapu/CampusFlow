@@ -378,4 +378,3 @@ create policy "Authorized users can read resume from storage"
       )
     )
   );
-
