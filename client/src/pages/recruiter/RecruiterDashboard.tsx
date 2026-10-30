@@ -11,6 +11,8 @@ import {
   Sparkles,
   Building2,
   ExternalLink,
+  ChevronRight,
+  Clock,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { Card } from '../../components/ui/Card';
@@ -29,124 +31,126 @@ export const RecruiterDashboard: React.FC = () => {
   const shortlistedCount = applications.filter((a) => a.status === 'Shortlisted').length;
   const scheduledInterviews = interviews.filter((i) => i.status === 'Scheduled').length;
 
+  const awaitingReview = applications.filter((a) => a.status === 'Submitted');
+
   return (
-    <div className="space-y-8 pb-12">
-      {/* Header */}
-      <div className="border-b border-border/60 pb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-8 pb-16">
+      {/* Editorial Header */}
+      <div className="border-b border-border pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Recruiter Portal • {currentUser.companyName}</span>
+          <div className="flex items-center gap-2 text-xs font-mono font-medium text-ink-500 uppercase tracking-wider">
+            <span>{currentUser.companyName || 'NovaTech Systems'}</span>
+            <span>•</span>
+            <span className="text-brand font-semibold">Campus Talent Acquisition Workspace</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-primary-text tracking-tight mt-1">
-            Talent Acquisition Command Center
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-ink-950 tracking-tight mt-1.5 font-sans">
+            Recruitment Command Center
           </h1>
-          <p className="text-sm text-secondary-text mt-1">
+          <p className="text-xs sm:text-sm text-ink-600 mt-1 max-w-2xl">
             Manage your open campus vacancies, review verified student applications, and conduct interview evaluations.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           <Button
             variant="outline"
-            leftIcon={<Users className="w-4 h-4" />}
+            size="sm"
+            leftIcon={<Users className="w-3.5 h-3.5" />}
             onClick={() => navigate('/recruiter/applicants')}
           >
-            Review Candidates
+            Review Pipeline ({applications.length})
           </Button>
           <Button
             variant="primary"
-            leftIcon={<Plus className="w-4 h-4" />}
+            size="sm"
+            leftIcon={<Plus className="w-3.5 h-3.5" />}
             onClick={() => navigate('/recruiter/jobs/new')}
           >
-            Post New Opening
+            Publish New Opening
           </Button>
         </div>
       </div>
 
-      {/* Metrics Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+      {/* KPI Metrics Strip */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <MetricCard
-          label="Active Job Postings"
+          label="Active Campus Postings"
           value={activePostings}
-          subtext="Published on campus portal"
-          icon={<Briefcase className="w-5 h-5 text-brand" />}
+          subtext="Published vacancies accepting applicants"
           variant="brand"
           onClick={() => navigate('/recruiter/jobs')}
         />
         <MetricCard
-          label="Total Candidates Applied"
+          label="Candidate Pool Size"
           value={totalApplicants}
-          subtext="Across all company openings"
-          icon={<Users className="w-5 h-5 text-info" />}
+          subtext="Verified student applications"
           trend={{ value: '14% vs last drive', isPositive: true }}
           onClick={() => navigate('/recruiter/applicants')}
         />
         <MetricCard
-          label="Shortlisted Candidates"
+          label="Shortlisted for Rounds"
           value={shortlistedCount}
-          subtext="Cleared initial academic screening"
-          icon={<CheckCircle2 className="w-5 h-5 text-success" />}
-          variant="success"
+          subtext="Passed criteria screening"
+          variant="warning"
           onClick={() => navigate('/recruiter/applicants')}
         />
         <MetricCard
           label="Interviews Scheduled"
           value={scheduledInterviews}
-          subtext="Virtual meeting links active"
-          icon={<Calendar className="w-5 h-5 text-warning" />}
-          variant="warning"
+          subtext="Virtual rooms & slots booked"
+          variant="success"
           onClick={() => navigate('/recruiter/interviews')}
         />
       </div>
 
       {/* Funnel & Active Jobs */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left 2 Cols: Candidate Pipeline Funnel */}
+        {/* Left 2 Cols: Candidate Conversion Funnel */}
         <div className="lg:col-span-2 space-y-6">
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-4">
+          <Card className="p-6 border border-border shadow-subtle">
+            <div className="flex items-center justify-between pb-3 border-b border-border mb-4">
               <div>
-                <h3 className="text-base font-bold text-primary-text">Candidate Selection Pipeline</h3>
-                <p className="text-xs text-secondary-text">
-                  Conversion metrics across each stage of evaluation
+                <h3 className="text-sm font-bold text-ink-950 uppercase tracking-wide">
+                  Candidate Selection Funnel
+                </h3>
+                <p className="text-xs text-ink-500 mt-0.5">
+                  Throughput and conversion across recruitment milestones
                 </p>
               </div>
               <Badge variant="brand" size="sm">
-                Active Cycle
+                Active Drive
               </Badge>
             </div>
 
-            <div className="space-y-4 pt-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
-                { label: 'Applications Received', count: applications.length, pct: 100, color: 'bg-brand' },
+                { stage: 'Applied', count: applications.length, pct: '100%', color: 'border-l-indigo-500' },
                 {
-                  label: 'Shortlisted for Assessment',
+                  stage: 'Shortlisted',
                   count: applications.filter((a) => a.status === 'Shortlisted' || a.status === 'Interview' || a.status === 'Selected').length,
-                  pct: 75,
-                  color: 'bg-info',
+                  pct: '75%',
+                  color: 'border-l-blue-500',
                 },
                 {
-                  label: 'Interview Round In Progress',
+                  stage: 'Interviewing',
                   count: applications.filter((a) => a.status === 'Interview' || a.status === 'Selected').length,
-                  pct: 45,
-                  color: 'bg-warning',
+                  pct: '50%',
+                  color: 'border-l-amber-500',
                 },
                 {
-                  label: 'Final Offer Extended',
+                  stage: 'Offers Extended',
                   count: applications.filter((a) => a.status === 'Selected').length,
-                  pct: 25,
-                  color: 'bg-success',
+                  pct: '25%',
+                  color: 'border-l-emerald-500',
                 },
-              ].map((stage, idx) => (
-                <div key={idx} className="space-y-1.5">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-semibold text-primary-text">{stage.label}</span>
-                    <span className="font-bold text-primary-text">{stage.count} candidates ({stage.pct}%)</span>
-                  </div>
-                  <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-                    <div className={`${stage.color} h-2 rounded-full transition-all duration-500`} style={{ width: `${stage.pct}%` }} />
-                  </div>
+              ].map((item, idx) => (
+                <div
+                  key={idx}
+                  className={`p-3.5 rounded-lg bg-surface-secondary/60 border border-border border-l-4 ${item.color}`}
+                >
+                  <p className="text-[11px] font-medium text-ink-500 uppercase">{item.stage}</p>
+                  <p className="text-2xl font-extrabold text-ink-950 mt-1 font-sans">{item.count}</p>
+                  <p className="text-[10px] text-ink-400 mt-0.5 font-mono">{item.pct} throughput</p>
                 </div>
               ))}
             </div>
@@ -155,7 +159,10 @@ export const RecruiterDashboard: React.FC = () => {
           {/* Active Job Postings */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-primary-text">Your Campus Postings</h3>
+              <div>
+                <h3 className="text-base font-bold text-ink-950">Active Campus Openings</h3>
+                <p className="text-xs text-ink-500">Live vacancies accepting student submissions</p>
+              </div>
               <Button
                 variant="ghost"
                 size="sm"
@@ -172,22 +179,24 @@ export const RecruiterDashboard: React.FC = () => {
                   key={job.id}
                   hoverable
                   onClick={() => navigate(`/recruiter/jobs/${job.id}`)}
-                  className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                  className="card-lift p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border border-border shadow-subtle"
                 >
                   <div>
                     <div className="flex items-center gap-2">
-                      <h4 className="text-sm font-bold text-primary-text">{job.title}</h4>
+                      <h4 className="text-sm font-bold text-ink-950">{job.title}</h4>
                       <Badge variant="brand" size="sm">
                         {job.workMode}
                       </Badge>
                     </div>
-                    <p className="text-xs text-muted-text mt-1">
-                      {job.stipendOrSalary} • Deadline: {formatDate(job.applyBy)} • Min CGPA: {job.minCgpa}
-                    </p>
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-500 mt-1.5">
+                      <span className="font-semibold text-ink-950">{job.stipendOrSalary}</span>
+                      <span>Min CGPA: <strong>{job.minCgpa}</strong></span>
+                      <span>Deadline: {formatDate(job.applyBy)}</span>
+                    </div>
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-semibold text-secondary-text">
+                    <span className="text-xs font-semibold text-brand">
                       {job.applicantsCount || 0} applicants
                     </span>
                     <Button variant="outline" size="sm" className="text-xs">
@@ -200,42 +209,44 @@ export const RecruiterDashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Right 1 Col: Recent Applicant Activity */}
+        {/* Right 1 Col: Urgent Attention / Recent Applicants */}
         <div className="space-y-6">
-          <Card className="p-5">
-            <div className="flex items-center justify-between pb-3 border-b border-border/60">
-              <h3 className="text-sm font-bold text-primary-text">Recent Applicants</h3>
+          <Card className="p-5 border border-border shadow-subtle">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
+              <h3 className="text-xs font-bold text-ink-950 uppercase tracking-wide">
+                Candidates Awaiting Review
+              </h3>
               <span
-                className="text-xs font-semibold text-brand hover:underline cursor-pointer"
+                className="text-[11px] font-medium text-brand hover:underline cursor-pointer"
                 onClick={() => navigate('/recruiter/applicants')}
               >
-                View Table
+                View ATS Table
               </span>
             </div>
 
-            <div className="divide-y divide-border/50 mt-2">
+            <div className="divide-y divide-border mt-1">
               {applications.slice(0, 4).map((app) => {
                 const badgeStyle = getStatusBadgeStyle(app.status);
                 return (
                   <div
                     key={app.id}
                     onClick={() => navigate('/recruiter/applicants')}
-                    className="py-3 first:pt-2 last:pb-1 cursor-pointer hover:bg-surface-secondary/40 rounded-lg px-2 transition-colors -mx-2"
+                    className="py-3 first:pt-2 last:pb-0 cursor-pointer hover:bg-surface-secondary/50 rounded-lg px-2 -mx-2 transition-colors"
                   >
                     <div className="flex items-start justify-between">
                       <div>
-                        <p className="text-xs font-bold text-primary-text">{app.studentName}</p>
-                        <p className="text-[11px] text-secondary-text truncate">{app.jobTitle}</p>
+                        <p className="text-xs font-bold text-ink-950">{app.studentName}</p>
+                        <p className="text-[11px] text-ink-600 truncate">{app.jobTitle}</p>
                       </div>
                       <span
-                        className={`text-[10px] px-2 py-0.5 rounded-full font-semibold border ${badgeStyle.bg} ${badgeStyle.text} ${badgeStyle.border}`}
+                        className={`text-[10px] px-2 py-0.5 rounded-badge font-semibold border ${badgeStyle.bg} ${badgeStyle.text} ${badgeStyle.border}`}
                       >
                         {app.status}
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between text-[11px] text-muted-text mt-1.5">
-                      <span>CGPA: <strong>{app.studentCgpa}</strong> • {app.studentBranch}</span>
+                    <div className="flex items-center justify-between text-[11px] text-ink-500 mt-1.5">
+                      <span>CGPA: <strong>{app.studentCgpa}</strong> • {app.studentBranch.split(' ')[0]}</span>
                       <span>{formatDate(app.appliedAt)}</span>
                     </div>
                   </div>

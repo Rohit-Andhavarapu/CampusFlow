@@ -6,7 +6,7 @@ export interface MetricCardProps {
   label: string;
   value: string | number;
   subtext?: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   trend?: {
     value: string;
     isPositive?: boolean;
@@ -27,51 +27,47 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   className,
   variant = 'default',
 }) => {
-  const iconBg = {
-    default: 'bg-surface-secondary text-secondary-text',
-    brand: 'bg-brand-surface text-brand',
-    success: 'bg-success-surface text-success-text',
-    warning: 'bg-warning-surface text-warning-text',
-  };
-
   return (
     <Card
       hoverable={Boolean(onClick)}
       onClick={onClick}
-      className={cn('p-5 flex flex-col justify-between transition-all duration-200', className)}
+      className={cn(
+        'p-5 flex flex-col justify-between transition-colors bg-surface border border-border shadow-subtle',
+        onClick && 'cursor-pointer hover:border-border-strong hover:bg-surface-subtle',
+        className
+      )}
     >
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-xs font-medium text-secondary-text tracking-wide uppercase">{label}</p>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl sm:text-3xl font-bold tracking-tight text-primary-text font-sans">
-              {value}
-            </span>
-            {trend && (
-              <span
-                className={cn(
-                  'text-xs font-semibold px-1.5 py-0.5 rounded-badge',
-                  trend.isNeutral
-                    ? 'bg-slate-100 text-slate-600'
-                    : trend.isPositive
-                    ? 'bg-success-surface text-success-text'
-                    : 'bg-error-surface text-error-text'
-                )}
-              >
-                {trend.isPositive ? '+' : ''}
-                {trend.value}
-              </span>
-            )}
-          </div>
+      <div>
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-medium text-ink-500 tracking-tight">{label}</p>
+          {icon && <div className="text-ink-400">{icon}</div>}
         </div>
-        <div className={cn('p-2.5 rounded-lg flex items-center justify-center flex-shrink-0', iconBg[variant])}>
-          {icon}
+
+        <div className="mt-3 flex items-baseline gap-2.5">
+          <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-ink-950 font-sans">
+            {value}
+          </span>
+          {trend && (
+            <span
+              className={cn(
+                'text-[11px] font-semibold px-1.5 py-0.5 rounded-badge border',
+                trend.isNeutral
+                  ? 'bg-slate-100 text-slate-700 border-slate-200'
+                  : trend.isPositive
+                  ? 'bg-success-surface text-success border-success-border'
+                  : 'bg-error-surface text-error border-error-border'
+              )}
+            >
+              {trend.isPositive ? '+' : ''}
+              {trend.value}
+            </span>
+          )}
         </div>
       </div>
 
       {subtext && (
-        <div className="mt-3 pt-3 border-t border-border/50 text-xs text-muted-text flex items-center gap-1.5">
-          <span>{subtext}</span>
+        <div className="mt-3.5 pt-3 border-t border-border/70 text-[11px] text-ink-500">
+          {subtext}
         </div>
       )}
     </Card>

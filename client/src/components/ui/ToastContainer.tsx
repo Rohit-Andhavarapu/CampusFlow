@@ -8,40 +8,46 @@ export const ToastContainer: React.FC = () => {
 
   if (toasts.length === 0) return null;
 
+  // Deduplicate toasts by title + message
+  const uniqueToasts = toasts.filter(
+    (toast, index, self) =>
+      index === self.findIndex((t) => t.title === toast.title && t.message === toast.message)
+  );
+
   const icons = {
-    success: <CheckCircle2 className="w-5 h-5 text-success flex-shrink-0" />,
-    warning: <AlertTriangle className="w-5 h-5 text-warning flex-shrink-0" />,
-    error: <AlertCircle className="w-5 h-5 text-error flex-shrink-0" />,
-    info: <Info className="w-5 h-5 text-brand flex-shrink-0" />,
+    success: <CheckCircle2 className="w-4 h-4 text-success flex-shrink-0" />,
+    warning: <AlertTriangle className="w-4 h-4 text-warning flex-shrink-0" />,
+    error: <AlertCircle className="w-4 h-4 text-error flex-shrink-0" />,
+    info: <Info className="w-4 h-4 text-brand flex-shrink-0" />,
   };
 
   const borders = {
     success: 'border-success-border bg-surface',
     warning: 'border-warning-border bg-surface',
     error: 'border-error-border bg-surface',
-    info: 'border-brand/20 bg-surface',
+    info: 'border-brand-border bg-surface',
   };
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 flex flex-col space-y-2.5 max-w-sm w-full pointer-events-none">
-      {toasts.map((toast) => (
+    <div className="fixed bottom-4 right-4 z-50 flex flex-col space-y-2 max-w-sm w-full pointer-events-none">
+      {uniqueToasts.slice(-3).map((toast) => (
         <div
           key={toast.id}
           className={cn(
-            'pointer-events-auto flex items-start gap-3 p-4 rounded-card border shadow-dropdown animate-in slide-in-from-bottom-3 duration-200',
+            'pointer-events-auto flex items-start gap-3 p-3.5 rounded-card border shadow-dropdown animate-in slide-in-from-bottom-2 duration-150',
             borders[toast.type]
           )}
         >
           {icons[toast.type]}
           <div className="flex-1 min-w-0">
-            <h4 className="text-sm font-semibold text-primary-text leading-tight">{toast.title}</h4>
-            {toast.message && <p className="text-xs text-secondary-text mt-0.5">{toast.message}</p>}
+            <h4 className="text-xs font-semibold text-ink-950 leading-tight">{toast.title}</h4>
+            {toast.message && <p className="text-[11px] text-ink-600 mt-0.5">{toast.message}</p>}
           </div>
           <button
             onClick={() => removeToast(toast.id)}
-            className="text-muted-text hover:text-primary-text transition-colors p-0.5"
+            className="text-ink-400 hover:text-ink-950 transition-colors p-0.5"
           >
-            <X className="w-4 h-4" />
+            <X className="w-3.5 h-3.5" />
           </button>
         </div>
       ))}

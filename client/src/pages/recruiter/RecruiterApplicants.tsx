@@ -12,6 +12,7 @@ import {
   FileText,
   UserCheck,
   Video,
+  Award,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { Card } from '../../components/ui/Card';
@@ -46,7 +47,7 @@ export const RecruiterApplicants: React.FC = () => {
   const [interviewDate, setInterviewDate] = useState('2026-11-04T10:00');
   const [interviewMode, setInterviewMode] = useState<'Virtual' | 'In-Person'>('Virtual');
   const [interviewLink, setInterviewLink] = useState('https://meet.google.com/nov-atec-hrec');
-  const [interviewRound, setInterviewRound] = useState('Round 1: Technical & Problem Solving');
+  const [interviewRound, setInterviewRound] = useState('Round 1: Technical & Architecture');
   const [interviewNotes, setInterviewNotes] = useState('');
 
   const filteredApplicants = useMemo(() => {
@@ -87,37 +88,36 @@ export const RecruiterApplicants: React.FC = () => {
   return (
     <div className="space-y-6 pb-16">
       {/* Header */}
-      <div className="border-b border-border/60 pb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="border-b border-border pb-5 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Candidate Evaluation</span>
+          <div className="flex items-center gap-2 text-xs font-mono font-medium text-ink-500 uppercase tracking-wider">
+            <span>ATS Candidate Management</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-primary-text tracking-tight mt-1">
-            Applicant Management Pipeline
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-ink-950 tracking-tight mt-1 font-sans">
+            Applicant Evaluation Table
           </h1>
-          <p className="text-sm text-secondary-text mt-1">
-            Review submitted student credentials, download resumes, advance shortlists, and trigger calendar invites.
+          <p className="text-xs sm:text-sm text-ink-600 mt-1">
+            Review student credentials, inspect verified resumes, and advance candidates through recruitment stages.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Badge variant="brand" size="md">
-            {applications.length} Total Candidates
-          </Badge>
+        <div className="flex items-center gap-2 font-mono text-xs text-ink-500 bg-surface border border-border px-3 py-1.5 rounded-button shadow-subtle">
+          <span>Total Pool: <strong>{applications.length}</strong></span>
+          <span>•</span>
+          <span>Filtered: <strong>{filteredApplicants.length}</strong></span>
         </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <Card className="p-4 flex flex-col md:flex-row items-center justify-between gap-3 shadow-card">
+      <Card className="p-3.5 flex flex-col md:flex-row items-center justify-between gap-3 border border-border shadow-subtle">
         <div className="w-full md:flex-1 relative">
-          <Search className="w-4 h-4 text-muted-text absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="w-3.5 h-3.5 text-ink-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by student name, roll no, skills or role..."
-            className="w-full pl-9 pr-3 py-2 text-xs bg-surface-secondary/40 border border-border rounded-button text-primary-text focus-ring"
+            placeholder="Search by student name, roll number, or skills..."
+            className="w-full pl-8 pr-3 py-2 text-xs bg-surface-secondary/40 border border-border rounded-button text-ink-950 focus-ring-refined"
           />
         </div>
 
@@ -125,7 +125,7 @@ export const RecruiterApplicants: React.FC = () => {
           <select
             value={selectedJobId}
             onChange={(e) => setSelectedJobId(e.target.value)}
-            className="text-xs bg-surface border border-border rounded-button px-3 py-2 text-secondary-text font-medium focus-ring"
+            className="text-xs bg-surface border border-border rounded-button px-2.5 py-2 text-ink-700 font-medium focus-ring-refined cursor-pointer"
           >
             <option value="all">Role: All Postings</option>
             {jobs.map((j) => (
@@ -138,7 +138,7 @@ export const RecruiterApplicants: React.FC = () => {
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="text-xs bg-surface border border-border rounded-button px-3 py-2 text-secondary-text font-medium focus-ring"
+            className="text-xs bg-surface border border-border rounded-button px-2.5 py-2 text-ink-700 font-medium focus-ring-refined cursor-pointer"
           >
             <option value="all">Status: All Stages</option>
             <option value="Submitted">Submitted</option>
@@ -150,26 +150,26 @@ export const RecruiterApplicants: React.FC = () => {
         </div>
       </Card>
 
-      {/* High Density Candidate Table */}
-      <Card className="overflow-hidden border-border shadow-card">
+      {/* High Density Professional ATS Table */}
+      <Card className="overflow-hidden border border-border shadow-subtle">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-surface-secondary/70 border-b border-border/80 text-secondary-text uppercase tracking-wider font-semibold">
+            <thead className="bg-surface-secondary/70 border-b border-border text-ink-600 font-semibold tracking-wide">
               <tr>
                 <th className="py-3 px-4">Candidate</th>
                 <th className="py-3 px-4">Target Role</th>
                 <th className="py-3 px-4">Branch & CGPA</th>
-                <th className="py-3 px-4">Top Skills</th>
-                <th className="py-3 px-4">Applied Date</th>
+                <th className="py-3 px-4">Skills Match</th>
+                <th className="py-3 px-4">Applied</th>
                 <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4 text-right">Actions</th>
+                <th className="py-3 px-4 text-right">Stage Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border/60">
+            <tbody className="divide-y divide-border">
               {filteredApplicants.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center text-muted-text">
-                    No applicants match the selected filters.
+                  <td colSpan={7} className="py-12 text-center text-ink-400">
+                    No candidates match the specified filter criteria.
                   </td>
                 </tr>
               ) : (
@@ -182,36 +182,40 @@ export const RecruiterApplicants: React.FC = () => {
                       className="hover:bg-surface-secondary/40 transition-colors group"
                     >
                       {/* Candidate */}
-                      <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-brand-surface text-brand font-bold flex items-center justify-center flex-shrink-0">
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-full bg-indigo-50 border border-indigo-200 text-brand font-bold flex items-center justify-center flex-shrink-0 text-xs">
                             {app.studentName.charAt(0)}
                           </div>
                           <div>
-                            <p className="font-bold text-primary-text">{app.studentName}</p>
-                            <p className="text-[11px] text-muted-text">{app.studentRollNo}</p>
+                            <p className="font-bold text-ink-950 leading-tight">{app.studentName}</p>
+                            <p className="text-[10px] font-mono text-ink-400 leading-tight mt-0.5">
+                              {app.studentRollNo}
+                            </p>
                           </div>
                         </div>
                       </td>
 
                       {/* Target Role */}
-                      <td className="py-3.5 px-4 font-semibold text-primary-text">
+                      <td className="py-3 px-4 font-semibold text-ink-950">
                         {app.jobTitle}
                       </td>
 
                       {/* Branch & CGPA */}
-                      <td className="py-3.5 px-4">
-                        <p className="text-primary-text font-medium">{app.studentBranch}</p>
-                        <p className="text-[11px] text-brand font-bold">CGPA: {app.studentCgpa}</p>
+                      <td className="py-3 px-4">
+                        <p className="text-ink-700">{app.studentBranch.split(' ')[0]}</p>
+                        <p className="text-[11px] font-mono font-bold text-brand mt-0.5">
+                          {app.studentCgpa} CGPA
+                        </p>
                       </td>
 
                       {/* Skills */}
-                      <td className="py-3.5 px-4">
+                      <td className="py-3 px-4">
                         <div className="flex flex-wrap gap-1 max-w-xs">
                           {app.studentSkills.slice(0, 3).map((s) => (
                             <span
                               key={s}
-                              className="text-[10px] px-1.5 py-0.5 rounded bg-surface-secondary text-secondary-text border border-border"
+                              className="text-[10px] px-1.5 py-0.2 rounded bg-surface-secondary text-ink-700 border border-border font-medium"
                             >
                               {s}
                             </span>
@@ -220,24 +224,23 @@ export const RecruiterApplicants: React.FC = () => {
                       </td>
 
                       {/* Applied Date */}
-                      <td className="py-3.5 px-4 text-muted-text">
+                      <td className="py-3 px-4 text-ink-500 font-mono text-[11px]">
                         {formatDate(app.appliedAt)}
                       </td>
 
                       {/* Status */}
-                      <td className="py-3.5 px-4">
+                      <td className="py-3 px-4">
                         <span
-                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-semibold border text-[11px] ${badgeStyle.bg} ${badgeStyle.text} ${badgeStyle.border}`}
+                          className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-badge font-semibold border text-[11px] ${badgeStyle.bg} ${badgeStyle.text} ${badgeStyle.border}`}
                         >
                           <span className={`w-1.5 h-1.5 rounded-full ${badgeStyle.dot}`} />
                           {app.status}
                         </span>
                       </td>
 
-                      {/* Action buttons */}
-                      <td className="py-3.5 px-4 text-right">
+                      {/* Streamlined Stage Actions */}
+                      <td className="py-3 px-4 text-right">
                         <div className="flex items-center justify-end gap-1.5">
-                          {/* Inspect Dossier */}
                           <Button
                             variant="outline"
                             size="sm"
@@ -250,49 +253,48 @@ export const RecruiterApplicants: React.FC = () => {
                             Inspect
                           </Button>
 
-                          {/* Shortlist */}
+                          {/* Dynamic Primary Action Based on Stage */}
                           {app.status === 'Submitted' && (
                             <Button
                               variant="primary"
                               size="sm"
-                              className="text-[11px] px-2 py-1"
+                              className="text-[11px] px-2.5 py-1 font-semibold"
                               onClick={() => shortlistApplication(app.id)}
                             >
                               Shortlist
                             </Button>
                           )}
 
-                          {/* Schedule Interview */}
-                          {(app.status === 'Shortlisted' || app.status === 'Interview') && (
+                          {app.status === 'Shortlisted' && (
                             <Button
                               variant="primary"
                               size="sm"
                               leftIcon={<Calendar className="w-3 h-3" />}
-                              className="text-[11px] px-2 py-1 bg-warning hover:bg-amber-600 text-white"
+                              className="text-[11px] px-2.5 py-1 bg-amber-600 hover:bg-amber-700 text-white font-semibold"
                               onClick={() => handleOpenScheduleModal(app)}
                             >
-                              Interview
+                              Schedule
                             </Button>
                           )}
 
-                          {/* Select / Hire */}
                           {app.status === 'Interview' && (
                             <Button
                               variant="success"
                               size="sm"
-                              className="text-[11px] px-2 py-1"
+                              leftIcon={<Award className="w-3 h-3" />}
+                              className="text-[11px] px-2.5 py-1 font-semibold"
                               onClick={() => markSelected(app.id)}
                             >
-                              Offer
+                              Extend Offer
                             </Button>
                           )}
 
-                          {/* Reject */}
+                          {/* Secondary Reject Action */}
                           {app.status !== 'Rejected' && app.status !== 'Selected' && app.status !== 'Withdrawn' && (
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="text-[11px] text-error hover:bg-error-surface px-2 py-1"
+                              className="text-[11px] text-error hover:bg-error-surface px-1.5 py-1"
                               onClick={() => rejectApplication(app.id)}
                             >
                               Reject
@@ -309,7 +311,7 @@ export const RecruiterApplicants: React.FC = () => {
         </div>
       </Card>
 
-      {/* Schedule Interview Modal Dialog */}
+      {/* Schedule Interview Modal */}
       <Dialog
         isOpen={isInterviewModalOpen}
         onClose={() => setIsInterviewModalOpen(false)}
@@ -321,7 +323,7 @@ export const RecruiterApplicants: React.FC = () => {
               Cancel
             </Button>
             <Button variant="primary" size="sm" onClick={handleConfirmSchedule}>
-              Confirm & Notify Student
+              Confirm & Alert Candidate
             </Button>
           </div>
         }
@@ -342,36 +344,36 @@ export const RecruiterApplicants: React.FC = () => {
             />
 
             <div>
-              <label className="text-xs font-semibold text-secondary-text uppercase tracking-wide block mb-1.5">
+              <label className="text-xs font-semibold text-ink-600 uppercase tracking-wide block mb-1.5">
                 Interview Mode
               </label>
               <select
                 value={interviewMode}
                 onChange={(e) => setInterviewMode(e.target.value as any)}
-                className="w-full bg-surface text-primary-text text-sm rounded-button border border-border p-2 focus-ring"
+                className="w-full bg-surface text-ink-950 text-sm rounded-button border border-border p-2 focus-ring-refined"
               >
-                <option value="Virtual">Virtual (Google Meet / Zoom)</option>
-                <option value="In-Person">In-Person (Campus Placement Cell)</option>
+                <option value="Virtual">Virtual (Google Meet)</option>
+                <option value="In-Person">In-Person (Placement Cell)</option>
               </select>
             </div>
           </div>
 
           <Input
-            label="Meeting Link / Location Venue"
+            label="Meeting Link / Venue"
             value={interviewLink}
             onChange={(e) => setInterviewLink(e.target.value)}
           />
 
           <div>
-            <label className="text-xs font-semibold text-secondary-text uppercase tracking-wide block mb-1.5">
+            <label className="text-xs font-semibold text-ink-600 uppercase tracking-wide block mb-1.5">
               Candidate Preparation Instructions
             </label>
             <textarea
               rows={2}
               value={interviewNotes}
               onChange={(e) => setInterviewNotes(e.target.value)}
-              placeholder="e.g. Please be ready to screen share your portfolio projects and code..."
-              className="w-full bg-surface text-primary-text text-sm rounded-button border border-border p-2.5 focus-ring"
+              placeholder="e.g. Please be prepared to screen share projects and discuss system architecture..."
+              className="w-full bg-surface text-ink-950 text-sm rounded-button border border-border p-2.5 focus-ring-refined"
             />
           </div>
         </div>
@@ -382,7 +384,7 @@ export const RecruiterApplicants: React.FC = () => {
         isOpen={isDossierModalOpen}
         onClose={() => setIsDossierModalOpen(false)}
         title={`Candidate Dossier: ${selectedApp?.studentName}`}
-        description={`Roll No: ${selectedApp?.studentRollNo} • ${selectedApp?.studentBranch}`}
+        description={`Roll: ${selectedApp?.studentRollNo} • ${selectedApp?.studentBranch}`}
         footer={
           <Button variant="outline" size="sm" onClick={() => setIsDossierModalOpen(false)}>
             Close Dossier
@@ -393,22 +395,22 @@ export const RecruiterApplicants: React.FC = () => {
           <div className="space-y-4 text-xs">
             <div className="grid grid-cols-2 gap-3 p-3 rounded-lg bg-surface-secondary/70 border border-border">
               <div>
-                <span className="text-muted-text">Verified Undergrad CGPA:</span>
-                <p className="text-sm font-bold text-primary-text">{selectedApp.studentCgpa} / 10.0</p>
+                <span className="text-ink-500">Academic CGPA:</span>
+                <p className="text-sm font-bold text-ink-950">{selectedApp.studentCgpa} / 10.0</p>
               </div>
               <div>
-                <span className="text-muted-text">Campus Email:</span>
-                <p className="font-semibold text-primary-text truncate">{selectedApp.studentEmail}</p>
+                <span className="text-ink-500">Campus Email:</span>
+                <p className="font-semibold text-ink-950 truncate">{selectedApp.studentEmail}</p>
               </div>
             </div>
 
             <div>
-              <p className="font-bold text-primary-text mb-2">Technical Competencies</p>
+              <p className="font-bold text-ink-950 mb-2">Verified Technical Skills</p>
               <div className="flex flex-wrap gap-1.5">
                 {selectedApp.studentSkills.map((s) => (
                   <span
                     key={s}
-                    className="px-2 py-0.5 rounded bg-brand-surface text-brand font-medium border border-brand/20"
+                    className="px-2 py-0.5 rounded bg-indigo-50 text-brand font-medium border border-indigo-200"
                   >
                     {s}
                   </span>
@@ -418,17 +420,17 @@ export const RecruiterApplicants: React.FC = () => {
 
             <div className="p-4 rounded-card border border-border bg-surface flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <FileText className="w-8 h-8 text-error" />
+                <FileText className="w-7 h-7 text-error" />
                 <div>
-                  <p className="font-bold text-primary-text">Master Placement Resume</p>
-                  <p className="text-[11px] text-muted-text">PDF document verified by placement office</p>
+                  <p className="font-bold text-ink-950">Master Placement Resume</p>
+                  <p className="text-[11px] text-ink-500">PDF document verified by placement office</p>
                 </div>
               </div>
               <Button
                 variant="outline"
                 size="sm"
                 className="text-xs"
-                onClick={() => showToast('info', 'Viewing Resume', 'Opening verified candidate resume in viewer.')}
+                onClick={() => showToast('info', 'Viewing Resume', 'Opening candidate verified resume.')}
               >
                 Inspect PDF
               </Button>
