@@ -6,7 +6,6 @@ import {
   Video,
   MapPin,
   ExternalLink,
-  Sparkles,
   Building2,
   CheckCircle2,
   User,
@@ -17,10 +16,10 @@ import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Tabs } from '../../components/ui/Tabs';
-import { formatDate, formatDateTime } from '../../utils/formatters';
+import { formatDateTime } from '../../utils/formatters';
 
 export const StudentInterviews: React.FC = () => {
-  const { interviews, applications } = useApp();
+  const { interviews } = useApp();
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState<string>('upcoming');
@@ -43,19 +42,15 @@ export const StudentInterviews: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-12">
-      {/* Header */}
-      <div className="border-b border-border/60 pb-5">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Header Without Banned Kickers */}
+      <div className="border-b border-slate-200/80 pb-5">
+        <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Campus Interview Schedule</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-primary-text tracking-tight mt-1">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-ink-950 tracking-tight font-sans">
               Interview Command Center
             </h1>
-            <p className="text-sm text-secondary-text mt-1">
-              Manage all virtual meet links, panel evaluations, and round schedules for your shortlisted campus drives.
+            <p className="text-xs sm:text-sm text-slate-600 mt-1">
+              Manage virtual meeting rooms, panel assignments, and scheduled rounds for campus hiring drives.
             </p>
           </div>
         </div>
@@ -68,10 +63,10 @@ export const StudentInterviews: React.FC = () => {
 
       {/* Interview Cards List */}
       {displayedInterviews.length === 0 ? (
-        <Card className="p-12 text-center flex flex-col items-center justify-center">
-          <Calendar className="w-10 h-10 text-muted-text mb-3" />
-          <h3 className="text-base font-semibold text-primary-text">No interviews in this view</h3>
-          <p className="text-xs text-secondary-text mt-1 max-w-sm">
+        <Card elevation={1} className="p-12 text-center flex flex-col items-center justify-center border-slate-200/80">
+          <Calendar className="w-10 h-10 text-slate-400 mb-3" />
+          <h3 className="text-sm font-bold text-ink-950">No interviews in this view</h3>
+          <p className="text-xs text-slate-500 mt-1 max-w-sm">
             When recruiters shortlist your profile for technical discussions or campus hiring rounds, your calendar invites and virtual rooms will appear here.
           </p>
           <Button
@@ -86,28 +81,28 @@ export const StudentInterviews: React.FC = () => {
       ) : (
         <div className="space-y-4">
           {displayedInterviews.map((interview) => (
-            <Card key={interview.id} className="p-6 border-border shadow-card transition-all">
+            <Card key={interview.id} elevation={1} className="p-6 bg-surface border-slate-200/80 transition-all">
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
                 <div className="flex items-start gap-4">
                   <img
                     src={interview.companyLogo}
                     alt={interview.companyName}
-                    className="w-14 h-14 rounded-2xl object-cover border border-border shadow-sm flex-shrink-0"
+                    className="w-14 h-14 rounded-xl object-cover border border-slate-200 flex-shrink-0"
                   />
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-secondary-text">
+                      <span className="text-xs font-bold text-slate-700">
                         {interview.companyName}
                       </span>
                       <span className="text-slate-300">•</span>
                       <Badge
-                        variant={interview.mode === 'Virtual' ? 'brand' : 'neutral'}
+                        variant="neutral"
                         size="sm"
                       >
                         {interview.mode === 'Virtual' ? (
-                          <Video className="w-3 h-3 inline mr-1" />
+                          <Video className="w-3 h-3 inline mr-1 text-teal-700" />
                         ) : (
-                          <MapPin className="w-3 h-3 inline mr-1" />
+                          <MapPin className="w-3 h-3 inline mr-1 text-slate-500" />
                         )}
                         {interview.mode}
                       </Badge>
@@ -120,27 +115,27 @@ export const StudentInterviews: React.FC = () => {
                       </Badge>
                     </div>
 
-                    <h3 className="text-lg font-bold text-primary-text mt-1">
+                    <h3 className="text-lg font-bold text-ink-950 mt-1">
                       {interview.round}
                     </h3>
-                    <p className="text-xs font-medium text-secondary-text mt-0.5">
+                    <p className="text-xs font-medium text-slate-500 mt-0.5">
                       Role: {interview.jobTitle}
                     </p>
 
-                    <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs text-secondary-text mt-3">
-                      <span className="flex items-center gap-1.5 font-semibold text-primary-text">
-                        <Calendar className="w-4 h-4 text-brand" />
+                    <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs text-slate-600 mt-3 font-mono">
+                      <span className="flex items-center gap-1.5 font-semibold text-ink-950">
+                        <Calendar className="w-4 h-4 text-teal-700" />
                         {formatDateTime(interview.dateTime)}
                       </span>
-                      <span className="flex items-center gap-1 text-muted-text">
+                      <span className="flex items-center gap-1 text-slate-500">
                         <User className="w-3.5 h-3.5" />
                         Panel: {interview.interviewer}
                       </span>
                     </div>
 
                     {interview.notes && (
-                      <div className="mt-3 p-3 rounded-lg bg-surface-secondary/60 border border-border/60 text-xs text-secondary-text">
-                        <p className="font-semibold text-primary-text mb-0.5">Candidate Preparation Instructions:</p>
+                      <div className="mt-3 p-3 rounded-lg bg-slate-50 border border-slate-200/80 text-xs text-slate-600">
+                        <p className="font-semibold text-ink-950 mb-0.5">Candidate Preparation Instructions:</p>
                         <p>{interview.notes}</p>
                       </div>
                     )}
@@ -148,13 +143,13 @@ export const StudentInterviews: React.FC = () => {
                 </div>
 
                 {/* Right Side Actions */}
-                <div className="flex flex-col sm:flex-row md:flex-col items-stretch md:items-end gap-2.5 border-t md:border-t-0 pt-3 md:pt-0 border-border/50">
+                <div className="flex flex-col sm:flex-row md:flex-col items-stretch md:items-end gap-2.5 border-t md:border-t-0 pt-3 md:pt-0 border-slate-100">
                   {interview.locationOrLink && interview.status === 'Scheduled' ? (
                     <a
                       href={interview.locationOrLink}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-button bg-brand text-white text-xs font-semibold hover:bg-brand-hover shadow-sm transition-all"
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-button bg-teal-700 text-white text-xs font-semibold hover:bg-teal-600 shadow-xs border border-teal-800/40 transition-all btn-press"
                     >
                       <Video className="w-4 h-4" />
                       <span>Join Video Conference</span>
@@ -174,7 +169,7 @@ export const StudentInterviews: React.FC = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="text-xs text-secondary-text"
+                    className="text-xs text-slate-500 hover:text-ink-950"
                     onClick={() => navigate(`/student/applications/${interview.applicationId}`)}
                   >
                     View Application Dossier

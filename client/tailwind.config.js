@@ -7,17 +7,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#F8FAFC',
+        background: '#F6F8FA', // Warm Alabaster Canvas
         surface: {
           DEFAULT: '#FFFFFF',
           subtle: '#F8FAFC',
-          secondary: '#F1F5F9',
+          secondary: '#F1F4F8',
           elevated: '#FFFFFF',
-          dark: '#0B0F19',
-          'dark-subtle': '#111827',
+          dark: '#0B0F17', // Obsidian Pitch Sidebar
+          'dark-subtle': '#131B26',
+          'dark-border': '#1B2433',
         },
         ink: {
-          950: '#090D16',
+          950: '#090E17',
           900: '#0F172A',
           800: '#1E293B',
           700: '#334155',
@@ -30,19 +31,20 @@ export default {
           50: '#F8FAFC',
         },
         brand: {
-          DEFAULT: '#4338CA', // Refined Editorial Indigo / Cobalt
-          hover: '#3730A3',
-          active: '#312E81',
-          light: '#6366F1',
-          surface: '#EEF2FF',
-          border: '#C7D2FE',
-          subtle: '#F5F7FF',
+          DEFAULT: '#0F766E', // Deep Precision Teal
+          hover: '#0D9488',   // Teal 600
+          active: '#115E59',  // Teal 800
+          light: '#14B8A6',   // Teal 500
+          surface: '#F0FDFA', // Teal 50
+          border: '#99F6E4',  // Teal 200
+          subtle: '#F4FBF9',
+          dark: '#042F2E',
         },
         border: {
           DEFAULT: '#E2E8F0',
           strong: '#CBD5E1',
-          subtle: '#F1F5F9',
-          dark: '#1E293B',
+          subtle: '#F1F4F8',
+          dark: '#1B2433',
         },
         success: {
           DEFAULT: '#059669',
@@ -89,20 +91,30 @@ export default {
         ],
       },
       boxShadow: {
-        'subtle': '0 1px 2px 0 rgba(15, 23, 42, 0.04)',
-        'card': '0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.04)',
-        'card-hover': '0 4px 20px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04)',
-        'dropdown': '0 10px 25px -3px rgba(15, 23, 42, 0.08), 0 4px 8px -2px rgba(15, 23, 42, 0.03)',
-        'modal': '0 25px 50px -12px rgba(15, 23, 42, 0.18)',
+        // Multi-Layer Elevation Hierarchy (Prompt Section 3)
+        'elevation-0': 'none',
+        'elevation-1': '0 1px 2px -1px rgba(11, 15, 23, 0.05), 0 1px 3px 0 rgba(11, 15, 23, 0.04)',
+        'elevation-2': '0 2px 4px -1px rgba(11, 15, 23, 0.04), 0 4px 12px -2px rgba(11, 15, 23, 0.05)',
+        'elevation-hover': '0 4px 6px -1px rgba(11, 15, 23, 0.05), 0 10px 24px -3px rgba(11, 15, 23, 0.08)',
+        'elevation-3': '0 4px 6px -2px rgba(11, 15, 23, 0.05), 0 12px 24px -4px rgba(11, 15, 23, 0.09)',
+        'elevation-4': '0 8px 16px -4px rgba(11, 15, 23, 0.08), 0 24px 48px -12px rgba(11, 15, 23, 0.16)',
+
+        // Semantic aliases
+        'subtle': '0 1px 2px -1px rgba(11, 15, 23, 0.05), 0 1px 3px 0 rgba(11, 15, 23, 0.04)',
+        'card': '0 1px 3px -1px rgba(11, 15, 23, 0.04), 0 2px 6px 0 rgba(11, 15, 23, 0.03)',
+        'card-hover': '0 4px 6px -1px rgba(11, 15, 23, 0.05), 0 10px 24px -3px rgba(11, 15, 23, 0.08)',
+        'dropdown': '0 4px 6px -2px rgba(11, 15, 23, 0.05), 0 12px 24px -4px rgba(11, 15, 23, 0.09)',
+        'modal': '0 8px 16px -4px rgba(11, 15, 23, 0.08), 0 24px 48px -12px rgba(11, 15, 23, 0.16)',
       },
       borderRadius: {
         'card': '10px',
         'button': '7px',
-        'badge': '5px',
+        'pill': '9999px',
       },
-      letterSpacing: {
-        'tighter': '-0.03em',
-        'tight': '-0.015em',
+      transitionTimingFunction: {
+        'emil-out': 'cubic-bezier(0.23, 1, 0.32, 1)',
+        'emil-in-out': 'cubic-bezier(0.77, 0, 0.175, 1)',
+        'emil-drawer': 'cubic-bezier(0.32, 0.72, 0, 1)',
       },
     },
   },

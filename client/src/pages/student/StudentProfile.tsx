@@ -127,18 +127,14 @@ export const StudentProfile: React.FC<{ activeTabProp?: string }> = ({ activeTab
 
   return (
     <div className="space-y-6 pb-16">
-      {/* Header */}
-      <div className="border-b border-border/60 pb-5">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Header Without Banned Kickers */}
+      <div className="border-b border-slate-200/80 pb-5">
+        <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Student Profile Dossier</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-primary-text tracking-tight mt-1">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-ink-950 tracking-tight font-sans">
               Profile & Placement Resume
             </h1>
-            <p className="text-sm text-secondary-text mt-1">
+            <p className="text-xs sm:text-sm text-slate-600 mt-1">
               Keep your academic credentials, verified CGPA, and technical skills updated for automated eligibility matching.
             </p>
           </div>

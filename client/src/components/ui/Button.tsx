@@ -25,27 +25,27 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      'inline-flex items-center justify-center font-medium transition-all duration-150 focus-ring disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.98]';
+      'inline-flex items-center justify-center font-medium select-none btn-press focus-ring-refined disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none';
 
     const variants = {
       primary:
-        'bg-brand hover:bg-brand-hover text-white shadow-sm shadow-brand/20 border border-transparent',
+        'bg-brand hover:bg-brand-hover active:bg-brand-active text-white border border-teal-800/40 shadow-xs font-semibold',
       secondary:
-        'bg-surface-secondary hover:bg-slate-200 text-primary-text border border-border/80',
+        'bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-800 border border-slate-200 shadow-xs hover:border-slate-300',
       outline:
-        'bg-surface hover:bg-surface-secondary text-primary-text border border-border hover:border-slate-300 shadow-sm',
+        'bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-700 border border-slate-200 hover:border-slate-300 shadow-xs',
       ghost:
-        'bg-transparent hover:bg-surface-secondary text-secondary-text hover:text-primary-text border border-transparent',
+        'bg-transparent hover:bg-slate-100/80 active:bg-slate-200/70 text-slate-600 hover:text-slate-900 border border-transparent',
       danger:
-        'bg-error hover:bg-red-700 text-white shadow-sm shadow-red-500/20 border border-transparent',
+        'bg-error hover:bg-red-700 active:bg-red-800 text-white shadow-xs border border-red-700/40 font-semibold',
       success:
-        'bg-success hover:bg-green-700 text-white shadow-sm shadow-green-500/20 border border-transparent',
+        'bg-success hover:bg-emerald-700 active:bg-emerald-800 text-white shadow-xs border border-emerald-700/40 font-semibold',
     };
 
     const sizes = {
       sm: 'text-xs px-2.5 py-1.5 rounded-md gap-1.5',
-      md: 'text-sm px-3.5 py-2 rounded-button gap-2',
-      lg: 'text-base px-5 py-2.5 rounded-button gap-2.5',
+      md: 'text-[13px] px-3.5 py-2 rounded-button gap-2',
+      lg: 'text-sm px-4.5 py-2.5 rounded-button gap-2.5',
     };
 
     return (
@@ -57,7 +57,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {isLoading ? (
           <svg
-            className="animate-spin h-4 w-4 text-current"
+            className="animate-spin h-3.5 w-3.5 text-current"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"

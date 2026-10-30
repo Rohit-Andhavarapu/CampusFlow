@@ -17,7 +17,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Layers,
-  ArrowUpRight,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { cn } from '../../utils/cn';
@@ -96,29 +95,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Mobile backdrop */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 bg-slate-950/60 z-40 lg:hidden backdrop-blur-sm transition-opacity"
+          className="fixed inset-0 bg-slate-950/70 z-40 lg:hidden backdrop-blur-xs transition-opacity"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
 
-      {/* Main Sidebar Shell: Deep Ink/Navy Precision */}
+      {/* Main Sidebar Shell: Obsidian Pitch Precision */}
       <aside
         className={cn(
-          'fixed lg:sticky top-0 left-0 z-40 h-screen bg-[#090D16] text-white border-r border-[#1E293B] flex flex-col justify-between transition-all duration-200 ease-out select-none',
+          'fixed lg:sticky top-0 left-0 z-40 h-screen bg-[#0B0F17] text-white border-r border-[#1B2433] flex flex-col justify-between transition-all duration-200 ease-out select-none',
           isCollapsed ? 'w-20' : 'w-[264px]',
           isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
       >
         {/* Top Header & Branding */}
         <div>
-          <div className="h-16 px-4 flex items-center justify-between border-b border-[#1E293B]">
+          <div className="h-16 px-4 flex items-center justify-between border-b border-[#1B2433]">
             <NavLink
               to={`/${currentRole}/dashboard`}
               className="flex items-center gap-3 overflow-hidden group"
               onClick={() => setIsMobileOpen(false)}
             >
-              {/* Distinctive Logo Symbol */}
-              <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-sm shadow-indigo-500/20 flex-shrink-0 group-hover:bg-indigo-500 transition-colors">
+              {/* Distinctive Logo Symbol: Precision Teal Emblem */}
+              <div className="w-8 h-8 rounded-lg bg-teal-700 flex items-center justify-center text-white border border-teal-500/40 shadow-xs shadow-teal-950 flex-shrink-0 group-hover:bg-teal-600 transition-colors">
                 <span className="font-extrabold text-sm tracking-tight">CF</span>
               </div>
               {!isCollapsed && (
@@ -127,11 +126,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     <span className="font-bold text-sm text-white tracking-tight leading-none">
                       CampusFlow
                     </span>
-                    <span className="text-[10px] font-mono text-indigo-400 bg-indigo-950/80 px-1 py-0.2 rounded border border-indigo-800/60">
-                      v2.0
+                    <span className="text-[10px] font-mono text-teal-400 bg-teal-950/80 px-1 py-0.2 rounded border border-teal-800/60">
+                      v3.0
                     </span>
                   </div>
-                  <span className="text-[11px] text-slate-400 mt-0.5 truncate leading-none">
+                  <span className="text-[11px] text-slate-400 mt-1 truncate leading-none">
                     {roleLabels[currentRole]}
                   </span>
                 </div>
@@ -156,7 +155,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="py-4 px-3 space-y-1">
             {!isCollapsed && (
               <p className="px-3 text-[10px] font-mono uppercase tracking-wider text-slate-500 mb-2 font-medium">
-                Navigation
+                Workspace
               </p>
             )}
             {navItems.map((item) => {
@@ -174,7 +173,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   className={cn(
                     'flex items-center gap-3 px-3 py-2 rounded-button text-[13px] font-medium transition-colors relative group',
                     isActive
-                      ? 'bg-indigo-600/15 text-white font-semibold border border-indigo-500/30'
+                      ? 'bg-teal-950/50 text-white font-semibold border border-teal-500/30 shadow-xs'
                       : 'text-slate-400 hover:text-slate-100 hover:bg-white/5 border border-transparent'
                   )}
                   title={isCollapsed ? item.label : undefined}
@@ -182,7 +181,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <Icon
                     className={cn(
                       'w-4 h-4 flex-shrink-0 transition-colors',
-                      isActive ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-200'
+                      isActive ? 'text-teal-400' : 'text-slate-400 group-hover:text-slate-200'
                     )}
                   />
                   {!isCollapsed && (
@@ -192,19 +191,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   )}
 
                   {!isCollapsed && item.badge && (
-                    <span className="ml-auto text-[10px] font-medium uppercase tracking-wider bg-indigo-500/20 text-indigo-300 px-1.5 py-0.2 rounded border border-indigo-500/30">
+                    <span className="ml-auto text-[10px] font-medium uppercase tracking-wider bg-teal-500/20 text-teal-300 px-1.5 py-0.2 rounded border border-teal-500/30">
                       {item.badge}
                     </span>
                   )}
 
                   {!isCollapsed && item.unreadBadge !== undefined && item.unreadBadge > 0 && (
-                    <span className="ml-auto text-[11px] font-mono font-semibold bg-indigo-500 text-white px-1.5 py-0.2 rounded-full min-w-5 text-center">
+                    <span className="ml-auto text-[11px] font-mono font-semibold bg-teal-600 text-white px-1.5 py-0.2 rounded-full min-w-5 text-center">
                       {item.unreadBadge}
                     </span>
                   )}
 
                   {isCollapsed && item.unreadBadge !== undefined && item.unreadBadge > 0 && (
-                    <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-indigo-500" />
+                    <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-teal-500" />
                   )}
                 </NavLink>
               );
@@ -213,7 +212,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Bottom User Persona Card */}
-        <div className="p-3 border-t border-[#1E293B]">
+        <div className="p-3 border-t border-[#1B2433]">
           <div
             className={cn(
               'flex items-center gap-3 p-2 rounded-lg bg-white/5 border border-white/5 hover:bg-white/10 transition-colors',
@@ -223,15 +222,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <img
               src={currentUser.avatar}
               alt={currentUser.name}
-              className="w-8 h-8 rounded-full object-cover border border-indigo-400/30 flex-shrink-0"
+              className="w-8 h-8 rounded-full object-cover border border-slate-700 flex-shrink-0"
             />
             {!isCollapsed && (
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-semibold text-slate-100 truncate leading-tight">
+                <p className="text-xs font-semibold text-white truncate leading-tight">
                   {currentUser.name}
                 </p>
-                <p className="text-[11px] text-slate-400 truncate leading-tight mt-0.5">
-                  {currentUser.collegeId || currentUser.companyName || currentRole}
+                <p className="text-[10px] font-mono text-slate-400 truncate mt-0.5">
+                  {currentUser.role === 'student'
+                    ? (currentUser as any).rollNo
+                    : (currentUser as any).company || (currentUser as any).designation || 'admin'}
                 </p>
               </div>
             )}

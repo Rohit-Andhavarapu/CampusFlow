@@ -7,7 +7,6 @@ import {
   MapPin,
   Clock,
   Briefcase,
-  Sparkles,
   CheckCircle2,
   AlertCircle,
   ArrowRight,
@@ -20,7 +19,7 @@ import { useApp } from '../../context/AppContext';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
-import { checkJobEligibility, formatDate, getStatusBadgeStyle } from '../../utils/formatters';
+import { checkJobEligibility, formatDate } from '../../utils/formatters';
 import { Tabs } from '../../components/ui/Tabs';
 
 export const ExploreOpportunities: React.FC = () => {
@@ -117,24 +116,21 @@ export const ExploreOpportunities: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-16">
-      {/* Editorial Header */}
-      <div className="border-b border-border pb-5">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Editorial Header Without Banned Kickers */}
+      <div className="border-b border-slate-200/80 pb-5">
+        <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs font-mono font-medium text-ink-500 uppercase tracking-wider">
-              <span>Verified Campus Recruiter Network</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-ink-950 tracking-tight mt-1 font-sans">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-ink-950 tracking-tight font-sans">
               Explore Opportunities
             </h1>
-            <p className="text-xs sm:text-sm text-ink-600 mt-1">
-              Direct campus drives and internships. Transparent criteria audits matching your verified academic profile.
+            <p className="text-xs sm:text-sm text-slate-600 mt-1">
+              Direct campus hiring drives and internships. Transparent criteria audits matching your verified academic profile.
             </p>
           </div>
 
-          <div className="flex items-center gap-2 text-xs font-mono text-ink-500 bg-surface border border-border px-3 py-1.5 rounded-button shadow-subtle">
-            <span>Profile CGPA: <strong>{studentProfile.cgpa}</strong></span>
-            <span>•</span>
+          <div className="flex items-center gap-2 text-xs font-mono text-slate-600 bg-white border border-slate-200 px-3 py-1.5 rounded-button shadow-elevation-1">
+            <span>Verified CGPA: <strong>{studentProfile.cgpa}</strong></span>
+            <span className="text-slate-300">•</span>
             <span>Batch: <strong>{studentProfile.graduationYear}</strong></span>
           </div>
         </div>
@@ -146,22 +142,22 @@ export const ExploreOpportunities: React.FC = () => {
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="bg-surface border border-border rounded-card p-3.5 shadow-subtle space-y-3">
+      <Card elevation={1} className="bg-surface border-slate-200/80 p-3.5 space-y-3">
         <div className="flex flex-col lg:flex-row items-center gap-2.5">
           {/* Search Input */}
           <div className="w-full lg:flex-1 relative">
-            <Search className="w-3.5 h-3.5 text-ink-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Filter by role, company, or target skill (e.g. Agentic AI, TypeScript)..."
-              className="w-full pl-8 pr-8 py-2 text-xs bg-surface-secondary/50 border border-border rounded-button text-ink-950 placeholder:text-ink-400 focus-ring-refined"
+              className="w-full pl-8 pr-8 py-2 text-xs bg-slate-50 border border-slate-200 rounded-button text-ink-950 placeholder:text-slate-400 focus-ring-refined"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-400 hover:text-ink-950"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-ink-950"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -173,7 +169,7 @@ export const ExploreOpportunities: React.FC = () => {
             <select
               value={selectedWorkMode}
               onChange={(e) => setSelectedWorkMode(e.target.value)}
-              className="text-xs bg-surface border border-border rounded-button px-2.5 py-2 text-ink-700 font-medium focus-ring-refined cursor-pointer"
+              className="text-xs bg-surface border border-slate-200 rounded-button px-2.5 py-2 text-slate-700 font-medium focus-ring-refined cursor-pointer"
             >
               <option value="all">Mode: All Arrangements</option>
               <option value="Remote">Remote / WFH</option>
@@ -184,7 +180,7 @@ export const ExploreOpportunities: React.FC = () => {
             <select
               value={selectedType}
               onChange={(e) => setSelectedType(e.target.value)}
-              className="text-xs bg-surface border border-border rounded-button px-2.5 py-2 text-ink-700 font-medium focus-ring-refined cursor-pointer"
+              className="text-xs bg-surface border border-slate-200 rounded-button px-2.5 py-2 text-slate-700 font-medium focus-ring-refined cursor-pointer"
             >
               <option value="all">Type: All Positions</option>
               <option value="Internship">Internship</option>
@@ -194,7 +190,7 @@ export const ExploreOpportunities: React.FC = () => {
             <select
               value={selectedEligibility}
               onChange={(e) => setSelectedEligibility(e.target.value)}
-              className="text-xs bg-surface border border-border rounded-button px-2.5 py-2 text-ink-700 font-medium focus-ring-refined cursor-pointer"
+              className="text-xs bg-surface border border-slate-200 rounded-button px-2.5 py-2 text-slate-700 font-medium focus-ring-refined cursor-pointer"
             >
               <option value="all">Eligibility: All</option>
               <option value="eligible">Eligible Only</option>
@@ -204,7 +200,7 @@ export const ExploreOpportunities: React.FC = () => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="text-xs bg-surface border border-border rounded-button px-2.5 py-2 text-ink-700 font-medium focus-ring-refined cursor-pointer"
+              className="text-xs bg-surface border border-slate-200 rounded-button px-2.5 py-2 text-slate-700 font-medium focus-ring-refined cursor-pointer"
             >
               <option value="newest">Sort: Recently Added</option>
               <option value="deadline">Sort: Deadline Soonest</option>
@@ -217,7 +213,7 @@ export const ExploreOpportunities: React.FC = () => {
                 size="sm"
                 leftIcon={<RotateCcw className="w-3 h-3" />}
                 onClick={clearAllFilters}
-                className="text-xs text-error hover:bg-error-surface"
+                className="text-xs text-red-600 hover:bg-red-50"
               >
                 Reset
               </Button>
@@ -225,21 +221,21 @@ export const ExploreOpportunities: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center justify-between text-[11px] text-ink-500 pt-2 border-t border-border">
+        <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-100">
           <span>
             Showing <strong className="text-ink-950 font-semibold">{filteredJobs.length}</strong> of{' '}
             {jobs.length} campus opportunities
           </span>
           <span>Verified recruitment partners</span>
         </div>
-      </div>
+      </Card>
 
       {/* Grid of Redesigned Job Cards — No Text Clipping, Clean Hierarchy */}
       {filteredJobs.length === 0 ? (
-        <Card className="p-12 text-center flex flex-col items-center justify-center border border-border">
-          <Briefcase className="w-8 h-8 text-ink-400 mb-2.5" />
+        <Card elevation={1} className="p-12 text-center flex flex-col items-center justify-center border-slate-200/80">
+          <Briefcase className="w-8 h-8 text-slate-400 mb-2.5" />
           <h3 className="text-sm font-bold text-ink-950">No matching opportunities found</h3>
-          <p className="text-xs text-ink-500 mt-1 max-w-sm">
+          <p className="text-xs text-slate-500 mt-1 max-w-sm">
             Adjust your keyword query, broaden work mode criteria, or clear filters.
           </p>
           <Button variant="outline" size="sm" onClick={clearAllFilters} className="mt-4">
@@ -257,9 +253,10 @@ export const ExploreOpportunities: React.FC = () => {
             return (
               <Card
                 key={job.id}
+                elevation={1}
                 hoverable
                 onClick={() => navigate(`/student/opportunities/${job.id}`)}
-                className="card-lift p-5 flex flex-col justify-between border border-border shadow-subtle hover:border-slate-300 transition-colors"
+                className="p-5 flex flex-col justify-between bg-surface border-slate-200/80 card-lift transition-colors"
               >
                 <div>
                   {/* Row 1: Company Logo + Title + Status Badge */}
@@ -268,27 +265,27 @@ export const ExploreOpportunities: React.FC = () => {
                       <img
                         src={job.companyLogo}
                         alt={job.companyName}
-                        className="w-11 h-11 rounded-lg object-cover border border-border flex-shrink-0"
+                        className="w-11 h-11 rounded-lg object-cover border border-slate-200 flex-shrink-0"
                       />
                       <div>
                         <div className="flex items-center gap-1.5">
-                          <span className="text-xs font-semibold text-ink-600">
+                          <span className="text-xs font-semibold text-slate-600">
                             {job.companyName}
                           </span>
                           <span className="text-slate-300">•</span>
-                          <span className="text-[11px] font-mono text-ink-500">
+                          <span className="text-[11px] font-mono text-slate-500">
                             {job.workMode}
                           </span>
                         </div>
-                        <h3 className="text-base font-bold text-ink-950 hover:text-brand transition-colors mt-0.5 line-clamp-1">
+                        <h3 className="text-base font-bold text-ink-950 hover:text-teal-700 transition-colors mt-0.5 line-clamp-1">
                           {job.title}
                         </h3>
                       </div>
                     </div>
 
                     {appliedApp ? (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-badge text-[11px] font-semibold bg-warning-surface text-warning border border-warning-border flex-shrink-0">
-                        <span className="w-1.5 h-1.5 rounded-full bg-warning" />
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200 flex-shrink-0">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
                         Applied
                       </span>
                     ) : eligibility.isEligible ? (
@@ -303,40 +300,40 @@ export const ExploreOpportunities: React.FC = () => {
                   </div>
 
                   {/* Row 2: Compensation & Metadata Strip (NO TRUNCATION) */}
-                  <div className="mt-4 pt-3 border-t border-border flex flex-col gap-1.5">
+                  <div className="mt-4 pt-3 border-t border-slate-100 flex flex-col gap-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-extrabold text-ink-950 font-sans tracking-tight">
+                      <span className="text-sm font-extrabold text-ink-950 font-sans tracking-tight tabular-nums">
                         {job.stipendOrSalary}
                       </span>
-                      <span className="text-xs font-medium text-ink-600">
+                      <span className="text-xs font-medium text-slate-600">
                         {job.openings} Openings
                       </span>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-500">
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
                       <span className="flex items-center gap-1">
-                        <MapPin className="w-3.5 h-3.5 text-ink-400" />
+                        <MapPin className="w-3.5 h-3.5 text-slate-400" />
                         {job.location}
                       </span>
                       <span className="flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5 text-ink-400" />
+                        <Clock className="w-3.5 h-3.5 text-slate-400" />
                         Apply by {formatDate(job.applyBy)}
                       </span>
                     </div>
                   </div>
 
                   {/* Row 3: Skill Chips */}
-                  <div className="flex flex-wrap items-center gap-1.5 mt-3 pt-3 border-t border-border/70">
+                  <div className="flex flex-wrap items-center gap-1.5 mt-3 pt-3 border-t border-slate-100">
                     {job.skillsRequired.slice(0, 4).map((skill) => (
                       <span
                         key={skill}
-                        className="text-[11px] font-medium px-2 py-0.5 rounded bg-surface-secondary text-ink-700 border border-border"
+                        className="text-[11px] font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200/60"
                       >
                         {skill}
                       </span>
                     ))}
                     {job.skillsRequired.length > 4 && (
-                      <span className="text-[11px] font-medium text-ink-400">
+                      <span className="text-[11px] font-medium text-slate-400">
                         +{job.skillsRequired.length - 4} more
                       </span>
                     )}
@@ -344,12 +341,12 @@ export const ExploreOpportunities: React.FC = () => {
                 </div>
 
                 {/* Footer: Applied count and CTA */}
-                <div className="mt-4 pt-3 border-t border-border flex items-center justify-between">
-                  <span className="text-xs text-ink-500">
+                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                  <span className="text-xs text-slate-500">
                     {job.applicantsCount || 0} candidates applied
                   </span>
 
-                  <span className="text-xs font-semibold text-brand flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                  <span className="text-xs font-semibold text-teal-700 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
                     Inspect Role <ChevronRight className="w-3.5 h-3.5" />
                   </span>
                 </div>

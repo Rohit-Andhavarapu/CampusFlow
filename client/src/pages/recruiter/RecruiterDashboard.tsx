@@ -8,7 +8,6 @@ import {
   TrendingUp,
   Plus,
   ArrowRight,
-  Sparkles,
   Building2,
   ExternalLink,
   ChevronRight,
@@ -16,7 +15,6 @@ import {
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { Card } from '../../components/ui/Card';
-import { MetricCard } from '../../components/ui/MetricCard';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { formatDate, getStatusBadgeStyle } from '../../utils/formatters';
@@ -35,19 +33,14 @@ export const RecruiterDashboard: React.FC = () => {
 
   return (
     <div className="space-y-8 pb-16">
-      {/* Editorial Header */}
-      <div className="border-b border-border pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+      {/* Header Without Banned Kickers */}
+      <div className="border-b border-slate-200/80 pb-6 flex flex-col md:flex-row md:items-baseline justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono font-medium text-ink-500 uppercase tracking-wider">
-            <span>{currentUser.companyName || 'NovaTech Systems'}</span>
-            <span>•</span>
-            <span className="text-brand font-semibold">Campus Talent Acquisition Workspace</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-ink-950 tracking-tight mt-1.5 font-sans">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-ink-950 tracking-tight font-sans">
             Recruitment Command Center
           </h1>
-          <p className="text-xs sm:text-sm text-ink-600 mt-1 max-w-2xl">
-            Manage your open campus vacancies, review verified student applications, and conduct interview evaluations.
+          <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl">
+            {currentUser.companyName || 'NovaTech Systems'} • Manage open campus vacancies, review verified student applications, and conduct interview evaluations.
           </p>
         </div>
 
@@ -71,49 +64,92 @@ export const RecruiterDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* KPI Metrics Strip */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard
-          label="Active Campus Postings"
-          value={activePostings}
-          subtext="Published vacancies accepting applicants"
-          variant="brand"
+      {/* Connected Performance Ribbon (Breaking Card-on-Card) */}
+      <Card elevation={1} className="divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 bg-surface">
+        <div
           onClick={() => navigate('/recruiter/jobs')}
-        />
-        <MetricCard
-          label="Candidate Pool Size"
-          value={totalApplicants}
-          subtext="Verified student applications"
-          trend={{ value: '14% vs last drive', isPositive: true }}
+          className="p-5 cursor-pointer hover:bg-slate-50/70 transition-colors flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-500">Active Postings</span>
+            <span className="text-[11px] font-semibold text-teal-800 bg-teal-50 border border-teal-200 px-1.5 py-0.5 rounded">
+              Accepting
+            </span>
+          </div>
+          <div className="mt-3">
+            <span className="text-3xl font-extrabold tracking-tight text-ink-950 tabular-nums">
+              {activePostings}
+            </span>
+            <p className="text-[11px] text-slate-500 mt-1 truncate">Published campus vacancies</p>
+          </div>
+        </div>
+
+        <div
           onClick={() => navigate('/recruiter/applicants')}
-        />
-        <MetricCard
-          label="Shortlisted for Rounds"
-          value={shortlistedCount}
-          subtext="Passed criteria screening"
-          variant="warning"
+          className="p-5 cursor-pointer hover:bg-slate-50/70 transition-colors flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-500">Candidate Pool</span>
+            <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded">
+              +14% vs last drive
+            </span>
+          </div>
+          <div className="mt-3">
+            <span className="text-3xl font-extrabold tracking-tight text-ink-950 tabular-nums">
+              {totalApplicants}
+            </span>
+            <p className="text-[11px] text-slate-500 mt-1 truncate">Verified student submissions</p>
+          </div>
+        </div>
+
+        <div
           onClick={() => navigate('/recruiter/applicants')}
-        />
-        <MetricCard
-          label="Interviews Scheduled"
-          value={scheduledInterviews}
-          subtext="Virtual rooms & slots booked"
-          variant="success"
+          className="p-5 cursor-pointer hover:bg-slate-50/70 transition-colors flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-500">Shortlisted for Rounds</span>
+            <span className="text-[11px] font-semibold text-blue-800 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded">
+              Screened
+            </span>
+          </div>
+          <div className="mt-3">
+            <span className="text-3xl font-extrabold tracking-tight text-ink-950 tabular-nums">
+              {shortlistedCount}
+            </span>
+            <p className="text-[11px] text-slate-500 mt-1 truncate">Passed criteria benchmark</p>
+          </div>
+        </div>
+
+        <div
           onClick={() => navigate('/recruiter/interviews')}
-        />
-      </div>
+          className="p-5 cursor-pointer hover:bg-slate-50/70 transition-colors flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-500">Interviews Scheduled</span>
+            <span className="text-[11px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded">
+              Active
+            </span>
+          </div>
+          <div className="mt-3">
+            <span className="text-3xl font-extrabold tracking-tight text-ink-950 tabular-nums">
+              {scheduledInterviews}
+            </span>
+            <p className="text-[11px] text-slate-500 mt-1 truncate">Virtual rooms & slots booked</p>
+          </div>
+        </div>
+      </Card>
 
       {/* Funnel & Active Jobs */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left 2 Cols: Candidate Conversion Funnel */}
         <div className="lg:col-span-2 space-y-6">
-          <Card className="p-6 border border-border shadow-subtle">
-            <div className="flex items-center justify-between pb-3 border-b border-border mb-4">
+          <Card elevation={1} className="p-6 bg-surface border-slate-200/80">
+            <div className="flex items-center justify-between pb-3.5 border-b border-slate-100 mb-4">
               <div>
-                <h3 className="text-sm font-bold text-ink-950 uppercase tracking-wide">
+                <h2 className="text-sm font-bold text-ink-950 tracking-tight">
                   Candidate Selection Funnel
-                </h3>
-                <p className="text-xs text-ink-500 mt-0.5">
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
                   Throughput and conversion across recruitment milestones
                 </p>
               </div>
@@ -122,35 +158,39 @@ export const RecruiterDashboard: React.FC = () => {
               </Badge>
             </div>
 
+            {/* Funnel without banned border-l-4 */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
-                { stage: 'Applied', count: applications.length, pct: '100%', color: 'border-l-indigo-500' },
+                { stage: 'Applied', count: applications.length, pct: '100%', bg: 'bg-slate-50', text: 'text-ink-950' },
                 {
                   stage: 'Shortlisted',
                   count: applications.filter((a) => a.status === 'Shortlisted' || a.status === 'Interview' || a.status === 'Selected').length,
                   pct: '75%',
-                  color: 'border-l-blue-500',
+                  bg: 'bg-blue-50/60',
+                  text: 'text-blue-900',
                 },
                 {
                   stage: 'Interviewing',
                   count: applications.filter((a) => a.status === 'Interview' || a.status === 'Selected').length,
                   pct: '50%',
-                  color: 'border-l-amber-500',
+                  bg: 'bg-amber-50/60',
+                  text: 'text-amber-900',
                 },
                 {
                   stage: 'Offers Extended',
                   count: applications.filter((a) => a.status === 'Selected').length,
                   pct: '25%',
-                  color: 'border-l-emerald-500',
+                  bg: 'bg-emerald-50/60',
+                  text: 'text-emerald-900',
                 },
               ].map((item, idx) => (
                 <div
                   key={idx}
-                  className={`p-3.5 rounded-lg bg-surface-secondary/60 border border-border border-l-4 ${item.color}`}
+                  className={`p-3.5 rounded-lg border border-slate-200/80 ${item.bg}`}
                 >
-                  <p className="text-[11px] font-medium text-ink-500 uppercase">{item.stage}</p>
-                  <p className="text-2xl font-extrabold text-ink-950 mt-1 font-sans">{item.count}</p>
-                  <p className="text-[10px] text-ink-400 mt-0.5 font-mono">{item.pct} throughput</p>
+                  <p className="text-[11px] font-medium text-slate-500 uppercase">{item.stage}</p>
+                  <p className={`text-2xl font-extrabold mt-1 font-sans tabular-nums ${item.text}`}>{item.count}</p>
+                  <p className="text-[10px] text-slate-500 mt-0.5 font-mono">{item.pct} throughput</p>
                 </div>
               ))}
             </div>
@@ -160,8 +200,8 @@ export const RecruiterDashboard: React.FC = () => {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-ink-950">Active Campus Openings</h3>
-                <p className="text-xs text-ink-500">Live vacancies accepting student submissions</p>
+                <h2 className="text-base font-bold text-ink-950 tracking-tight">Active Campus Openings</h2>
+                <p className="text-xs text-slate-500">Live vacancies accepting student submissions</p>
               </div>
               <Button
                 variant="ghost"
@@ -177,26 +217,27 @@ export const RecruiterDashboard: React.FC = () => {
               {jobs.slice(0, 3).map((job) => (
                 <Card
                   key={job.id}
+                  elevation={1}
                   hoverable
                   onClick={() => navigate(`/recruiter/jobs/${job.id}`)}
-                  className="card-lift p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border border-border shadow-subtle"
+                  className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface border-slate-200/80 card-lift transition-colors"
                 >
                   <div>
                     <div className="flex items-center gap-2">
-                      <h4 className="text-sm font-bold text-ink-950">{job.title}</h4>
-                      <Badge variant="brand" size="sm">
+                      <h3 className="text-sm font-bold text-ink-950">{job.title}</h3>
+                      <Badge variant="neutral" size="sm">
                         {job.workMode}
                       </Badge>
                     </div>
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-500 mt-1.5">
-                      <span className="font-semibold text-ink-950">{job.stipendOrSalary}</span>
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500 mt-1.5">
+                      <span className="font-semibold text-ink-950 tabular-nums">{job.stipendOrSalary}</span>
                       <span>Min CGPA: <strong>{job.minCgpa}</strong></span>
                       <span>Deadline: {formatDate(job.applyBy)}</span>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-semibold text-brand">
+                    <span className="text-xs font-semibold text-teal-700 tabular-nums">
                       {job.applicantsCount || 0} applicants
                     </span>
                     <Button variant="outline" size="sm" className="text-xs">
@@ -211,41 +252,41 @@ export const RecruiterDashboard: React.FC = () => {
 
         {/* Right 1 Col: Urgent Attention / Recent Applicants */}
         <div className="space-y-6">
-          <Card className="p-5 border border-border shadow-subtle">
-            <div className="flex items-center justify-between pb-3 border-b border-border">
-              <h3 className="text-xs font-bold text-ink-950 uppercase tracking-wide">
+          <Card elevation={1} className="p-5 bg-surface border-slate-200/80">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <h2 className="text-xs font-bold text-ink-950 uppercase tracking-wide">
                 Candidates Awaiting Review
-              </h3>
+              </h2>
               <span
-                className="text-[11px] font-medium text-brand hover:underline cursor-pointer"
+                className="text-[11px] font-medium text-teal-700 hover:underline cursor-pointer"
                 onClick={() => navigate('/recruiter/applicants')}
               >
                 View ATS Table
               </span>
             </div>
 
-            <div className="divide-y divide-border mt-1">
+            <div className="divide-y divide-slate-100 mt-1">
               {applications.slice(0, 4).map((app) => {
                 const badgeStyle = getStatusBadgeStyle(app.status);
                 return (
                   <div
                     key={app.id}
                     onClick={() => navigate('/recruiter/applicants')}
-                    className="py-3 first:pt-2 last:pb-0 cursor-pointer hover:bg-surface-secondary/50 rounded-lg px-2 -mx-2 transition-colors"
+                    className="py-3 first:pt-2 last:pb-0 cursor-pointer hover:bg-slate-50 rounded-lg px-2 -mx-2 transition-colors"
                   >
                     <div className="flex items-start justify-between">
                       <div>
                         <p className="text-xs font-bold text-ink-950">{app.studentName}</p>
-                        <p className="text-[11px] text-ink-600 truncate">{app.jobTitle}</p>
+                        <p className="text-[11px] text-slate-600 truncate">{app.jobTitle}</p>
                       </div>
                       <span
-                        className={`text-[10px] px-2 py-0.5 rounded-badge font-semibold border ${badgeStyle.bg} ${badgeStyle.text} ${badgeStyle.border}`}
+                        className={`text-[10px] px-2 py-0.5 rounded font-semibold border ${badgeStyle.bg} ${badgeStyle.text} ${badgeStyle.border}`}
                       >
                         {app.status}
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between text-[11px] text-ink-500 mt-1.5">
+                    <div className="flex items-center justify-between text-[11px] text-slate-500 mt-1.5 font-mono">
                       <span>CGPA: <strong>{app.studentCgpa}</strong> • {app.studentBranch.split(' ')[0]}</span>
                       <span>{formatDate(app.appliedAt)}</span>
                     </div>

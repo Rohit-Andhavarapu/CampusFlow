@@ -3,22 +3,37 @@ import { cn } from '../../utils/cn';
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   hoverable?: boolean;
+  interactive?: boolean;
+  elevation?: 0 | 1 | 2 | 3 | 4;
 }
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, hoverable = false, children, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(
-        'bg-surface border border-border rounded-card shadow-card overflow-hidden transition-all duration-200',
-        hoverable && 'hover:shadow-card-hover hover:border-border-hover cursor-pointer',
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </div>
-  )
+  ({ className, hoverable = false, interactive = false, elevation = 1, children, ...props }, ref) => {
+    const isInteractive = hoverable || interactive;
+
+    const elevationStyles = {
+      0: 'shadow-elevation-0 border-border/60',
+      1: 'shadow-elevation-1 border-border/80',
+      2: 'shadow-elevation-2 border-slate-200/90',
+      3: 'shadow-elevation-3 border-slate-200',
+      4: 'shadow-elevation-4 border-slate-200',
+    };
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          'bg-surface border rounded-card overflow-hidden',
+          elevationStyles[elevation],
+          isInteractive ? 'card-lift cursor-pointer hover:border-slate-300' : 'transition-colors',
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  }
 );
 Card.displayName = 'Card';
 
@@ -40,7 +55,7 @@ export const CardTitle = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <h3
     ref={ref}
-    className={cn('text-base sm:text-lg font-semibold text-primary-text tracking-tight', className)}
+    className={cn('text-base sm:text-lg font-bold text-ink-950 tracking-tight', className)}
     {...props}
   >
     {children}
@@ -51,12 +66,14 @@ CardTitle.displayName = 'CardTitle';
 export const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn('text-xs sm:text-sm text-secondary-text', className)}
+    className={cn('text-xs text-ink-500 font-normal leading-relaxed', className)}
     {...props}
-  />
+  >
+    {children}
+  </p>
 ));
 CardDescription.displayName = 'CardDescription';
 
@@ -74,7 +91,7 @@ export const CardFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('p-4 sm:p-5 bg-surface-secondary/40 border-t border-border/60 flex items-center', className)}
+    className={cn('p-4 sm:p-5 border-t border-border/60 bg-surface-subtle/50 flex items-center justify-between', className)}
     {...props}
   />
 ));

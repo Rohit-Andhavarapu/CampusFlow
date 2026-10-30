@@ -2,50 +2,84 @@
 
 ## Project Metadata
 - **Project:** CampusFlow (HACK-P410 Campus Recruitment Portal)
-- **Current Milestone:** Premium UI/UX Transformation Complete ("Editorial Precision" Design System)
+- **Current Milestone:** CampusFlow V3 — Editorial Precision & Tactile Depth (Design Transformation Complete)
 - **Updated:** 2026-10-30
-- **Design System:** Editorial Precision (Synthesizing Linear, Vercel, Ashby, & Greenhouse)
+- **Design System:** CampusFlow V3 — Editorial Precision & Tactile Depth
 - **Active Skills Applied:** `impeccable`, `emil-design-eng`, `design-taste-frontend`
 - **Frontend Stack:** React 18 + TypeScript + Vite + Tailwind CSS + Lucide Icons + Recharts
-- **Production Bundle:** `dist/` built in 8.02s with zero TypeScript warnings or errors
+- **Production Bundle:** `dist/` built in 9.10s with zero TypeScript warnings or errors
 
 ---
 
-## Visual Design Transformation ("CampusFlow — Editorial Precision")
+## CampusFlow V3 — Complete Design Transformation
 
-Following strict user instructions and guidelines from `impeccable`, `emil-design-eng`, and `design-taste-frontend`, the entire application underwent a comprehensive aesthetic and UX elevation:
+Following user instructions and strict guidelines from all three installed design skills (`impeccable`, `emil-design-eng`, and `design-taste-frontend`), the entire application underwent a comprehensive aesthetic, interaction, and architectural overhaul:
 
-### 1. Color System & Surface Architecture
-- **Deep Midnight Navy Sidebar:** (`#090D16`, border `#1E293B`) gives strong contrast and high-end SaaS product posture, replacing the generic all-white sidebar.
-- **Cool Neutral Ground:** (`#F8FAFC`) with crisp white (`#FFFFFF`) card surfaces and 1px border separation (`#E2E8F0`).
-- **Controlled Electric Indigo/Cobalt Accent:** (`#4338CA`, `#4F46E5`) reserved strictly for primary interactive affordances, removing generic purple gradient fills.
-- **Surface Elevation:** Replaced generic AI-card dropshadows with subtle 1px border frames (`border-border/60`) and soft `rgba(0,0,0,0.03)` elevation.
+### 1. Three-Skill Synthesis & Directives Applied
 
-### 2. Typography & Metric Presentation
-- **Typographic KPIs:** Eliminated repetitive colored circular icon tiles on every stat card. All metrics now feature large, confident tabular numbers (`text-3xl font-extrabold tracking-tight text-primary-text`), small uppercase contextual subtitles, and clear contextual trend badges.
-- **Monospaced Identifiers:** All registration numbers, dates, reference codes, and salaries use proportional and tabular font treatments.
-- **Hierarchy & Whitespace:** Increased contrast between page headers, section titles, and supporting descriptive copy.
+#### A. Impeccable (`.agent/skills/impeccable/SKILL.md` & `reference/craft-floor.md`)
+- **Total Elimination of Kickers / Eyebrows:** Removed all generic small uppercase text (`text-xs uppercase tracking-wider`) above page titles across every student, recruiter, and administrator screen. Headings now command authority with confident, editorial typography.
+- **Strict Ban on `border-l-4` Surface Accents:** Eliminated colored left stripes from alert boxes, metric cards, and callouts. Cards now utilize tonal boundaries, subtle 1px borders, and tactile top-border accents.
+- **Nested Card & Icon-Tile Ban:** Removed repetitive rounded icon containers on metric cards. Information is presented through large, confident tabular numerals and contextual subtitles.
+- **Contrast & Craft Floor Compliance:** All text passes WCAG AA contrast (≥4.5:1). Custom browser selection theme (`#CCFBF1` / `#0F766E`), restrained modern scrollbars (`#CBD5E1`), and monospace/tabular figures for all financial, temporal, and numeric data.
 
-### 3. Navigation & App Shell Overhaul
-- **Sidebar Breathing Room:** Width calibrated to `w-[264px]` with `text-[13px]`, completely fixing the truncation of "Explore Opportunities".
-- **CF Monogram Badge:** Geometric logo icon with `v2.0` badge and workspace role context ("Student Workspace", "Talent Acquisition", "Placement Cell Admin").
-- **Persona Switcher:** Linear-style pill dropdown in the header with seamless role switching and zero duplicate toast notifications.
-- **Global Search:** Linear-inspired search bar with `⌘K` keyboard badge.
+#### B. Design-Taste-Frontend (`.agents/skills/design-taste-frontend/references/app-screens.md`)
+- **Elimination of Predictable Purple Gradients:** Banned all purple gradients, indigo accents, and glowing badges.
+- **Mature Color System:**
+  - **Alabaster Ground:** `#F6F8FA` provides an editorial, non-sterile canvas.
+  - **Obsidian Pitch Navigation:** `#0B0F17` delivers dramatic SaaS contrast and structural permanence.
+  - **Deep Precision Teal:** Primary accent (`#0F766E`, hover `#0D9488`, active `#115E59`, surface `#F0FDFA`) for intentional interactive focus.
+  - **Color on Data, Not Chrome:** Visual weight is placed on applicant counts, salaries, and eligibility statuses rather than decorative chrome.
 
-### 4. Screen-by-Screen Refinements
+#### C. Emil Kowalski Design Engineering (`.agents/skills/emil-design-eng/SKILL.md`)
+- **Custom Easing Curves:** Declared `--ease-out: cubic-bezier(0.23, 1, 0.32, 1)` and `--ease-in-out: cubic-bezier(0.77, 0, 0.175, 1)` for organic, purposeful physics.
+- **Tactile Button Press Feedback:** Interactive elements implement `.btn-press` (`active:scale-[0.97] transition-transform duration-75`) for responsive haptic feel.
+- **Multi-Layer Elevation Hierarchy:** Replaced generic single-layer drop shadows with 5 explicit elevation tiers (`elevation-0` through `elevation-4`) combining ambient ambient occlusion with directional key light.
+- **Accessibility & Reduced Motion:** Full `@media (prefers-reduced-motion: reduce)` support with immediate fallback transitions.
 
-| View | Before State (Prototype) | Transformed State ("Editorial Precision") | Verification |
+---
+
+### 2. Comprehensive Before vs. After Design Comparison
+
+| Screen / Component | V2 State (Interim Prototype) | V3 Transformed State (Editorial Precision & Tactile Depth) | Active Skill Influence |
 |---|---|---|---|
-| **Sidebar Navigation** | Generic white bar; truncated "Explore Opportu..." | Deep midnight navy (`#090D16`), geometric CF badge, zero truncation, unclipped active pill | Verified |
-| **Student Dashboard** | Generic icon squares; basic progress bar | 4 typographic KPI numbers, 4-stage verified Placement Milestone progression, Profile Readiness gauge | Verified |
-| **Explore Opportunities** | Cramped 4-column sub-grid; clipped compensation & location | Spacious 2-column cards; large compensation (`₹9.0 - ₹12.0 LPA`), clear separate lines for location, dates, tags | Verified |
-| **Job Details** | Dense single-column layout | 2-column Ashby layout; 4-card transparent line-by-line eligibility audit (CGPA, Branch, Batch, Skills) | Verified |
-| **My Applications** | Flat list | Pipeline metrics, stage-colored chips, transition logs, and withdrawal modal | Verified |
-| **Application Details** | Basic status badge | 4-step stepper bar with transition audit log and interview link cards | Verified |
-| **Recruiter Dashboard** | Repetitive card blocks | Candidate Selection Funnel with exact throughput percentages, candidate review queue | Verified |
-| **Recruiter ATS Table** | 4 repetitive action buttons per row | High-density ATS table with context-aware single primary action (*Shortlist*, *Schedule*, *Extend Offer*, *Inspect*) | Verified |
-| **Admin Command Center** | Empty chart placehholders | Department-wise placement conversion bars, CTC tier breakdown, NAAC/NIRF reporting | Verified |
-| **Mobile Responsiveness** | Untested | Verified at 375x812 (iPhone) with responsive drawer, full-width stacked cards, no horizontal bleed | Verified |
+| **Design Language & Palette** | Generic purple accents, flat shadows, repetitive white boxes | Alabaster ground (`#F6F8FA`), Obsidian Pitch (`#0B0F17`), Deep Precision Teal (`#0F766E`) | `design-taste-frontend` |
+| **Typography & Kickers** | Repetitive uppercase kickers above all headings (`STUDENT WORKSPACE`, etc.) | **Strictly removed all kickers**. Confident editorial headings with proportional metadata subtitles | `impeccable` |
+| **Elevation & Depth** | Uniform single-layer blur `shadow-sm` | Multi-layer 5-tier elevation system (`elevation-0` to `4`) with ambient + key shadows | `emil-design-eng` |
+| **Interactive Feedback** | Standard color hover only | Tactile button press (`active:scale-[0.97]`), card lift on hover, refined 2px teal focus rings | `emil-design-eng` |
+| **Sidebar Navigation** | Generic dark navy with standard text items | Obsidian Pitch (`#0B0F17`), `CF v3.0` monogram badge, emerald status dot, active teal pill | `design-taste-frontend` |
+| **Header & Topbar** | White bar with generic role toggle | Obsidian borders, Linear-style `⌘K` search badge, live status dot, refined dropdowns | `impeccable` |
+| **Student Dashboard** | Icon tiles on stat cards, loose layout | Connected 4-pillar ribbon, typographic KPIs, 4-stage verified milestone pipeline, profile readiness gauge | `impeccable` & `design-taste-frontend` |
+| **Explore Opportunities** | Cramped multi-column cards | Clean 2-column cards, large compensation (`₹9.0 - ₹12.0 LPA`), explicit location/deadline, `Inspect Role →` CTA | `design-taste-frontend` |
+| **Job Details** | Basic criteria list | 2-column Ashby layout; 4-card transparent line-by-line eligibility audit (CGPA, Branch, Batch, Skills) | `impeccable` |
+| **My Applications** | Flat list with basic chips | Connected 4-stage pipeline summary, status-coded semantic pills, application transition audit log | `impeccable` |
+| **Application Details** | Simple status badge | Interactive 4-step stepper with active pulse, transition history log, Google Meet launcher card | `emil-design-eng` |
+| **Student Interviews** | Generic cards | Date-led chronological interview schedule with Google Meet CTA and round instructions | `design-taste-frontend` |
+| **Recruiter Dashboard** | Generic cards with `border-l-4` purple stripe | Removed `border-l-4`, candidate selection funnel with exact throughput percentages, candidate review queue | `impeccable` & `design-taste-frontend` |
+| **Recruiter ATS Table** | Repetitive action buttons per row | High-density ATS evaluation table with stage-based contextual actions (*Shortlist*, *Schedule*, *Extend Offer*, *Inspect*) | `impeccable` & `emil-design-eng` |
+| **Admin Command Center** | Empty charts and placeholder boxes | 4-pillar institutional ribbon, department-wise placement conversion bars, CTC package benchmarks, NIRF export | `design-taste-frontend` |
+| **Mobile Layout** | Untested baseline | Responsive drawers, full-width touch-friendly cards, zero horizontal scroll bleed (tested 375x812) | `impeccable` & `emil-design-eng` |
+
+---
+
+### 3. Verification & Evidence
+
+- **TypeScript Compilation:** `npm run build --prefix client` executed `tsc -b && vite build` successfully with **0 errors and 0 warnings**.
+- **Visual Artifacts:** All 14 high-resolution screenshots generated and visually inspected via headless browser:
+  - `screenshots/student_dashboard.png`
+  - `screenshots/explore_opportunities.png`
+  - `screenshots/job_details.png`
+  - `screenshots/my_applications.png`
+  - `screenshots/application_details.png`
+  - `screenshots/student_interviews.png`
+  - `screenshots/student_profile.png`
+  - `screenshots/recruiter_dashboard.png`
+  - `screenshots/recruiter_applicants.png`
+  - `screenshots/recruiter_jobs.png`
+  - `screenshots/admin_dashboard.png`
+  - `screenshots/admin_analytics.png`
+  - `screenshots/student_dashboard_mobile.png`
+  - `screenshots/explore_opportunities_mobile.png`
 
 ---
 
@@ -56,7 +90,7 @@ Following strict user instructions and guidelines from `impeccable`, `emil-desig
 | **Phase 1** | Repository Analysis & UI Foundation | **COMPLETED** | Verified (Design tokens, atomic primitives, AppShell, Sidebar, Top Navigation, Persona Switcher) |
 | **Phase 2** | Premium Student Portal Frontend | **COMPLETED** | Verified (Dashboard, Explore Opportunities, Job Details with Explainable Eligibility, My Applications Tracker, Interviews, Profile & Resume) |
 | **Phase 3** | Recruiter & Admin Portals | **COMPLETED** | Verified (Recruiter Dashboard, Pipeline, Job Management, Applicant Table, Admin Command Center, Student Directory, Company Empanelment, Drive Schedules) |
-| **Phase 4** | Complete Frontend Interactions & Visual QA | **COMPLETED** | 14 headless screenshots captured across desktop & mobile; zero console errors; `tsc -b && vite build` built in 8.02s |
+| **Phase 4** | Complete Frontend Interactions & Visual QA | **COMPLETED** | CampusFlow V3 design overhaul verified with 14 screenshots; `tsc -b && vite build` passed cleanly in 9.10s |
 | **Phase 5** | Backend & Database Implementation | **READY TO START** | Express + Prisma + SQLite/PostgreSQL schema ready |
 | **Phase 6** | Full-Stack Integration | Up Next | Wire live REST API endpoints to reactive frontends |
 | **Phase 7** | Testing, Polish & Deployment | Up Next | End-to-end user flows, presentation assets, seed data |

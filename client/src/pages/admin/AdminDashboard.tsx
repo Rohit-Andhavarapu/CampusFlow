@@ -7,7 +7,6 @@ import {
   FileText,
   TrendingUp,
   Award,
-  Sparkles,
   ArrowRight,
   Download,
   CheckCircle2,
@@ -15,7 +14,6 @@ import {
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { Card } from '../../components/ui/Card';
-import { MetricCard } from '../../components/ui/MetricCard';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { syntheticStudents } from '../../data/mockData';
@@ -39,22 +37,14 @@ export const AdminDashboard: React.FC = () => {
 
   return (
     <div className="space-y-8 pb-16">
-      {/* Editorial Header */}
-      <div className="border-b border-border pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+      {/* Header Without Banned Kickers */}
+      <div className="border-b border-slate-200/80 pb-6 flex flex-col md:flex-row md:items-baseline justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono font-medium text-ink-500 uppercase tracking-wider">
-            <span>Training & Placement Cell</span>
-            <span>•</span>
-            <span className="text-brand font-semibold">Institutional Analytics</span>
-            <span>•</span>
-            <span className="text-ink-400 font-normal">Demonstration Dataset</span>
-          </div>
-
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-ink-950 tracking-tight mt-1.5 font-sans">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-ink-950 tracking-tight font-sans">
             Placement Administration Command Center
           </h1>
-          <p className="text-xs sm:text-sm text-ink-600 mt-1 max-w-2xl">
-            Campus-wide recruitment drive analytics, company empanelment, and student placement progression for Class of 2026.
+          <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl">
+            Class of 2026 • Campus-wide recruitment drive analytics, company empanelment, and student placement progression.
           </p>
         </div>
 
@@ -78,47 +68,96 @@ export const AdminDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* KPI Metrics Strip */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard
-          label="Institutional Placement Rate"
-          value={`${placementRate}%`}
-          subtext={`${placedStudents} of ${totalStudents} graduating students placed`}
-          trend={{ value: '12% vs 2025', isPositive: true }}
-          variant="success"
-        />
-        <MetricCard
-          label="Registered Batch Size"
-          value={totalStudents}
-          subtext={`${inProcessStudents} currently interviewing in drives`}
-          variant="brand"
+      {/* Connected Performance Ribbon (Breaking Card-on-Card) */}
+      <Card elevation={1} className="divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 bg-surface">
+        <div className="p-5 flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-500">Placement Rate</span>
+            <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded">
+              +12% vs 2025
+            </span>
+          </div>
+          <div className="mt-3">
+            <span className="text-3xl font-extrabold tracking-tight text-emerald-700 tabular-nums">
+              {placementRate}%
+            </span>
+            <p className="text-[11px] text-slate-500 mt-1 truncate">
+              {placedStudents} of {totalStudents} graduating students placed
+            </p>
+          </div>
+        </div>
+
+        <div
           onClick={() => navigate('/admin/students')}
-        />
-        <MetricCard
-          label="Empanelled Partners"
-          value={6}
-          subtext="Active Tier-1 & Core corporate recruiters"
+          className="p-5 cursor-pointer hover:bg-slate-50/70 transition-colors flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-500">Registered Batch</span>
+            <span className="text-[11px] font-semibold text-teal-800 bg-teal-50 border border-teal-200 px-1.5 py-0.5 rounded">
+              Class 2026
+            </span>
+          </div>
+          <div className="mt-3">
+            <span className="text-3xl font-extrabold tracking-tight text-ink-950 tabular-nums">
+              {totalStudents}
+            </span>
+            <p className="text-[11px] text-slate-500 mt-1 truncate">
+              {inProcessStudents} currently interviewing in drives
+            </p>
+          </div>
+        </div>
+
+        <div
           onClick={() => navigate('/admin/companies')}
-        />
-        <MetricCard
-          label="Placement Drive Phases"
-          value={3}
-          subtext="Super-Dream, AI, & Mass hiring tracks"
-          variant="warning"
+          className="p-5 cursor-pointer hover:bg-slate-50/70 transition-colors flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-500">Empanelled Partners</span>
+            <span className="text-[11px] font-semibold text-blue-800 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded">
+              Tier-1 & Core
+            </span>
+          </div>
+          <div className="mt-3">
+            <span className="text-3xl font-extrabold tracking-tight text-ink-950 tabular-nums">
+              6
+            </span>
+            <p className="text-[11px] text-slate-500 mt-1 truncate">
+              Active corporate hiring partners
+            </p>
+          </div>
+        </div>
+
+        <div
           onClick={() => navigate('/admin/drives')}
-        />
-      </div>
+          className="p-5 cursor-pointer hover:bg-slate-50/70 transition-colors flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-500">Drive Phases</span>
+            <span className="text-[11px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded">
+              On Schedule
+            </span>
+          </div>
+          <div className="mt-3">
+            <span className="text-3xl font-extrabold tracking-tight text-ink-950 tabular-nums">
+              3
+            </span>
+            <p className="text-[11px] text-slate-500 mt-1 truncate">
+              Super-Dream, AI, & Mass hiring tracks
+            </p>
+          </div>
+        </div>
+      </Card>
 
       {/* Department Analytics & Recent Offers */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Department Placement Breakdown */}
-        <Card className="lg:col-span-2 p-6 border border-border shadow-subtle">
-          <div className="flex items-center justify-between pb-3 border-b border-border mb-6">
+        <Card elevation={1} className="lg:col-span-2 p-6 bg-surface border-slate-200/80">
+          <div className="flex items-center justify-between pb-3.5 border-b border-slate-100 mb-6">
             <div>
-              <h3 className="text-sm font-bold text-ink-950 uppercase tracking-wide">
+              <h2 className="text-sm font-bold text-ink-950 tracking-tight">
                 Department-Wise Placement Conversion
-              </h3>
-              <p className="text-xs text-ink-500 mt-0.5">
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">
                 Class of 2026 verified placement achievement across disciplines
               </p>
             </div>
@@ -132,13 +171,13 @@ export const AdminDashboard: React.FC = () => {
               <div key={dept.name} className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs font-semibold">
                   <span className="text-ink-950">{dept.name}</span>
-                  <span className="font-mono text-ink-600">
+                  <span className="font-mono text-slate-600">
                     {dept.placed} / {dept.total} placed ({dept.rate}%)
                   </span>
                 </div>
                 <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden flex">
                   <div
-                    className="bg-brand h-full rounded-full transition-all duration-500"
+                    className="bg-teal-700 h-full rounded-full transition-all duration-500"
                     style={{ width: `${dept.rate}%` }}
                   />
                 </div>
@@ -146,37 +185,37 @@ export const AdminDashboard: React.FC = () => {
             ))}
           </div>
 
-          <div className="mt-8 pt-4 border-t border-border grid grid-cols-3 gap-4 text-center text-xs">
+          <div className="mt-8 pt-4 border-t border-slate-100 grid grid-cols-3 gap-4 text-center text-xs">
             <div>
-              <p className="text-ink-500 font-medium">Highest Package</p>
-              <p className="text-base font-extrabold text-ink-950 font-sans mt-0.5">₹28.0 LPA</p>
+              <p className="text-slate-500 font-medium">Highest Package</p>
+              <p className="text-base font-extrabold text-ink-950 font-sans mt-0.5 tabular-nums">₹28.0 LPA</p>
             </div>
             <div>
-              <p className="text-ink-500 font-medium">Average Package</p>
-              <p className="text-base font-extrabold text-ink-950 font-sans mt-0.5">₹14.2 LPA</p>
+              <p className="text-slate-500 font-medium">Average Package</p>
+              <p className="text-base font-extrabold text-ink-950 font-sans mt-0.5 tabular-nums">₹14.2 LPA</p>
             </div>
             <div>
-              <p className="text-ink-500 font-medium">Median Package</p>
-              <p className="text-base font-extrabold text-ink-950 font-sans mt-0.5">₹12.0 LPA</p>
+              <p className="text-slate-500 font-medium">Median Package</p>
+              <p className="text-base font-extrabold text-ink-950 font-sans mt-0.5 tabular-nums">₹12.0 LPA</p>
             </div>
           </div>
         </Card>
 
         {/* Latest Offers Extended List */}
-        <Card className="p-6 border border-border shadow-subtle">
-          <div className="flex items-center justify-between pb-3 border-b border-border">
-            <h3 className="text-xs font-bold text-ink-950 uppercase tracking-wide">
+        <Card elevation={1} className="p-6 bg-surface border-slate-200/80">
+          <div className="flex items-center justify-between pb-3.5 border-b border-slate-100">
+            <h2 className="text-xs font-bold text-ink-950 uppercase tracking-wide">
               Recent Offers Released
-            </h3>
+            </h2>
             <span
-              className="text-[11px] font-medium text-brand hover:underline cursor-pointer"
+              className="text-[11px] font-medium text-teal-700 hover:underline cursor-pointer"
               onClick={() => navigate('/admin/students')}
             >
               All Students
             </span>
           </div>
 
-          <div className="divide-y divide-border mt-1">
+          <div className="divide-y divide-slate-100 mt-1">
             {syntheticStudents
               .filter((s) => s.status === 'Placed')
               .slice(0, 5)
@@ -184,11 +223,11 @@ export const AdminDashboard: React.FC = () => {
                 <div key={st.id} className="py-3 first:pt-2 last:pb-0 flex items-center justify-between">
                   <div>
                     <p className="text-xs font-bold text-ink-950">{st.name}</p>
-                    <p className="text-[11px] text-ink-500">{st.company}</p>
+                    <p className="text-[11px] text-slate-500">{st.company}</p>
                   </div>
                   <div className="text-right">
-                    <span className="text-xs font-bold font-mono text-emerald-700">{st.package}</span>
-                    <p className="text-[10px] text-ink-400 font-mono">{st.branch.split(' ')[0]}</p>
+                    <span className="text-xs font-bold font-mono text-emerald-700 tabular-nums">{st.package}</span>
+                    <p className="text-[10px] text-slate-400 font-mono">{st.branch.split(' ')[0]}</p>
                   </div>
                 </div>
               ))}
