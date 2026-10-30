@@ -7,13 +7,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#F6F8FA', // Warm Alabaster Canvas
+        background: '#F4F5F7', // Linear/Ashby Framed-Sheet Ground
         surface: {
           DEFAULT: '#FFFFFF',
           subtle: '#F8FAFC',
           secondary: '#F1F4F8',
           elevated: '#FFFFFF',
-          dark: '#0B0F17', // Obsidian Pitch Sidebar
+          shell: '#F4F5F7',
+          sidebar: '#F8FAFC',
           'dark-subtle': '#131B26',
           'dark-border': '#1B2433',
         },

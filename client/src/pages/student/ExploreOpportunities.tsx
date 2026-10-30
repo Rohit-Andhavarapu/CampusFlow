@@ -14,6 +14,7 @@ import {
   ChevronRight,
   Building2,
   Users,
+  ShieldCheck,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { Card } from '../../components/ui/Card';
@@ -119,19 +120,19 @@ export const ExploreOpportunities: React.FC = () => {
       {/* Editorial Header Without Banned Kickers */}
       <div className="border-b border-slate-200/80 pb-5">
         <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-ink-950 tracking-tight font-sans">
-              Explore Opportunities
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight font-sans break-words">
+              Explore Campus Opportunities
             </h1>
             <p className="text-xs sm:text-sm text-slate-600 mt-1">
-              Direct campus hiring drives and internships. Transparent criteria audits matching your verified academic profile.
+              Active campus recruitment drives, summer internships, and graduate trainee pipelines with real-time academic clearance.
             </p>
           </div>
 
-          <div className="flex items-center gap-2 text-xs font-mono text-slate-600 bg-white border border-slate-200 px-3 py-1.5 rounded-button shadow-elevation-1">
-            <span>Verified CGPA: <strong>{studentProfile.cgpa}</strong></span>
+          <div className="flex items-center gap-2 text-xs font-mono text-slate-600 bg-white border border-slate-200/90 px-3 py-1.5 rounded-lg shadow-2xs self-start md:self-auto">
+            <span>Verified CGPA: <strong className="text-slate-900 font-bold">{studentProfile.cgpa}</strong></span>
             <span className="text-slate-300">•</span>
-            <span>Batch: <strong>{studentProfile.graduationYear}</strong></span>
+            <span>Batch: <strong className="text-slate-900 font-bold">{studentProfile.graduationYear}</strong></span>
           </div>
         </div>
 
@@ -141,8 +142,8 @@ export const ExploreOpportunities: React.FC = () => {
         </div>
       </div>
 
-      {/* Filter & Search Bar */}
-      <Card elevation={1} className="bg-surface border-slate-200/80 p-3.5 space-y-3">
+      {/* Filter & Search Command Bar */}
+      <div className="rounded-xl border border-slate-200/90 bg-white p-3.5 space-y-3 shadow-2xs">
         <div className="flex flex-col lg:flex-row items-center gap-2.5">
           {/* Search Input */}
           <div className="w-full lg:flex-1 relative">
@@ -151,13 +152,13 @@ export const ExploreOpportunities: React.FC = () => {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Filter by role, company, or target skill (e.g. Agentic AI, TypeScript)..."
-              className="w-full pl-8 pr-8 py-2 text-xs bg-slate-50 border border-slate-200 rounded-button text-ink-950 placeholder:text-slate-400 focus-ring-refined"
+              placeholder="Search by role, company name, or competency (e.g. TypeScript, Fastify, Agentic AI)..."
+              className="w-full pl-8 pr-8 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-900 placeholder:text-slate-400 focus-ring-refined"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-ink-950"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-900"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -169,10 +170,10 @@ export const ExploreOpportunities: React.FC = () => {
             <select
               value={selectedWorkMode}
               onChange={(e) => setSelectedWorkMode(e.target.value)}
-              className="text-xs bg-surface border border-slate-200 rounded-button px-2.5 py-2 text-slate-700 font-medium focus-ring-refined cursor-pointer"
+              className="text-xs bg-white border border-slate-200 rounded-lg px-2.5 py-2 text-slate-700 font-medium focus-ring-refined cursor-pointer"
             >
               <option value="all">Mode: All Arrangements</option>
-              <option value="Remote">Remote / WFH</option>
+              <option value="Remote">Remote</option>
               <option value="Hybrid">Hybrid</option>
               <option value="On-site">On-site</option>
             </select>
@@ -180,7 +181,7 @@ export const ExploreOpportunities: React.FC = () => {
             <select
               value={selectedType}
               onChange={(e) => setSelectedType(e.target.value)}
-              className="text-xs bg-surface border border-slate-200 rounded-button px-2.5 py-2 text-slate-700 font-medium focus-ring-refined cursor-pointer"
+              className="text-xs bg-white border border-slate-200 rounded-lg px-2.5 py-2 text-slate-700 font-medium focus-ring-refined cursor-pointer"
             >
               <option value="all">Type: All Positions</option>
               <option value="Internship">Internship</option>
@@ -190,7 +191,7 @@ export const ExploreOpportunities: React.FC = () => {
             <select
               value={selectedEligibility}
               onChange={(e) => setSelectedEligibility(e.target.value)}
-              className="text-xs bg-surface border border-slate-200 rounded-button px-2.5 py-2 text-slate-700 font-medium focus-ring-refined cursor-pointer"
+              className="text-xs bg-white border border-slate-200 rounded-lg px-2.5 py-2 text-slate-700 font-medium focus-ring-refined cursor-pointer"
             >
               <option value="all">Eligibility: All</option>
               <option value="eligible">Eligible Only</option>
@@ -200,7 +201,7 @@ export const ExploreOpportunities: React.FC = () => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="text-xs bg-surface border border-slate-200 rounded-button px-2.5 py-2 text-slate-700 font-medium focus-ring-refined cursor-pointer"
+              className="text-xs bg-white border border-slate-200 rounded-lg px-2.5 py-2 text-slate-700 font-medium focus-ring-refined cursor-pointer"
             >
               <option value="newest">Sort: Recently Added</option>
               <option value="deadline">Sort: Deadline Soonest</option>
@@ -221,27 +222,27 @@ export const ExploreOpportunities: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-100">
+        <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-100 font-mono">
           <span>
-            Showing <strong className="text-ink-950 font-semibold">{filteredJobs.length}</strong> of{' '}
+            Showing <strong className="text-slate-900 font-semibold">{filteredJobs.length}</strong> of{' '}
             {jobs.length} campus opportunities
           </span>
-          <span>Verified recruitment partners</span>
+          <span className="hidden sm:inline text-slate-400">Institutional Placement Clearance Active</span>
         </div>
-      </Card>
+      </div>
 
-      {/* Grid of Redesigned Job Cards — No Text Clipping, Clean Hierarchy */}
+      {/* Grid of Redesigned Job Cards — Sophisticated Hierarchy */}
       {filteredJobs.length === 0 ? (
-        <Card elevation={1} className="p-12 text-center flex flex-col items-center justify-center border-slate-200/80">
+        <div className="rounded-xl border border-slate-200/90 bg-white p-12 text-center flex flex-col items-center justify-center shadow-2xs">
           <Briefcase className="w-8 h-8 text-slate-400 mb-2.5" />
-          <h3 className="text-sm font-bold text-ink-950">No matching opportunities found</h3>
+          <h3 className="text-sm font-bold text-slate-900">No matching campus opportunities found</h3>
           <p className="text-xs text-slate-500 mt-1 max-w-sm">
-            Adjust your keyword query, broaden work mode criteria, or clear filters.
+            Adjust your keyword query, broaden work mode criteria, or reset active filters.
           </p>
           <Button variant="outline" size="sm" onClick={clearAllFilters} className="mt-4">
             Reset All Filters
           </Button>
-        </Card>
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {filteredJobs.map((job) => {
@@ -251,17 +252,15 @@ export const ExploreOpportunities: React.FC = () => {
             );
 
             return (
-              <Card
+              <div
                 key={job.id}
-                elevation={1}
-                hoverable
                 onClick={() => navigate(`/student/opportunities/${job.id}`)}
-                className="p-5 flex flex-col justify-between bg-surface border-slate-200/80 card-lift transition-colors"
+                className="p-5 rounded-xl border border-slate-200/90 bg-white hover:border-slate-300 hover:shadow-xs transition-all cursor-pointer flex flex-col justify-between"
               >
                 <div>
-                  {/* Row 1: Company Logo + Title + Status Badge */}
+                  {/* Row 1: Company Logo + Title + Status Pill */}
                   <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-start gap-3.5">
                       <img
                         src={job.companyLogo}
                         alt={job.companyName}
@@ -269,15 +268,15 @@ export const ExploreOpportunities: React.FC = () => {
                       />
                       <div>
                         <div className="flex items-center gap-1.5">
-                          <span className="text-xs font-semibold text-slate-600">
+                          <span className="text-xs font-semibold text-slate-700">
                             {job.companyName}
                           </span>
                           <span className="text-slate-300">•</span>
-                          <span className="text-[11px] font-mono text-slate-500">
+                          <span className="text-[11px] font-mono text-slate-500 bg-slate-100 px-1.5 py-0.2 rounded">
                             {job.workMode}
                           </span>
                         </div>
-                        <h3 className="text-base font-bold text-ink-950 hover:text-teal-700 transition-colors mt-0.5 line-clamp-1">
+                        <h3 className="text-base font-bold text-slate-900 hover:text-teal-700 transition-colors mt-0.5 line-clamp-1">
                           {job.title}
                         </h3>
                       </div>
@@ -294,19 +293,19 @@ export const ExploreOpportunities: React.FC = () => {
                       </Badge>
                     ) : (
                       <Badge variant="neutral" dot size="sm" className="flex-shrink-0">
-                        Ineligible
+                        Criteria Gap
                       </Badge>
                     )}
                   </div>
 
-                  {/* Row 2: Compensation & Metadata Strip (NO TRUNCATION) */}
-                  <div className="mt-4 pt-3 border-t border-slate-100 flex flex-col gap-1.5">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-extrabold text-ink-950 font-sans tracking-tight tabular-nums">
+                  {/* Row 2: Compensation & Criteria Badge */}
+                  <div className="mt-4 pt-3 border-t border-slate-100 flex flex-col gap-2">
+                    <div className="flex items-baseline justify-between">
+                      <span className="text-base font-extrabold text-slate-900 tracking-tight tabular-nums">
                         {job.stipendOrSalary}
                       </span>
-                      <span className="text-xs font-medium text-slate-600">
-                        {job.openings} Openings
+                      <span className="text-xs font-medium text-slate-500 font-mono">
+                        {job.openings} campus openings
                       </span>
                     </div>
 
@@ -320,9 +319,15 @@ export const ExploreOpportunities: React.FC = () => {
                         Apply by {formatDate(job.applyBy)}
                       </span>
                     </div>
+
+                    {/* Distinctive Transparent Eligibility Manifest */}
+                    <div className="mt-1 flex items-center gap-1.5 text-[11px] text-slate-600 bg-slate-50 border border-slate-200/70 px-2 py-1 rounded-md">
+                      <ShieldCheck className="w-3.5 h-3.5 text-teal-700 flex-shrink-0" />
+                      <span>Cutoff: Min CGPA {job.minCgpa} • Eligible: {job.eligibleBranches.join(', ')}</span>
+                    </div>
                   </div>
 
-                  {/* Row 3: Skill Chips */}
+                  {/* Row 3: Skills List */}
                   <div className="flex flex-wrap items-center gap-1.5 mt-3 pt-3 border-t border-slate-100">
                     {job.skillsRequired.slice(0, 4).map((skill) => (
                       <span
@@ -341,16 +346,16 @@ export const ExploreOpportunities: React.FC = () => {
                 </div>
 
                 {/* Footer: Applied count and CTA */}
-                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-xs text-slate-500">
+                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                  <span className="text-slate-500 font-mono">
                     {job.applicantsCount || 0} candidates applied
                   </span>
 
-                  <span className="text-xs font-semibold text-teal-700 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                    Inspect Role <ChevronRight className="w-3.5 h-3.5" />
+                  <span className="font-semibold text-teal-700 flex items-center gap-1 hover:underline">
+                    Inspect Specification <ChevronRight className="w-3.5 h-3.5" />
                   </span>
                 </div>
-              </Card>
+              </div>
             );
           })}
         </div>

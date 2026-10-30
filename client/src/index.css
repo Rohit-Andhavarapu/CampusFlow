@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --bg-ground: #F6F8FA;
+    --bg-ground: #F4F5F7;
     --text-primary: #090E17;
     --text-secondary: #334155;
     --text-muted: #64748B;
@@ -26,7 +26,7 @@
   }
 
   body {
-    background-color: #F6F8FA;
+    background-color: #F4F5F7;
     color: #090E17;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;

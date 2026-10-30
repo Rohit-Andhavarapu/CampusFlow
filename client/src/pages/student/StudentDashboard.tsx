@@ -12,7 +12,10 @@ import {
   ShieldCheck,
   ChevronRight,
   Building2,
+  Video,
+  Award,
   Sparkles,
+  AlertCircle,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { Card } from '../../components/ui/Card';
@@ -38,25 +41,30 @@ export const StudentDashboard: React.FC = () => {
   if (studentProfile.projects.length >= 1) profileScore += 15;
   if (studentProfile.githubUrl || studentProfile.portfolioUrl) profileScore += 10;
 
+  const nextInterview = upcomingInterviews.length > 0 ? upcomingInterviews[0] : null;
   const recommendedJobs = eligibleJobs.slice(0, 3);
   const recentApplications = applications.slice(0, 3);
 
   return (
-    <div className="space-y-7 pb-12">
+    <div className="space-y-6 pb-12">
       {/* Editorial Header — Confident Typography Without Banned Kickers */}
       <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4 pb-4 border-b border-slate-200/80">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-ink-950 tracking-tight font-sans">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight font-sans break-words">
             Career Overview — {currentUser.name}
           </h1>
-          <p className="text-xs sm:text-sm text-slate-600 mt-1 font-normal">
-            {studentProfile.degree} in {studentProfile.branch} • Verified CGPA{' '}
-            <strong className="text-ink-950 font-bold">{studentProfile.cgpa}</strong> • Class of{' '}
-            {studentProfile.graduationYear}
+          <p className="text-xs sm:text-sm text-slate-600 mt-1 font-normal flex flex-wrap items-center gap-x-2">
+            <span>{studentProfile.degree} in {studentProfile.branch}</span>
+            <span>•</span>
+            <span>Verified CGPA <strong className="text-slate-900 font-bold">{studentProfile.cgpa}</strong></span>
+            <span>•</span>
+            <span>Roll No: <span className="font-mono text-slate-700">{studentProfile.rollNo}</span></span>
+            <span>•</span>
+            <span>Class of {studentProfile.graduationYear}</span>
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 flex-shrink-0">
           <Button
             variant="outline"
             size="sm"
@@ -76,31 +84,112 @@ export const StudentDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Connected Performance Ribbon (Breaking the Card-on-Card Pattern) */}
-      <Card elevation={1} className="divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 bg-surface">
-        {/* Pillar 1: Applications Active */}
+      {/* LEAD-ANSWER ARCHITECTURE: Active Next Action Command Hero */}
+      {nextInterview ? (
+        <div className="rounded-2xl border border-teal-200/90 bg-gradient-to-r from-teal-50/90 via-slate-50/60 to-white p-5 sm:p-6 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-2 max-w-2xl min-w-0">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-teal-600 animate-pulse" />
+              <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-teal-800">
+                Next Active Recruitment Milestone
+              </span>
+              <span className="text-[11px] font-semibold text-teal-700 bg-teal-100/70 border border-teal-200 px-2 py-0.5 rounded-full">
+                Scheduled Round
+              </span>
+            </div>
+
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-900 tracking-tight break-words">
+              {nextInterview.round} • {nextInterview.companyName}
+            </h2>
+
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Target Role: <strong className="text-slate-800">{nextInterview.jobTitle}</strong>. {nextInterview.notes || 'Review system design, full-stack architecture, and real-time state synchronization.'}
+            </p>
+
+            <div className="flex flex-wrap items-center gap-4 text-xs text-slate-600 pt-1 font-mono">
+              <span className="flex items-center gap-1.5 font-medium text-slate-800">
+                <Calendar className="w-3.5 h-3.5 text-teal-700" />
+                {new Date(nextInterview.dateTime).toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })} at {new Date(nextInterview.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Video className="w-3.5 h-3.5 text-teal-700" />
+                {nextInterview.mode} (Google Meet)
+              </span>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row md:flex-col gap-2.5 flex-shrink-0">
+            {nextInterview.locationOrLink ? (
+              <a
+                href={nextInterview.locationOrLink}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white font-semibold text-xs sm:text-sm shadow-xs transition-colors"
+              >
+                <Video className="w-4 h-4" />
+                Launch Google Meet Room
+              </a>
+            ) : null}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/student/interviews')}
+              rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
+            >
+              Interview Logistics
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-slate-200/90 bg-gradient-to-r from-slate-50 via-white to-slate-50/80 p-5 sm:p-6 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-5">
+          <div>
+            <div className="flex items-center gap-2 text-xs font-mono font-semibold uppercase text-slate-500">
+              <ShieldCheck className="w-4 h-4 text-teal-700" />
+              <span>Campus Recruitment Clearance</span>
+            </div>
+            <h2 className="text-lg font-bold text-slate-900 mt-1">
+              {eligibleCount} Verified Campus Vacancies Open For Submission
+            </h2>
+            <p className="text-xs text-slate-600 mt-0.5">
+              Your profile satisfies all academic benchmarks. Submit applications before corporate deadlines.
+            </p>
+          </div>
+          <Button
+            variant="primary"
+            size="md"
+            rightIcon={<ArrowRight className="w-4 h-4" />}
+            onClick={() => navigate('/student/opportunities')}
+          >
+            Review Matching Openings
+          </Button>
+        </div>
+      )}
+
+      {/* Connected 4-Pillar Metric Strip (Arithmetically Balanced) */}
+      <div className="rounded-xl border border-slate-200/90 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 bg-white shadow-2xs overflow-hidden">
+        {/* Pillar 1 */}
         <div
           onClick={() => navigate('/student/applications')}
-          className="p-5 cursor-pointer hover:bg-slate-50/70 transition-colors flex flex-col justify-between"
+          className="p-4 sm:p-5 cursor-pointer hover:bg-slate-50/80 transition-colors flex flex-col justify-between"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Applications Active</span>
-            <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded">
+            <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded">
               +2 this week
             </span>
           </div>
-          <div className="mt-3">
-            <span className="text-3xl font-extrabold tracking-tight text-ink-950 tabular-nums">
+          <div className="mt-2.5">
+            <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 tabular-nums">
               {submittedCount}
             </span>
-            <p className="text-[11px] text-slate-500 mt-1 truncate">Submitted across campus drives</p>
+            <p className="text-[11px] text-slate-500 mt-0.5 truncate">Submitted across campus drives</p>
           </div>
         </div>
 
-        {/* Pillar 2: Eligible Openings */}
+        {/* Pillar 2 */}
         <div
           onClick={() => navigate('/student/opportunities')}
-          className="p-5 cursor-pointer hover:bg-slate-50/70 transition-colors flex flex-col justify-between"
+          className="p-4 sm:p-5 cursor-pointer hover:bg-slate-50/80 transition-colors flex flex-col justify-between"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Eligible Openings</span>
@@ -108,20 +197,18 @@ export const StudentDashboard: React.FC = () => {
               Direct match
             </span>
           </div>
-          <div className="mt-3">
-            <span className="text-3xl font-extrabold tracking-tight text-ink-950 tabular-nums">
+          <div className="mt-2.5">
+            <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 tabular-nums">
               {eligibleCount}
             </span>
-            <p className="text-[11px] text-slate-500 mt-1 truncate">
-              Meets branch and CGPA cutoffs
-            </p>
+            <p className="text-[11px] text-slate-500 mt-0.5 truncate">Meets branch & CGPA criteria</p>
           </div>
         </div>
 
-        {/* Pillar 3: Upcoming Interview Rounds */}
+        {/* Pillar 3 */}
         <div
           onClick={() => navigate('/student/interviews')}
-          className="p-5 cursor-pointer hover:bg-slate-50/70 transition-colors flex flex-col justify-between"
+          className="p-4 sm:p-5 cursor-pointer hover:bg-slate-50/80 transition-colors flex flex-col justify-between"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Upcoming Rounds</span>
@@ -131,11 +218,11 @@ export const StudentDashboard: React.FC = () => {
               </span>
             )}
           </div>
-          <div className="mt-3">
-            <span className="text-3xl font-extrabold tracking-tight text-ink-950 tabular-nums">
+          <div className="mt-2.5">
+            <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 tabular-nums">
               {upcomingInterviews.length}
             </span>
-            <p className="text-[11px] text-slate-500 mt-1 truncate">
+            <p className="text-[11px] text-slate-500 mt-0.5 truncate">
               {upcomingInterviews.length > 0
                 ? `${formatDate(upcomingInterviews[0].dateTime)} • ${upcomingInterviews[0].companyName}`
                 : 'No rounds pending'}
@@ -143,10 +230,10 @@ export const StudentDashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Pillar 4: Hiring Offers Extended */}
+        {/* Pillar 4 */}
         <div
           onClick={() => navigate('/student/applications')}
-          className="p-5 cursor-pointer hover:bg-slate-50/70 transition-colors flex flex-col justify-between"
+          className="p-4 sm:p-5 cursor-pointer hover:bg-slate-50/80 transition-colors flex flex-col justify-between"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-slate-500">Offers Extended</span>
@@ -154,173 +241,93 @@ export const StudentDashboard: React.FC = () => {
               Verified
             </span>
           </div>
-          <div className="mt-3">
-            <span className="text-3xl font-extrabold tracking-tight text-emerald-700 tabular-nums">
+          <div className="mt-2.5">
+            <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-emerald-700 tabular-nums">
               {selectedOffers.length}
             </span>
-            <p className="text-[11px] text-slate-500 mt-1 truncate">
+            <p className="text-[11px] text-slate-500 mt-0.5 truncate">
               {selectedOffers.length > 0
                 ? `${selectedOffers[0].companyName} (${selectedOffers[0].jobTitle})`
                 : 'Interview stage active'}
             </p>
           </div>
         </div>
-      </Card>
-
-      {/* Placement Journey & Career Readiness Module */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Placement Journey Pipeline */}
-        <Card elevation={1} className="lg:col-span-2 p-6 flex flex-col justify-between bg-surface border-slate-200/80">
-          <div>
-            <div className="flex items-center justify-between pb-3.5 border-b border-slate-100">
-              <div>
-                <h2 className="text-sm font-bold text-ink-950 tracking-tight">
-                  Placement Milestone Progression
-                </h2>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Actual progress across campus recruitment stages
-                </p>
-              </div>
-              <Badge variant="brand" size="sm">
-                Session {studentProfile.graduationYear}
-              </Badge>
-            </div>
-
-            {/* Stage Progress Blocks */}
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mt-4">
-              <div className="p-3 rounded-lg bg-slate-50/90 border border-slate-200/80">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-mono text-[10px] text-slate-400 font-semibold uppercase">Stage 1</span>
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                </div>
-                <p className="font-bold text-ink-950 text-xs mt-1.5">Academic Audit</p>
-                <p className="text-[11px] text-slate-500 mt-0.5">CGPA {studentProfile.cgpa} Verified</p>
-              </div>
-
-              <div className="p-3 rounded-lg bg-slate-50/90 border border-slate-200/80">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-mono text-[10px] text-slate-400 font-semibold uppercase">Stage 2</span>
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                </div>
-                <p className="font-bold text-ink-950 text-xs mt-1.5">Applications</p>
-                <p className="text-[11px] text-slate-500 mt-0.5">{submittedCount} Roles Submitted</p>
-              </div>
-
-              <div className="p-3 rounded-lg bg-teal-50/70 border border-teal-200/90">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-mono text-[10px] text-teal-800 font-semibold uppercase">Stage 3</span>
-                  <span className="w-2 h-2 rounded-full bg-teal-600 animate-pulse" />
-                </div>
-                <p className="font-bold text-teal-900 text-xs mt-1.5">Interviews</p>
-                <p className="text-[11px] text-teal-700 mt-0.5">1 Round Scheduled</p>
-              </div>
-
-              <div className="p-3 rounded-lg bg-emerald-50/70 border border-emerald-200/90">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-mono text-[10px] text-emerald-800 font-semibold uppercase">Stage 4</span>
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                </div>
-                <p className="font-bold text-emerald-950 text-xs mt-1.5">Offer Extended</p>
-                <p className="text-[11px] text-emerald-700 mt-0.5">AgNext Technologies</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <span className="flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-teal-700" />
-              Automated eligibility rules evaluated across all live vacancies.
-            </span>
-            <button
-              onClick={() => navigate('/student/applications')}
-              className="text-teal-700 font-medium hover:underline flex items-center gap-1"
-            >
-              Detailed Pipeline <ArrowRight className="w-3 h-3" />
-            </button>
-          </div>
-        </Card>
-
-        {/* Profile Readiness & Dossier Checklist */}
-        <Card elevation={1} className="p-6 flex flex-col justify-between bg-surface border-slate-200/80">
-          <div>
-            <div className="flex items-center justify-between pb-3.5 border-b border-slate-100">
-              <h2 className="text-sm font-bold text-ink-950 tracking-tight">
-                Profile Readiness
-              </h2>
-              <span className="font-mono font-bold text-xs text-teal-700">{profileScore}%</span>
-            </div>
-
-            <div className="w-full bg-slate-100 rounded-full h-1.5 mt-4 overflow-hidden">
-              <div
-                className="bg-teal-700 h-1.5 rounded-full transition-all duration-300"
-                style={{ width: `${profileScore}%` }}
-              />
-            </div>
-
-            <div className="mt-4 space-y-2.5">
-              <div className="flex items-center justify-between text-xs">
-                <span className="flex items-center gap-2 text-slate-700">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                  Academic CGPA & Branch
-                </span>
-                <span className="font-mono text-slate-500 text-[11px]">{studentProfile.cgpa} CGPA</span>
-              </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="flex items-center gap-2 text-slate-700">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                  Placement Master Resume
-                </span>
-                <span className="font-mono text-slate-500 text-[11px]">PDF Attached</span>
-              </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="flex items-center gap-2 text-slate-700">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                  Technical Skills Tagged
-                </span>
-                <span className="font-mono text-slate-500 text-[11px]">
-                  {studentProfile.skills.length} skills
-                </span>
-              </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="flex items-center gap-2 text-slate-700">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                  GitHub & Portfolio Attached
-                </span>
-                <span className="font-mono text-slate-500 text-[11px]">Verified</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-5 pt-3 border-t border-slate-100">
-            <Button
-              variant="outline"
-              size="sm"
-              className="w-full text-xs"
-              onClick={() => navigate('/student/profile')}
-            >
-              Update Dossier Credentials
-            </Button>
-          </div>
-        </Card>
       </div>
 
-      {/* Main Grid: Recommended Openings & Live Schedule */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left 2 Cols: Recommended Opportunities */}
+      {/* DISTINCTIVE SIGNATURE COMPONENT: Placement Milestone Progression */}
+      <div className="rounded-xl border border-slate-200/90 bg-white p-5 sm:p-6 shadow-2xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-2">
+          <div>
+            <h2 className="text-sm font-bold text-slate-900 tracking-tight">
+              Institutional Placement Milestone Progression
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Automated recruitment audit status for Session {studentProfile.graduationYear}
+            </p>
+          </div>
+          <span className="inline-flex items-center gap-1.5 text-xs text-teal-800 bg-teal-50 border border-teal-200 px-2.5 py-1 rounded-full font-medium self-start sm:self-auto">
+            <ShieldCheck className="w-3.5 h-3.5 text-teal-700" />
+            Verified T&P Clearance
+          </span>
+        </div>
+
+        {/* 4 Pipeline Stages */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
+          <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200/90">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-mono text-[10px] text-slate-500 font-semibold uppercase">Stage 1</span>
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            </div>
+            <p className="font-bold text-slate-900 text-xs mt-2">Academic Audit</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">CGPA {studentProfile.cgpa} Verified</p>
+          </div>
+
+          <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200/90">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-mono text-[10px] text-slate-500 font-semibold uppercase">Stage 2</span>
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            </div>
+            <p className="font-bold text-slate-900 text-xs mt-2">Applications Submitted</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">{submittedCount} Campus Roles</p>
+          </div>
+
+          <div className="p-3.5 rounded-lg bg-teal-50/80 border border-teal-200/90">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-mono text-[10px] text-teal-800 font-semibold uppercase">Stage 3</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-teal-600 animate-pulse" />
+            </div>
+            <p className="font-bold text-teal-950 text-xs mt-2">Evaluations Active</p>
+            <p className="text-[11px] text-teal-800 mt-0.5">1 Round Scheduled</p>
+          </div>
+
+          <div className="p-3.5 rounded-lg bg-emerald-50/80 border border-emerald-200/90">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-mono text-[10px] text-emerald-800 font-semibold uppercase">Stage 4</span>
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            </div>
+            <p className="font-bold text-emerald-950 text-xs mt-2">Offer Released</p>
+            <p className="text-[11px] text-emerald-800 mt-0.5">AgNext Technologies</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Workspace Grid: Recommended Opportunities & Student Dossier (2/3 + 1/3) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left 2 Cols: Recommended Opportunities Catalog */}
         <div className="lg:col-span-2 space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between pb-1">
             <div>
-              <h2 className="text-base font-bold text-ink-950 tracking-tight">
-                Recommended Opportunities
+              <h2 className="text-base font-bold text-slate-900 tracking-tight">
+                Recommended Campus Opportunities
               </h2>
               <p className="text-xs text-slate-500">
-                Direct match for your competencies in {studentProfile.skills.slice(0, 3).join(', ')}
+                Direct match for {studentProfile.branch} with competencies in {studentProfile.skills.slice(0, 3).join(', ')}
               </p>
             </div>
             <Button
               variant="ghost"
               size="sm"
-              rightIcon={<ArrowRight className="w-3 h-3" />}
+              rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
               onClick={() => navigate('/student/opportunities')}
             >
               All Openings ({jobs.length})
@@ -331,12 +338,10 @@ export const StudentDashboard: React.FC = () => {
             {recommendedJobs.map((job) => {
               const applied = applications.some((a) => a.jobId === job.id && a.status !== 'Withdrawn');
               return (
-                <Card
+                <div
                   key={job.id}
-                  elevation={1}
-                  hoverable
                   onClick={() => navigate(`/student/opportunities/${job.id}`)}
-                  className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface border-slate-200/80 transition-colors"
+                  className="p-4 sm:p-5 rounded-xl border border-slate-200/90 bg-white hover:border-slate-300 hover:shadow-2xs transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                 >
                   <div className="flex items-start gap-3.5">
                     <img
@@ -346,35 +351,41 @@ export const StudentDashboard: React.FC = () => {
                     />
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-semibold text-slate-600">
+                        <span className="text-xs font-semibold text-slate-700">
                           {job.companyName}
                         </span>
-                        <Badge variant="neutral" size="sm">
+                        <span className="text-[11px] font-mono text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
                           {job.workMode}
-                        </Badge>
+                        </span>
                       </div>
 
-                      <h3 className="text-sm sm:text-base font-bold text-ink-950 mt-0.5 hover:text-teal-700 transition-colors">
+                      <h3 className="text-sm sm:text-base font-bold text-slate-900 mt-1 hover:text-teal-700 transition-colors">
                         {job.title}
                       </h3>
 
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500 mt-2">
-                        <span className="flex items-center gap-1">
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600 mt-2">
+                        <span className="font-semibold text-slate-900 tabular-nums">
+                          {job.stipendOrSalary}
+                        </span>
+                        <span className="flex items-center gap-1 text-slate-500">
                           <MapPin className="w-3 h-3 text-slate-400" />
                           {job.location}
                         </span>
-                        <span className="font-semibold text-ink-950 tabular-nums">
-                          {job.stipendOrSalary}
-                        </span>
-                        <span className="flex items-center gap-1">
+                        <span className="flex items-center gap-1 text-slate-500">
                           <Clock className="w-3 h-3 text-slate-400" />
                           Apply by {formatDate(job.applyBy)}
                         </span>
                       </div>
+
+                      {/* CampusFlow Distinctive Eligibility Seal */}
+                      <div className="mt-2.5 flex items-center gap-1 text-[11px] text-teal-800 bg-teal-50 border border-teal-200/80 px-2 py-0.5 rounded-md w-fit">
+                        <CheckCircle2 className="w-3 h-3 text-teal-600 flex-shrink-0" />
+                        <span>Meets CGPA benchmark ({job.minCgpa} req) • Verified {studentProfile.branch}</span>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 sm:flex-col sm:items-end justify-between border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-100">
+                  <div className="flex items-center gap-3 sm:flex-col sm:items-end justify-between border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-100 flex-shrink-0">
                     {applied ? (
                       <Badge variant="warning" dot size="sm">
                         Applied
@@ -384,82 +395,85 @@ export const StudentDashboard: React.FC = () => {
                         Eligible
                       </Badge>
                     )}
-                    <span className="text-xs font-semibold text-teal-700 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                      View Details <ChevronRight className="w-3.5 h-3.5" />
+                    <span className="text-xs font-semibold text-teal-700 flex items-center gap-1 hover:underline">
+                      Inspect Role <ChevronRight className="w-3.5 h-3.5" />
                     </span>
                   </div>
-                </Card>
+                </div>
               );
             })}
           </div>
         </div>
 
-        {/* Right 1 Col: Live Schedule & Pipeline Activity */}
+        {/* Right 1 Col: Profile Readiness & Upcoming Schedules */}
         <div className="space-y-6">
-          {/* Upcoming Interviews Box */}
-          <Card elevation={1} className="p-5 bg-surface border-slate-200/80">
+          {/* Profile Readiness Dossier */}
+          <div className="rounded-xl border border-slate-200/90 bg-white p-5 shadow-2xs">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-amber-600" />
-                <h3 className="text-xs font-bold text-ink-950 tracking-tight">
-                  Upcoming Interviews
-                </h3>
+              <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono">
+                Academic Dossier Readiness
+              </h3>
+              <span className="font-mono font-bold text-xs text-teal-700">{profileScore}%</span>
+            </div>
+
+            <div className="w-full bg-slate-100 rounded-full h-1.5 mt-3.5 overflow-hidden">
+              <div
+                className="bg-teal-700 h-1.5 rounded-full transition-all duration-300"
+                style={{ width: `${profileScore}%` }}
+              />
+            </div>
+
+            <div className="mt-4 space-y-2.5">
+              <div className="flex items-center justify-between text-xs">
+                <span className="flex items-center gap-2 text-slate-700">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  Academic CGPA & Clearance
+                </span>
+                <span className="font-mono text-slate-600 text-[11px] font-semibold">{studentProfile.cgpa} CGPA</span>
               </div>
-              <span
-                className="text-[11px] font-medium text-teal-700 hover:underline cursor-pointer"
-                onClick={() => navigate('/student/interviews')}
+              <div className="flex items-center justify-between text-xs">
+                <span className="flex items-center gap-2 text-slate-700">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  Placement Master Resume
+                </span>
+                <span className="font-mono text-slate-600 text-[11px]">PDF Attached</span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="flex items-center gap-2 text-slate-700">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  Technical Competencies
+                </span>
+                <span className="font-mono text-slate-600 text-[11px]">
+                  {studentProfile.skills.length} tagged
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="flex items-center gap-2 text-slate-700">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  GitHub & Portfolio Verified
+                </span>
+                <span className="font-mono text-slate-600 text-[11px]">Attached</span>
+              </div>
+            </div>
+
+            <div className="mt-4 pt-3 border-t border-slate-100">
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full text-xs"
+                onClick={() => navigate('/student/profile')}
               >
-                Schedule ({interviews.length})
-              </span>
+                Inspect Dossier Credentials
+              </Button>
             </div>
-
-            <div className="divide-y divide-slate-100 mt-1">
-              {upcomingInterviews.length === 0 ? (
-                <div className="py-6 text-center text-xs text-slate-400">
-                  No pending interview rounds.
-                </div>
-              ) : (
-                upcomingInterviews.map((interview) => (
-                  <div key={interview.id} className="py-3 first:pt-2 last:pb-0">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <p className="text-xs font-bold text-ink-950">{interview.jobTitle}</p>
-                        <p className="text-[11px] text-slate-600">{interview.companyName}</p>
-                      </div>
-                      <Badge variant="neutral" size="sm">
-                        {interview.mode}
-                      </Badge>
-                    </div>
-
-                    <div className="mt-2 text-[11px] text-slate-500 flex items-center gap-1.5 font-mono">
-                      <Clock className="w-3 h-3 text-amber-600" />
-                      <span>{new Date(interview.dateTime).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}</span>
-                    </div>
-
-                    {interview.locationOrLink && (
-                      <div className="mt-2.5">
-                        <a
-                          href={interview.locationOrLink}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-teal-700 hover:underline"
-                        >
-                          Join Google Meet <ExternalLink className="w-3 h-3" />
-                        </a>
-                      </div>
-                    )}
-                  </div>
-                ))
-              )}
-            </div>
-          </Card>
+          </div>
 
           {/* Recent Application Pipeline */}
-          <Card elevation={1} className="p-5 bg-surface border-slate-200/80">
+          <div className="rounded-xl border border-slate-200/90 bg-white p-5 shadow-2xs">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-teal-700" />
-                <h3 className="text-xs font-bold text-ink-950 tracking-tight">
+                <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono">
                   Application Log
                 </h3>
               </div>
@@ -467,7 +481,7 @@ export const StudentDashboard: React.FC = () => {
                 className="text-[11px] font-medium text-teal-700 hover:underline cursor-pointer"
                 onClick={() => navigate('/student/applications')}
               >
-                All ({applications.length})
+                View All ({applications.length})
               </span>
             </div>
 
@@ -478,11 +492,11 @@ export const StudentDashboard: React.FC = () => {
                   <div
                     key={app.id}
                     onClick={() => navigate(`/student/applications/${app.id}`)}
-                    className="py-3 first:pt-2 last:pb-0 cursor-pointer hover:bg-slate-50 rounded-lg px-2 -mx-2 transition-colors"
+                    className="py-3 first:pt-2 last:pb-0 cursor-pointer hover:bg-slate-50/80 rounded-lg px-2 -mx-2 transition-colors"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <p className="text-xs font-bold text-ink-950 truncate">{app.jobTitle}</p>
+                        <p className="text-xs font-bold text-slate-900 truncate">{app.jobTitle}</p>
                         <p className="text-[11px] text-slate-500 truncate">{app.companyName}</p>
                       </div>
                       <span
@@ -493,14 +507,14 @@ export const StudentDashboard: React.FC = () => {
                       </span>
                     </div>
 
-                    <p className="text-[11px] text-slate-400 mt-1 truncate">
+                    <p className="text-[11px] text-slate-500 mt-1 truncate">
                       {app.nextAction || 'Under recruiter review.'}
                     </p>
                   </div>
                 );
               })}
             </div>
-          </Card>
+          </div>
         </div>
       </div>
     </div>

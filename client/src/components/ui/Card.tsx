@@ -8,15 +8,15 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, hoverable = false, interactive = false, elevation = 1, children, ...props }, ref) => {
+  ({ className, hoverable = false, interactive = false, elevation = 0, children, ...props }, ref) => {
     const isInteractive = hoverable || interactive;
 
     const elevationStyles = {
-      0: 'shadow-elevation-0 border-border/60',
-      1: 'shadow-elevation-1 border-border/80',
-      2: 'shadow-elevation-2 border-slate-200/90',
-      3: 'shadow-elevation-3 border-slate-200',
-      4: 'shadow-elevation-4 border-slate-200',
+      0: 'shadow-none border-slate-200/80',
+      1: 'shadow-xs border-slate-200/90',
+      2: 'shadow-sm border-slate-200',
+      3: 'shadow-md border-slate-200',
+      4: 'shadow-lg border-slate-200',
     };
 
     return (
