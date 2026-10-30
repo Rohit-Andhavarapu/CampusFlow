@@ -22,6 +22,8 @@ import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { checkJobEligibility, formatDate, getStatusBadgeStyle } from '../../utils/formatters';
+import { CareerCompass } from '../../components/student/CareerCompass';
+import { ChartPieDonut } from '../../components/charts/ChartPieDonut';
 
 export const StudentDashboard: React.FC = () => {
   const { currentUser, jobs, applications, interviews, studentProfile } = useApp();
@@ -47,6 +49,24 @@ export const StudentDashboard: React.FC = () => {
   const nextInterview = upcomingInterviews.length > 0 ? upcomingInterviews[0] : null;
   const recommendedJobs = eligibleJobs.slice(0, 3);
   const recentApplications = applications.slice(0, 3);
+
+  // Status breakdown for Donut Chart (clean 0 handling)
+  const statusCounts = applications.reduce((acc, app) => {
+    acc[app.status] = (acc[app.status] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const appStatusData = Object.entries(statusCounts).map(([name, value]) => ({
+    name,
+    value,
+  }));
+
+  // Campus eligibility breakdown
+  const gapCount = Math.max(0, jobs.length - eligibleCount);
+  const eligibilityData = jobs.length > 0 ? [
+    { name: 'Directly Eligible', value: eligibleCount },
+    { name: 'Criteria Gap', value: gapCount },
+  ].filter((d) => d.value > 0) : [];
 
   return (
     <div className="space-y-6 pb-12">
@@ -205,6 +225,9 @@ export const StudentDashboard: React.FC = () => {
           </Button>
         </div>
       )}
+
+      {/* Context-Aware Career Compass Radar */}
+      <CareerCompass />
 
       {/* Connected 4-Pillar Metric Strip (Arithmetically Balanced) */}
       <div className="rounded-xl border border-slate-200/90 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 bg-white shadow-2xs overflow-hidden">
@@ -577,6 +600,27 @@ export const StudentDashboard: React.FC = () => {
                 Inspect Dossier Credentials
               </Button>
             </div>
+          </div>
+
+          {/* Interactive Recruitment Intelligence Charts */}
+          <div className="space-y-6">
+            <ChartPieDonut
+              title="Application Pipeline Breakdown"
+              description="Distribution of submitted applications across selection stages."
+              data={appStatusData}
+              centerLabel="Total Apps"
+              centerValue={applications.length}
+              height={260}
+            />
+
+            <ChartPieDonut
+              title="Campus Eligibility Overview"
+              description="Direct qualification across active campus recruitment drives."
+              data={eligibilityData}
+              centerLabel="Qualified"
+              centerValue={`${jobs.length > 0 ? Math.round((eligibleCount / jobs.length) * 100) : 0}%`}
+              height={260}
+            />
           </div>
 
           {/* Recent Application Pipeline */}

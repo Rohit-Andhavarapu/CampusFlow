@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   Check,
   Users,
+  Bookmark,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { Card } from '../../components/ui/Card';
@@ -25,7 +26,7 @@ import { checkJobEligibility, formatDate } from '../../utils/formatters';
 export const JobDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { jobs, applications, studentProfile, applyToJob, showToast } = useApp();
+  const { jobs, applications, studentProfile, applyToJob, showToast, toggleWatchlist, isWatchlisted } = useApp();
 
   const [isEligibilityModalOpen, setIsEligibilityModalOpen] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
@@ -363,7 +364,7 @@ export const JobDetails: React.FC = () => {
                 </p>
               </div>
             ) : (
-              <div className="space-y-2 pt-2">
+              <div className="space-y-2.5 pt-2">
                 <Button
                   variant="primary"
                   size="lg"
@@ -374,6 +375,18 @@ export const JobDetails: React.FC = () => {
                 >
                   {eligibility.isEligible ? 'Apply For Opportunity' : 'Ineligible to Apply'}
                 </Button>
+                <button
+                  type="button"
+                  onClick={() => toggleWatchlist(job.id)}
+                  className={`w-full py-2 px-3 text-xs font-semibold rounded-lg border transition-all flex items-center justify-center gap-1.5 ${
+                    isWatchlisted(job.id)
+                      ? 'bg-teal-50 text-teal-900 border-teal-300'
+                      : 'bg-white text-stone-700 border-stone-200 hover:bg-stone-50'
+                  }`}
+                >
+                  <Bookmark className={`w-3.5 h-3.5 ${isWatchlisted(job.id) ? 'fill-teal-700 text-teal-700' : 'text-stone-400'}`} />
+                  <span>{isWatchlisted(job.id) ? 'Saved to Watchlist' : 'Bookmark Opportunity'}</span>
+                </button>
                 {!eligibility.isEligible && (
                   <p className="text-[11px] text-center text-red-600 font-medium">
                     {eligibility.reasons[0] || 'Requirements not satisfied.'}

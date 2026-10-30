@@ -25,6 +25,7 @@ import {
   jobsService,
   notificationService,
   studentService,
+  watchlistService,
   isDemoUserId,
 } from '../services/campusflowService';
 
@@ -92,6 +93,9 @@ interface AppContextType {
   createJobPosting: (job: Omit<JobPosting, 'id' | 'createdAt' | 'applicantsCount'>) => Promise<void>;
   markNotificationRead: (id: string) => void;
   markAllNotificationsRead: () => void;
+  watchlist: string[];
+  toggleWatchlist: (jobId: string) => Promise<void>;
+  isWatchlisted: (jobId: string) => boolean;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -105,6 +109,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [interviews, setInterviews] = useState<Interview[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [studentProfile, setStudentProfile] = useState<StudentProfileData>(emptyStudentProfile);
+  const [watchlist, setWatchlist] = useState<string[]>([]);
   const [toasts, setToasts] = useState<ToastInfo[]>([]);
   const isDatabaseConnected = isSupabaseConfigured();
 
@@ -141,6 +146,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
               setApplications(remoteApps || []);
               setInterviews(remoteInts || []);
               setNotifications(remoteNotifs || []);
+              if (remoteUser.role === 'student') {
+                const remoteWl = await watchlistService.fetchWatchlist(remoteProfile?.id, remoteUser.id);
+                setWatchlist(remoteWl);
+              }
               return;
             }
           }
@@ -152,6 +161,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           setInterviews([]);
           setNotifications([]);
           setStudentProfile(emptyStudentProfile);
+          setWatchlist([]);
           const remoteJobs = await jobsService.fetchJobs();
           if (remoteJobs && remoteJobs.length > 0) setJobs(remoteJobs);
         } catch (err) {
@@ -161,6 +171,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           setApplications([]);
           setInterviews([]);
           setNotifications([]);
+          setWatchlist([]);
         }
       };
       initApp();
@@ -183,6 +194,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             setInterviews(remoteInts || []);
             setNotifications(remoteNotifs || []);
             if (remoteProf) setStudentProfile(remoteProf);
+            if (user.role === 'student') {
+              const remoteWl = await watchlistService.fetchWatchlist(remoteProf?.id, user.id);
+              setWatchlist(remoteWl);
+            } else {
+              setWatchlist([]);
+            }
           }
         } else if (event === 'SIGNED_OUT') {
           setIsAuthenticated(false);
@@ -191,6 +208,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           setInterviews([]);
           setNotifications([]);
           setStudentProfile(emptyStudentProfile);
+          setWatchlist([]);
         }
       });
 
@@ -248,6 +266,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (role === 'student') {
           const remoteProfile = await studentService.getStudentProfile();
           if (remoteProfile) setStudentProfile(remoteProfile);
+          const remoteWl = await watchlistService.fetchWatchlist(remoteProfile?.id, remoteUser?.id);
+          setWatchlist(remoteWl);
+        } else {
+          setWatchlist([]);
         }
       } catch (err) {
         console.warn('Backend persona authentication sync warning:', err);
@@ -276,6 +298,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (res.user.role === 'student') {
         const remoteProfile = await studentService.getStudentProfile(res.user.id);
         if (remoteProfile) setStudentProfile(remoteProfile);
+        const remoteWl = await watchlistService.fetchWatchlist(remoteProfile?.id, res.user.id);
+        setWatchlist(remoteWl);
+      } else {
+        setWatchlist([]);
       }
       showToast('success', `Welcome back, ${res.user.name}`, `Signed in as ${res.user.role.toUpperCase()}`);
       return { success: true, role: res.user.role };
@@ -338,6 +364,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setInterviews([]);
     setNotifications([]);
     setStudentProfile(emptyStudentProfile);
+    setWatchlist([]);
     showToast('info', 'Signed Out', 'You have been logged out of CampusFlow.');
   };
 
@@ -705,6 +732,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast('info', 'All Caught Up', 'All notifications marked as read.');
   };
 
+  const toggleWatchlist = async (jobId: string) => {
+    const res = await watchlistService.toggleWatchlist(jobId, studentProfile.id, currentUser.id);
+    const updated = watchlistService.getLocalWatchlist(currentUser.id);
+    setWatchlist(updated);
+    showToast(
+      res.isWatchlisted ? 'success' : 'info',
+      res.isWatchlisted ? 'Added to Watchlist' : 'Removed from Watchlist',
+      res.isWatchlisted ? 'Opportunity saved to your watchlist.' : 'Removed from saved opportunities.'
+    );
+  };
+
+  const isWatchlisted = (jobId: string) => watchlist.includes(jobId);
+
   return (
     <AppContext.Provider
       value={{
@@ -736,6 +776,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         createJobPosting,
         markNotificationRead,
         markAllNotificationsRead,
+        watchlist,
+        toggleWatchlist,
+        isWatchlisted,
       }}
     >
       {children}

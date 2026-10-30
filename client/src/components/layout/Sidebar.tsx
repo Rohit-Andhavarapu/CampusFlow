@@ -18,6 +18,8 @@ import {
   ChevronRight,
   Layers,
   LogOut,
+  Bookmark,
+  Sliders,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { cn } from '../../utils/cn';
@@ -52,6 +54,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const studentNav: NavItem[] = [
     { label: 'Overview', path: '/student/dashboard', icon: LayoutDashboard },
     { label: 'Explore Opportunities', path: '/student/opportunities', icon: Compass },
+    { label: 'Watchlist', path: '/student/watchlist', icon: Bookmark },
+    { label: 'What-If Lab', path: '/student/eligibility-lab', icon: Sliders },
     { label: 'My Applications', path: '/student/applications', icon: FileText },
     { label: 'Interview Schedule', path: '/student/interviews', icon: Calendar },
     { label: 'Profile & Resume', path: '/student/profile', icon: UserCheck },

@@ -127,6 +127,7 @@ export interface Notification {
 }
 
 export interface StudentProfileData {
+  id?: string;
   fullName: string;
   rollNo: string;
   email: string;

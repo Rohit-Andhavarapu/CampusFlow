@@ -18,6 +18,7 @@ import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { formatDate, getStatusBadgeStyle } from '../../utils/formatters';
+import { ChartPieDonut } from '../../components/charts/ChartPieDonut';
 
 export const RecruiterDashboard: React.FC = () => {
   const { currentUser, jobs, applications, interviews } = useApp();
@@ -30,6 +31,17 @@ export const RecruiterDashboard: React.FC = () => {
   const scheduledInterviews = interviews.filter((i) => i.status === 'Scheduled').length;
 
   const awaitingReview = applications.filter((a) => a.status === 'Submitted');
+
+  // Pipeline distribution for Donut
+  const statusCounts = applications.reduce((acc, app) => {
+    acc[app.status] = (acc[app.status] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const pipelineData = Object.entries(statusCounts).map(([name, value]) => ({
+    name,
+    value,
+  }));
 
   return (
     <div className="space-y-8 pb-16">
@@ -252,6 +264,16 @@ export const RecruiterDashboard: React.FC = () => {
 
         {/* Right 1 Col: Urgent Attention / Recent Applicants */}
         <div className="space-y-6">
+          {/* Candidate Pipeline Donut */}
+          <ChartPieDonut
+            title="Application Pipeline Status"
+            description="Real-time distribution across active stages."
+            data={pipelineData}
+            centerLabel="Total Applicants"
+            centerValue={totalApplicants}
+            height={260}
+          />
+
           <Card elevation={1} className="p-5 bg-surface border-slate-200/80">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <h2 className="text-xs font-bold text-ink-950 uppercase tracking-wide">

@@ -15,6 +15,7 @@ import {
   Building2,
   Users,
   ShieldCheck,
+  Bookmark,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { Card } from '../../components/ui/Card';
@@ -24,7 +25,7 @@ import { checkJobEligibility, formatDate } from '../../utils/formatters';
 import { Tabs } from '../../components/ui/Tabs';
 
 export const ExploreOpportunities: React.FC = () => {
-  const { jobs, applications, studentProfile } = useApp();
+  const { jobs, applications, studentProfile, toggleWatchlist, isWatchlisted } = useApp();
   const navigate = useNavigate();
 
   // Search & Filter state
@@ -282,20 +283,38 @@ export const ExploreOpportunities: React.FC = () => {
                       </div>
                     </div>
 
-                    {appliedApp ? (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200 flex-shrink-0">
-                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                        Applied
-                      </span>
-                    ) : eligibility.isEligible ? (
-                      <Badge variant="success" dot size="sm" className="flex-shrink-0">
-                        Eligible
-                      </Badge>
-                    ) : (
-                      <Badge variant="neutral" dot size="sm" className="flex-shrink-0">
-                        Criteria Gap
-                      </Badge>
-                    )}
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                      {appliedApp ? (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                          Applied
+                        </span>
+                      ) : eligibility.isEligible ? (
+                        <Badge variant="success" dot size="sm">
+                          Eligible
+                        </Badge>
+                      ) : (
+                        <Badge variant="neutral" dot size="sm">
+                          Criteria Gap
+                        </Badge>
+                      )}
+
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleWatchlist(job.id);
+                        }}
+                        className={`p-1.5 rounded-lg border transition-colors ${
+                          isWatchlisted(job.id)
+                            ? 'bg-teal-50 text-teal-800 border-teal-200'
+                            : 'bg-white text-slate-400 border-slate-200 hover:text-slate-600'
+                        }`}
+                        title={isWatchlisted(job.id) ? 'Remove from Watchlist' : 'Add to Watchlist'}
+                      >
+                        <Bookmark className={`w-3.5 h-3.5 ${isWatchlisted(job.id) ? 'fill-teal-700' : ''}`} />
+                      </button>
+                    </div>
                   </div>
 
                   {/* Row 2: Compensation & Criteria Badge */}

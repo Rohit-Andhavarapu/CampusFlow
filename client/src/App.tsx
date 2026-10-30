@@ -13,6 +13,8 @@ import { StudentInterviews } from './pages/student/StudentInterviews';
 import { StudentProfile } from './pages/student/StudentProfile';
 import { StudentNotifications } from './pages/student/StudentNotifications';
 import { StudentSettings } from './pages/student/StudentSettings';
+import { EligibilityLab } from './pages/student/EligibilityLab';
+import { OpportunityWatchlist } from './pages/student/OpportunityWatchlist';
 
 // Recruiter Pages
 import { RecruiterDashboard } from './pages/recruiter/RecruiterDashboard';
@@ -72,6 +74,8 @@ export const App: React.FC = () => {
                 <Route path="dashboard" element={<StudentDashboard />} />
                 <Route path="opportunities" element={<ExploreOpportunities />} />
                 <Route path="opportunities/:id" element={<JobDetails />} />
+                <Route path="watchlist" element={<OpportunityWatchlist />} />
+                <Route path="eligibility-lab" element={<EligibilityLab />} />
                 <Route path="applications" element={<MyApplications />} />
                 <Route path="applications/:id" element={<ApplicationDetails />} />
                 <Route path="interviews" element={<StudentInterviews />} />

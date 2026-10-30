@@ -27,6 +27,8 @@ import { Badge } from '../../components/ui/Badge';
 import { Input } from '../../components/ui/Input';
 import { formatDate, getStatusBadgeStyle } from '../../utils/formatters';
 import { Application, ApplicationStatus } from '../../types';
+import { CandidateCompare } from '../../components/recruiter/CandidateCompare';
+import { Scale } from 'lucide-react';
 
 export const RecruiterApplicants: React.FC = () => {
   const {
@@ -55,6 +57,8 @@ export const RecruiterApplicants: React.FC = () => {
   const [interviewRound, setInterviewRound] = useState('Round 1: Technical & Architecture');
   const [interviewNotes, setInterviewNotes] = useState('');
   const [isSchedulingOpen, setIsSchedulingOpen] = useState(false);
+  const [compareList, setCompareList] = useState<string[]>([]);
+  const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
 
   const filteredApplicants = useMemo(() => {
     return applications.filter((app) => {
@@ -161,6 +165,9 @@ export const RecruiterApplicants: React.FC = () => {
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-600 font-semibold tracking-wide">
                   <tr>
+                    <th className="py-3 px-3 w-8 text-center" title="Compare selection">
+                      <Scale className="w-3.5 h-3.5 text-slate-400 mx-auto" />
+                    </th>
                     <th className="py-3 px-3.5">Candidate</th>
                     <th className="py-3 px-3">Role</th>
                     <th className="py-3 px-3">Branch & CGPA</th>
@@ -171,7 +178,7 @@ export const RecruiterApplicants: React.FC = () => {
                 <tbody className="divide-y divide-slate-100">
                   {filteredApplicants.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="py-12 text-center text-slate-400">
+                      <td colSpan={6} className="py-12 text-center text-slate-400">
                         No candidates match the specified filter criteria.
                       </td>
                     </tr>
@@ -190,6 +197,26 @@ export const RecruiterApplicants: React.FC = () => {
                               : 'hover:bg-slate-50/70'
                           }`}
                         >
+                          {/* Checkbox for Compare */}
+                          <td className="py-3 px-3 text-center" onClick={(e) => e.stopPropagation()}>
+                            <input
+                              type="checkbox"
+                              checked={compareList.includes(app.id)}
+                              onChange={() => {
+                                if (compareList.includes(app.id)) {
+                                  setCompareList((prev) => prev.filter((id) => id !== app.id));
+                                } else {
+                                  if (compareList.length >= 3) {
+                                    showToast('warning', 'Maximum Reached', 'You can compare at most 3 candidates simultaneously.');
+                                    return;
+                                  }
+                                  setCompareList((prev) => [...prev, app.id]);
+                                }
+                              }}
+                              className="rounded border-slate-300 text-teal-700 focus:ring-teal-700 h-4 w-4 cursor-pointer accent-teal-700"
+                            />
+                          </td>
+
                           {/* Candidate Identity (2-line stacked) */}
                           <td className="py-3 px-3.5">
                             <div className="flex items-center gap-2.5">
@@ -541,6 +568,47 @@ export const RecruiterApplicants: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Floating Compare Action Bar */}
+      {compareList.length > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-stone-900 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-4 border border-stone-800 animate-in slide-in-from-bottom duration-200">
+          <div className="flex items-center gap-2">
+            <Scale className="w-4 h-4 text-teal-400" />
+            <span className="text-xs font-semibold">
+              {compareList.length} candidate{compareList.length > 1 ? 's' : ''} selected
+            </span>
+          </div>
+          <button
+            onClick={() => setIsCompareModalOpen(true)}
+            className="px-3.5 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-semibold text-xs shadow-xs transition-colors flex items-center gap-1.5"
+          >
+            <span>Compare Matrix</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+          <button
+            onClick={() => setCompareList([])}
+            className="text-stone-400 hover:text-white text-xs transition-colors"
+          >
+            Clear
+          </button>
+        </div>
+      )}
+
+      {/* Candidate Compare Modal */}
+      <CandidateCompare
+        isOpen={isCompareModalOpen}
+        onClose={() => setIsCompareModalOpen(false)}
+        applicants={applications.filter((a) => compareList.includes(a.id))}
+        onRemove={(id) => setCompareList((prev) => prev.filter((cId) => cId !== id))}
+        onShortlist={shortlistApplication}
+        onReject={rejectApplication}
+        onScheduleInterview={(app) => {
+          setSelectedAppId(app.id);
+          setIsSchedulingOpen(true);
+          setIsCompareModalOpen(false);
+        }}
+        onMarkSelected={markSelected}
+      />
     </div>
   );
 };

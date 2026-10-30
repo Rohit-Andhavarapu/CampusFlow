@@ -1,67 +1,187 @@
-import React from 'react';
-import { BarChart3, TrendingUp, Users, CheckCircle2, Briefcase } from 'lucide-react';
-import { Card } from '../../components/ui/Card';
-import { MetricCard } from '../../components/ui/MetricCard';
+import React, { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  Users,
+  CheckCircle2,
+  TrendingUp,
+  Briefcase,
+  Layers,
+  ArrowRight,
+  Filter,
+  GraduationCap,
+} from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { ChartPieDonut } from '../../components/charts/ChartPieDonut';
+import { ChartBarHorizontal } from '../../components/charts/ChartBarHorizontal';
+import { ChartFunnel } from '../../components/charts/ChartFunnel';
 
 export const RecruiterAnalytics: React.FC = () => {
-  const { applications, jobs } = useApp();
+  const { applications, jobs, currentUser } = useApp();
+  const navigate = useNavigate();
+
+  // 1. Application status distribution
+  const statusCounts = useMemo(() => {
+    return applications.reduce((acc, app) => {
+      acc[app.status] = (acc[app.status] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+  }, [applications]);
+
+  const statusDonutData = useMemo(() => {
+    return Object.entries(statusCounts).map(([name, value]) => ({
+      name,
+      value,
+    }));
+  }, [statusCounts]);
+
+  // 2. Selection Funnel Progression (Step through)
+  const funnelData = useMemo(() => {
+    const applied = applications.length;
+    const shortlisted = applications.filter(
+      (a) => a.status === 'Shortlisted' || a.status === 'Interview' || a.status === 'Selected'
+    ).length;
+    const interviewed = applications.filter(
+      (a) => a.status === 'Interview' || a.status === 'Selected'
+    ).length;
+    const selected = applications.filter((a) => a.status === 'Selected').length;
+
+    return [
+      { name: 'Applied Pool', value: applied, color: '#0F766E' },
+      { name: 'Shortlisted for Review', value: shortlisted, color: '#0284C7' },
+      { name: 'Interview Evaluation', value: interviewed, color: '#D97706' },
+      { name: 'Formal Campus Offers', value: selected, color: '#059669' },
+    ];
+  }, [applications]);
+
+  // 3. Branch distribution computed dynamically
+  const branchData = useMemo(() => {
+    const counts: Record<string, number> = {};
+    applications.forEach((a) => {
+      const b = a.studentBranch || 'Unspecified';
+      counts[b] = (counts[b] || 0) + 1;
+    });
+
+    return Object.entries(counts)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value);
+  }, [applications]);
+
+  // Derived KPIs
+  const totalApps = applications.length;
+  const totalOffers = applications.filter((a) => a.status === 'Selected').length;
+  const offerRate = totalApps > 0 ? Math.round((totalOffers / totalApps) * 100) : 0;
+  const activePostings = jobs.filter((j) => j.status === 'active').length;
 
   return (
-    <div className="space-y-6 pb-16">
-      <div className="border-b border-border/60 pb-5">
-        <h1 className="text-2xl font-extrabold text-primary-text tracking-tight">
-          Campus Recruitment Analytics
-        </h1>
-        <p className="text-sm text-secondary-text mt-1">
-          Hiring funnel velocity, qualification pass-rates, and candidate distribution.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        <MetricCard
-          label="Total Funnel Throughput"
-          value={applications.length}
-          subtext="Processed by screening engine"
-          icon={<Users className="w-5 h-5 text-brand" />}
-          variant="brand"
-        />
-        <MetricCard
-          label="Offer Acceptance Rate"
-          value="100%"
-          subtext="All offers accepted by candidates"
-          icon={<CheckCircle2 className="w-5 h-5 text-success" />}
-          variant="success"
-        />
-        <MetricCard
-          label="Average Time to Interview"
-          value="3.2 Days"
-          subtext="Fast-track candidate experience"
-          icon={<TrendingUp className="w-5 h-5 text-warning" />}
-          variant="warning"
-        />
-      </div>
-
-      <Card className="p-6">
-        <h3 className="text-base font-bold text-primary-text mb-4">Branch Distribution of Candidates</h3>
-        <div className="space-y-3">
-          {[
-            { branch: 'Computer Science & Engineering', count: 12, pct: 60 },
-            { branch: 'Information Technology', count: 5, pct: 25 },
-            { branch: 'Artificial Intelligence & Data Science', count: 3, pct: 15 },
-          ].map((item) => (
-            <div key={item.branch} className="space-y-1">
-              <div className="flex justify-between text-xs font-semibold">
-                <span>{item.branch}</span>
-                <span>{item.count} candidates ({item.pct}%)</span>
-              </div>
-              <div className="w-full bg-slate-100 rounded-full h-2">
-                <div className="bg-brand h-2 rounded-full" style={{ width: `${item.pct}%` }} />
-              </div>
-            </div>
-          ))}
+    <div className="space-y-8 pb-16 max-w-7xl mx-auto">
+      {/* Editorial Header */}
+      <div className="border-b border-stone-200 pb-5 flex flex-col md:flex-row md:items-baseline justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-teal-100/70 text-teal-900 border border-teal-200">
+              <TrendingUp className="w-3.5 h-3.5 text-teal-700" />
+              Recruitment Intelligence
+            </span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-stone-900 tracking-tight">
+            Corporate Hiring Analytics
+          </h1>
+          <p className="text-xs sm:text-sm text-stone-600 mt-1">
+            {currentUser.companyName || 'NovaTech Systems'} • Conversion velocity, candidate pipeline distribution, and academic demographics.
+          </p>
         </div>
-      </Card>
+
+        <button
+          onClick={() => navigate('/recruiter/applicants')}
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-teal-800 text-white hover:bg-teal-900 font-semibold text-xs shadow-xs transition-all self-start md:self-auto"
+        >
+          <span>Evaluate Applicants</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </button>
+      </div>
+
+      {/* KPI Ribbons */}
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+        <div className="bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
+          <p className="text-xs uppercase tracking-wider font-semibold text-stone-500 mb-1">
+            Total Applicants
+          </p>
+          <div className="flex items-baseline gap-2">
+            <span className="font-serif text-3xl font-bold text-stone-900">{totalApps}</span>
+            <span className="text-xs text-stone-400">across {activePostings} drives</span>
+          </div>
+        </div>
+
+        <div className="bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
+          <p className="text-xs uppercase tracking-wider font-semibold text-stone-500 mb-1">
+            Shortlist Velocity
+          </p>
+          <div className="flex items-baseline gap-2">
+            <span className="font-serif text-3xl font-bold text-teal-800">
+              {applications.filter((a) => a.status === 'Shortlisted').length}
+            </span>
+            <span className="text-xs text-stone-400">candidates advanced</span>
+          </div>
+        </div>
+
+        <div className="bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
+          <p className="text-xs uppercase tracking-wider font-semibold text-stone-500 mb-1">
+            In Evaluation Rounds
+          </p>
+          <div className="flex items-baseline gap-2">
+            <span className="font-serif text-3xl font-bold text-amber-700">
+              {applications.filter((a) => a.status === 'Interview').length}
+            </span>
+            <span className="text-xs text-stone-400">interviews booked</span>
+          </div>
+        </div>
+
+        <div className="bg-white p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
+          <p className="text-xs uppercase tracking-wider font-semibold text-stone-500 mb-1">
+            Conversion Yield
+          </p>
+          <div className="flex items-baseline gap-2">
+            <span className="font-serif text-3xl font-bold text-emerald-700">
+              {offerRate}%
+            </span>
+            <span className="text-xs text-stone-400">offers ({totalOffers})</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Row 1: Funnel & Donut Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="lg:col-span-7">
+          <ChartFunnel
+            title="Recruitment Throughput Funnel"
+            description="Progression from candidate submission through technical interviews to verified offer release."
+            data={funnelData}
+            height={320}
+          />
+        </div>
+
+        <div className="lg:col-span-5">
+          <ChartPieDonut
+            title="Candidate Pipeline Status"
+            description="Proportion of applicants by current evaluation stage."
+            data={statusDonutData}
+            centerLabel="Candidates"
+            centerValue={totalApps}
+            height={320}
+          />
+        </div>
+      </div>
+
+      {/* Row 2: Branch Demographics */}
+      <div className="grid grid-cols-1 gap-8">
+        <ChartBarHorizontal
+          title="Applicant Academic Distribution by Branch"
+          description="Volume of candidate submissions received across college engineering departments."
+          data={branchData}
+          barColor="#0F766E"
+          height={280}
+        />
+      </div>
     </div>
   );
 };

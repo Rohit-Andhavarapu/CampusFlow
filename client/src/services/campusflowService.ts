@@ -888,3 +888,140 @@ export const adminService = {
     };
   },
 };
+
+// ==============================================================================
+// 8. Opportunity Watchlist Service (Phase 7)
+// ==============================================================================
+export const watchlistService = {
+  getLocalKey(userId?: string): string {
+    return `campusflow_watchlist_${userId || 'guest'}`;
+  },
+
+  getLocalWatchlist(userId?: string): string[] {
+    try {
+      const stored = localStorage.getItem(this.getLocalKey(userId));
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  },
+
+  setLocalWatchlist(userId: string | undefined, list: string[]): void {
+    try {
+      localStorage.setItem(this.getLocalKey(userId), JSON.stringify(list));
+    } catch {
+      // ignore
+    }
+  },
+
+  async fetchWatchlist(studentProfileId?: string, userId?: string): Promise<string[]> {
+    if (!isSupabaseConfigured() || !studentProfileId) {
+      return this.getLocalWatchlist(userId);
+    }
+
+    try {
+      const { data, error } = await (supabase as any)
+        .from('student_watchlists')
+        .select('job_id')
+        .eq('student_id', studentProfileId);
+
+      if (error) {
+        return this.getLocalWatchlist(userId);
+      }
+
+      const ids = (data || []).map((row: any) => row.job_id);
+      this.setLocalWatchlist(userId, ids);
+      return ids;
+    } catch {
+      return this.getLocalWatchlist(userId);
+    }
+  },
+
+  async toggleWatchlist(jobId: string, studentProfileId?: string, userId?: string): Promise<{ isWatchlisted: boolean }> {
+    const current = this.getLocalWatchlist(userId);
+    const exists = current.includes(jobId);
+    let updated: string[];
+
+    if (exists) {
+      updated = current.filter((id) => id !== jobId);
+      this.setLocalWatchlist(userId, updated);
+      if (isSupabaseConfigured() && studentProfileId) {
+        try {
+          await (supabase as any)
+            .from('student_watchlists')
+            .delete()
+            .match({ student_id: studentProfileId, job_id: jobId });
+        } catch {
+          // fallback smoothly
+        }
+      }
+      return { isWatchlisted: false };
+    } else {
+      updated = [...current, jobId];
+      this.setLocalWatchlist(userId, updated);
+      if (isSupabaseConfigured() && studentProfileId) {
+        try {
+          await (supabase as any)
+            .from('student_watchlists')
+            .insert({ student_id: studentProfileId, job_id: jobId });
+        } catch {
+          // fallback smoothly
+        }
+      }
+      return { isWatchlisted: true };
+    }
+  },
+};
+
+// ==============================================================================
+// 9. Calendar Export Service (Phase 8 — Standard .ics Generation)
+// ==============================================================================
+export const calendarExportService = {
+  downloadInterviewIcs(interview: {
+    round: string;
+    jobTitle: string;
+    companyName: string;
+    dateTime: string;
+    locationOrLink: string;
+    notes?: string;
+  }): void {
+    const startDate = new Date(interview.dateTime);
+    const endDate = new Date(startDate.getTime() + 45 * 60 * 1000); // 45 min default duration
+
+    const pad = (n: number) => (n < 10 ? '0' + n : `${n}`);
+    const formatIcsTime = (d: Date) =>
+      `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`;
+
+    const summary = `${interview.round} — ${interview.companyName} (${interview.jobTitle})`;
+    const description = `CampusFlow Verified Interview Round\\nRole: ${interview.jobTitle}\\nCompany: ${interview.companyName}\\nLocation/Link: ${interview.locationOrLink}\\n\\nNotes: ${interview.notes || 'Please be online 5 minutes before the scheduled time.'}`;
+
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//CampusFlow//Recruitment Intelligence//EN',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      'BEGIN:VEVENT',
+      `UID:campusflow_${Date.now()}@campusflow.io`,
+      `DTSTAMP:${formatIcsTime(new Date())}`,
+      `DTSTART:${formatIcsTime(startDate)}`,
+      `DTEND:${formatIcsTime(endDate)}`,
+      `SUMMARY:${summary}`,
+      `DESCRIPTION:${description}`,
+      `LOCATION:${interview.locationOrLink}`,
+      'STATUS:CONFIRMED',
+      'END:VEVENT',
+      'END:VCALENDAR',
+    ].join('\r\n');
+
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `interview_${interview.companyName.toLowerCase().replace(/[^a-z0-9]/g, '_')}.ics`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  },
+};
