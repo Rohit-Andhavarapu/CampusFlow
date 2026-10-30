@@ -9,6 +9,7 @@ export const isSupabaseConfigured = (): boolean => {
     typeof supabaseUrl === 'string' &&
     supabaseUrl.trim().length > 0 &&
     !supabaseUrl.includes('your-project-id') &&
+    !supabaseUrl.includes('your-project-ref') &&
     typeof supabaseKey === 'string' &&
     supabaseKey.trim().length > 0 &&
     !supabaseKey.includes('your-supabase')
