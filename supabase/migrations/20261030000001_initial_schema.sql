@@ -1,13 +1,17 @@
 -- ==============================================================================
--- CampusFlow V4 — Supabase Schema Migration: 001_initial_schema.sql
+-- CampusFlow V4 - Supabase Schema Migration: 001_initial_schema.sql
 -- Problem Statement: HACK-P410 (Campus Recruitment Portal)
 -- ==============================================================================
 
--- 1. Enable Required PostgreSQL Extensions
+-- ==============================================================================
+-- 1. EXTENSIONS
+-- ==============================================================================
 create extension if not exists "uuid-ossp";
 create extension if not exists "pgcrypto";
 
--- 2. Custom Domain Types / Enums
+-- ==============================================================================
+-- 2. ENUMS & DOMAIN TYPES
+-- ==============================================================================
 do $$ begin
   create type user_role_type as enum ('student', 'recruiter', 'placement_admin');
 exception
@@ -81,7 +85,11 @@ exception
   when duplicate_object then null;
 end $$;
 
--- 3. Profiles Table (Extends Supabase auth.users)
+-- ==============================================================================
+-- 3. TABLES (14 NORMALIZED RELATIONAL ENTITIES)
+-- ==============================================================================
+
+-- 1. Profiles Table (Extends Supabase auth.users)
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   full_name text not null,
@@ -92,14 +100,12 @@ create table if not exists public.profiles (
   updated_at timestamptz not null default now()
 );
 
--- Index on email & role for quick identity and authorization lookups
-create index if not exists idx_profiles_role on public.profiles(role);
-create index if not exists idx_profiles_email on public.profiles(email);
-
--- 4. Student Profiles Table
+-- 2. Student Profiles Table
 create table if not exists public.student_profiles (
   id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references public.profiles(id) on delete cascade unique,
+  user_id uuid references public.profiles(id) on delete cascade unique,
+  full_name text not null,
+  email text not null unique,
   roll_number text not null unique,
   course text not null default 'B.Tech',
   branch text not null,
@@ -115,12 +121,7 @@ create table if not exists public.student_profiles (
   updated_at timestamptz not null default now()
 );
 
-create index if not exists idx_student_profiles_user_id on public.student_profiles(user_id);
-create index if not exists idx_student_profiles_branch on public.student_profiles(branch);
-create index if not exists idx_student_profiles_cgpa on public.student_profiles(cgpa);
-create index if not exists idx_student_profiles_grad_year on public.student_profiles(graduation_year);
-
--- 5. Student Skills Table
+-- 3. Student Skills Table
 create table if not exists public.student_skills (
   id uuid primary key default gen_random_uuid(),
   student_id uuid not null references public.student_profiles(id) on delete cascade,
@@ -128,10 +129,7 @@ create table if not exists public.student_skills (
   unique (student_id, skill_name)
 );
 
-create index if not exists idx_student_skills_student on public.student_skills(student_id);
-create index if not exists idx_student_skills_name on public.student_skills(lower(skill_name));
-
--- 6. Student Projects Table
+-- 4. Student Projects Table
 create table if not exists public.student_projects (
   id uuid primary key default gen_random_uuid(),
   student_id uuid not null references public.student_profiles(id) on delete cascade,
@@ -142,9 +140,7 @@ create table if not exists public.student_projects (
   created_at timestamptz not null default now()
 );
 
-create index if not exists idx_student_projects_student on public.student_projects(student_id);
-
--- 7. Companies Table
+-- 5. Companies Table
 create table if not exists public.companies (
   id uuid primary key default gen_random_uuid(),
   name text not null unique,
@@ -156,9 +152,7 @@ create table if not exists public.companies (
   created_at timestamptz not null default now()
 );
 
-create index if not exists idx_companies_status on public.companies(status);
-
--- 8. Recruiter Company Memberships Table
+-- 6. Recruiter Company Memberships Table
 create table if not exists public.recruiter_company_memberships (
   id uuid primary key default gen_random_uuid(),
   recruiter_user_id uuid not null references public.profiles(id) on delete cascade,
@@ -168,10 +162,7 @@ create table if not exists public.recruiter_company_memberships (
   unique (recruiter_user_id, company_id)
 );
 
-create index if not exists idx_recruiter_memberships_recruiter on public.recruiter_company_memberships(recruiter_user_id);
-create index if not exists idx_recruiter_memberships_company on public.recruiter_company_memberships(company_id);
-
--- 9. Recruitment Drives Table
+-- 7. Recruitment Drives Table
 create table if not exists public.recruitment_drives (
   id uuid primary key default gen_random_uuid(),
   company_id uuid not null references public.companies(id) on delete cascade,
@@ -184,10 +175,7 @@ create table if not exists public.recruitment_drives (
   created_at timestamptz not null default now()
 );
 
-create index if not exists idx_drives_company on public.recruitment_drives(company_id);
-create index if not exists idx_drives_status on public.recruitment_drives(status);
-
--- 10. Job Postings Table
+-- 8. Job Postings Table
 create table if not exists public.job_postings (
   id uuid primary key default gen_random_uuid(),
   company_id uuid not null references public.companies(id) on delete cascade,
@@ -210,11 +198,7 @@ create table if not exists public.job_postings (
   updated_at timestamptz not null default now()
 );
 
-create index if not exists idx_jobs_company on public.job_postings(company_id);
-create index if not exists idx_jobs_status on public.job_postings(status);
-create index if not exists idx_jobs_deadline on public.job_postings(deadline);
-
--- 11. Job Eligibility Rules Table
+-- 9. Job Eligibility Rules Table
 create table if not exists public.job_eligibility_rules (
   id uuid primary key default gen_random_uuid(),
   job_id uuid not null references public.job_postings(id) on delete cascade unique,
@@ -226,9 +210,7 @@ create table if not exists public.job_eligibility_rules (
   created_at timestamptz not null default now()
 );
 
-create index if not exists idx_eligibility_job on public.job_eligibility_rules(job_id);
-
--- 12. Applications Table
+-- 10. Applications Table
 create table if not exists public.applications (
   id uuid primary key default gen_random_uuid(),
   student_id uuid not null references public.student_profiles(id) on delete cascade,
@@ -240,11 +222,7 @@ create table if not exists public.applications (
   unique (student_id, job_id)
 );
 
-create index if not exists idx_applications_student on public.applications(student_id);
-create index if not exists idx_applications_job on public.applications(job_id);
-create index if not exists idx_applications_status on public.applications(status);
-
--- 13. Application Status History Table (Audit Trail)
+-- 11. Application Status History Table (Audit Trail)
 create table if not exists public.application_status_history (
   id uuid primary key default gen_random_uuid(),
   application_id uuid not null references public.applications(id) on delete cascade,
@@ -255,9 +233,7 @@ create table if not exists public.application_status_history (
   changed_at timestamptz not null default now()
 );
 
-create index if not exists idx_app_history_app on public.application_status_history(application_id);
-
--- 14. Interviews Table
+-- 12. Interviews Table
 create table if not exists public.interviews (
   id uuid primary key default gen_random_uuid(),
   application_id uuid not null references public.applications(id) on delete cascade,
@@ -274,10 +250,7 @@ create table if not exists public.interviews (
   updated_at timestamptz not null default now()
 );
 
-create index if not exists idx_interviews_application on public.interviews(application_id);
-create index if not exists idx_interviews_scheduled_at on public.interviews(scheduled_at);
-
--- 15. Notifications Table
+-- 13. Notifications Table
 create table if not exists public.notifications (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references public.profiles(id) on delete cascade,
@@ -289,9 +262,7 @@ create table if not exists public.notifications (
   created_at timestamptz not null default now()
 );
 
-create index if not exists idx_notifications_user on public.notifications(user_id, is_read);
-
--- 16. Resume Files Metadata Table
+-- 14. Resume Files Metadata Table
 create table if not exists public.resume_files (
   id uuid primary key default gen_random_uuid(),
   student_id uuid not null references public.student_profiles(id) on delete cascade,
@@ -302,48 +273,29 @@ create table if not exists public.resume_files (
   uploaded_at timestamptz not null default now()
 );
 
+-- ==============================================================================
+-- 4. CONSTRAINTS & INDEXES
+-- ==============================================================================
+create index if not exists idx_profiles_role on public.profiles(role);
+create index if not exists idx_profiles_email on public.profiles(email);
+create index if not exists idx_student_profiles_user on public.student_profiles(user_id);
+create index if not exists idx_student_profiles_branch on public.student_profiles(branch);
+create index if not exists idx_student_profiles_cgpa on public.student_profiles(cgpa);
+create index if not exists idx_student_skills_student on public.student_skills(student_id);
+create index if not exists idx_student_projects_student on public.student_projects(student_id);
+create index if not exists idx_companies_status on public.companies(status);
+create index if not exists idx_recruiter_memberships_recruiter on public.recruiter_company_memberships(recruiter_user_id);
+create index if not exists idx_recruiter_memberships_company on public.recruiter_company_memberships(company_id);
+create index if not exists idx_drives_company on public.recruitment_drives(company_id);
+create index if not exists idx_jobs_company on public.job_postings(company_id);
+create index if not exists idx_jobs_status on public.job_postings(status);
+create index if not exists idx_jobs_deadline on public.job_postings(deadline);
+create index if not exists idx_applications_student on public.applications(student_id);
+create index if not exists idx_applications_job on public.applications(job_id);
+create index if not exists idx_applications_status on public.applications(status);
+create index if not exists idx_app_history_app on public.application_status_history(application_id);
+create index if not exists idx_interviews_application on public.interviews(application_id);
+create index if not exists idx_interviews_scheduled on public.interviews(scheduled_at);
+create index if not exists idx_notifications_user_read on public.notifications(user_id, is_read);
 create index if not exists idx_resumes_student on public.resume_files(student_id);
 
--- 17. Storage Bucket Initialization
-insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-values (
-  'resumes',
-  'resumes',
-  false,
-  5242880, -- 5 MB limit
-  array['application/pdf']
-)
-on conflict (id) do update set
-  public = false,
-  file_size_limit = 5242880,
-  allowed_mime_types = array['application/pdf'];
-
--- 18. Updated_At Auto-Trigger Helper Function
-create or replace function public.set_updated_at()
-returns trigger as $$
-begin
-  new.updated_at = now();
-  return new;
-end;
-$$ language plpgsql;
-
--- Apply updated_at triggers
-create or replace trigger trg_profiles_updated_at
-  before update on public.profiles
-  for each row execute function public.set_updated_at();
-
-create or replace trigger trg_student_profiles_updated_at
-  before update on public.student_profiles
-  for each row execute function public.set_updated_at();
-
-create or replace trigger trg_job_postings_updated_at
-  before update on public.job_postings
-  for each row execute function public.set_updated_at();
-
-create or replace trigger trg_applications_updated_at
-  before update on public.applications
-  for each row execute function public.set_updated_at();
-
-create or replace trigger trg_interviews_updated_at
-  before update on public.interviews
-  for each row execute function public.set_updated_at();

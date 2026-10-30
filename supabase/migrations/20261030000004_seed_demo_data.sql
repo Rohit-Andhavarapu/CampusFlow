@@ -1,22 +1,80 @@
 -- ==============================================================================
--- CampusFlow V4 — Supabase Migration: 004_seed_demo_data.sql
--- Demonstration Data: Companies, Jobs, 20 Students, Applications, Interviews
+-- CampusFlow V4 - Supabase Migration: 004_seed_demo_data.sql
+-- Problem Statement: HACK-P410 (Campus Recruitment Portal)
+-- Seed Data: Synthetic University Directory, Verified Demo Accounts, Production Drives
 -- ==============================================================================
 
--- 1. Demo User IDs (Deterministic UUIDs for reproducibility across environments)
--- Student: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa
--- Recruiter: bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb
--- Admin: cccccccc-cccc-cccc-cccc-cccccccccccc
+-- ==============================================================================
+-- 10. SYNTHETIC BATCH SEED HELPER (DEFINED BEFORE EXECUTION)
+-- ==============================================================================
+create or replace function public.seed_synthetic_batch()
+returns void as $$
+declare
+  v_rec record;
+  v_student_id uuid;
+  v_students jsonb := '[
+    {"name": "Bhavna Kulkarni", "roll": "N25H02A0326", "email": "bhavna.k@campus.edu", "branch": "Computer Science & Engineering", "cgpa": 9.20, "year": 2026, "skills": ["Python", "Django", "AWS", "PostgreSQL"], "status": "selected"},
+    {"name": "Chirag Mehra", "roll": "N25H02A0327", "email": "chirag.m@campus.edu", "branch": "Information Technology", "cgpa": 8.40, "year": 2026, "skills": ["Java", "Spring Boot", "Kafka", "Docker"], "status": "interview"},
+    {"name": "Divya Iyer", "roll": "N25H02A0328", "email": "divya.i@campus.edu", "branch": "Artificial Intelligence & Data Science", "cgpa": 9.45, "year": 2026, "skills": ["PyTorch", "Computer Vision", "Python", "MLOps"], "status": "selected"},
+    {"name": "Eshaan Gupta", "roll": "N25H02A0329", "email": "eshaan.g@campus.edu", "branch": "Computer Science & Engineering", "cgpa": 7.65, "year": 2026, "skills": ["React", "JavaScript", "Tailwind", "HTML5"], "status": "submitted"},
+    {"name": "Farhan Ali", "roll": "N25H02A0330", "email": "farhan.a@campus.edu", "branch": "Electronics & Communication", "cgpa": 8.10, "year": 2026, "skills": ["C++", "Embedded C", "IoT", "Python"], "status": "shortlisted"},
+    {"name": "Gayatri Joshi", "roll": "N25H02A0331", "email": "gayatri.j@campus.edu", "branch": "Information Technology", "cgpa": 8.75, "year": 2026, "skills": ["Go", "Kubernetes", "Linux", "SQL"], "status": "selected"},
+    {"name": "Harsh Vardhan", "roll": "N25H02A0332", "email": "harsh.v@campus.edu", "branch": "Computer Science & Engineering", "cgpa": 6.95, "year": 2026, "skills": ["Python", "SQL", "Excel", "Tableau"], "status": "rejected"},
+    {"name": "Ishita Sen", "roll": "N25H02A0333", "email": "ishita.s@campus.edu", "branch": "Artificial Intelligence & Data Science", "cgpa": 8.90, "year": 2026, "skills": ["SQL", "R", "Tableau", "PowerBI"], "status": "selected"},
+    {"name": "Jayant Patel", "roll": "N25H02A0334", "email": "jayant.p@campus.edu", "branch": "Computer Science & Engineering", "cgpa": 7.80, "year": 2026, "skills": ["Node.js", "MongoDB", "Express", "React"], "status": "submitted"},
+    {"name": "Kavya Pillai", "roll": "N25H02A0335", "email": "kavya.p@campus.edu", "branch": "Information Technology", "cgpa": 9.05, "year": 2026, "skills": ["Rust", "C++", "Systems", "Networks"], "status": "selected"},
+    {"name": "Lokesh Nair", "roll": "N25H02A0336", "email": "lokesh.n@campus.edu", "branch": "Electronics & Communication", "cgpa": 7.30, "year": 2026, "skills": ["Python", "VLSI", "Verilog", "MATLAB"], "status": "unplaced"},
+    {"name": "Meera Nambiar", "roll": "N25H02A0337", "email": "meera.n@campus.edu", "branch": "Computer Science & Engineering", "cgpa": 8.60, "year": 2026, "skills": ["React Native", "Swift", "Flutter", "Firebase"], "status": "interview"},
+    {"name": "Nikhil Saxena", "roll": "N25H02A0338", "email": "nikhil.s@campus.edu", "branch": "Information Technology", "cgpa": 8.35, "year": 2026, "skills": ["TypeScript", "GraphQL", "Next.js", "Jest"], "status": "selected"},
+    {"name": "Ojas Deshmukh", "roll": "N25H02A0339", "email": "ojas.d@campus.edu", "branch": "Computer Science & Engineering", "cgpa": 7.40, "year": 2026, "skills": ["Java", "SQL", "HTML/CSS", "Git"], "status": "unplaced"},
+    {"name": "Prerna Singhania", "roll": "N25H02A0340", "email": "prerna.s@campus.edu", "branch": "Artificial Intelligence & Data Science", "cgpa": 9.30, "year": 2026, "skills": ["LLMs", "Prompt Engineering", "LangChain", "Python"], "status": "selected"},
+    {"name": "Rohan Bose", "roll": "N25H02A0341", "email": "rohan.b@campus.edu", "branch": "Mechanical Engineering", "cgpa": 8.15, "year": 2026, "skills": ["Python", "Data Analytics", "AutoCAD", "SQL"], "status": "submitted"},
+    {"name": "Sneha Chatterjee", "roll": "N25H02A0342", "email": "sneha.c@campus.edu", "branch": "Computer Science & Engineering", "cgpa": 8.70, "year": 2026, "skills": ["Cybersecurity", "Linux", "Network Security", "Python"], "status": "selected"},
+    {"name": "Tanmay Bhatt", "roll": "N25H02A0343", "email": "tanmay.b@campus.edu", "branch": "Information Technology", "cgpa": 7.10, "year": 2026, "skills": ["PHP", "MySQL", "JavaScript", "Bootstrap"], "status": "unplaced"},
+    {"name": "Urvi Shah", "roll": "N25H02A0344", "email": "urvi.s@campus.edu", "branch": "Computer Science & Engineering", "cgpa": 9.15, "year": 2026, "skills": ["Kubernetes", "Cloud Architecture", "Go", "GCP"], "status": "selected"}
+  ]'::jsonb;
+begin
+  for v_rec in select * from jsonb_to_recordset(v_students) as x(
+    name text, roll text, email text, branch text, cgpa numeric, year int, skills text[], status text
+  )
+  loop
+    insert into public.student_profiles (
+      full_name, email, roll_number, course, branch, graduation_year, cgpa, active_backlogs
+    )
+    values (
+      v_rec.name, v_rec.email, v_rec.roll, 'B.Tech', v_rec.branch, v_rec.year, v_rec.cgpa, 0
+    )
+    on conflict (roll_number) do update set
+      cgpa = excluded.cgpa,
+      full_name = excluded.full_name
+    returning id into v_student_id;
 
--- Note: In Supabase production/local auth, these IDs can match auth.users(id).
--- If auth.users has foreign key enforcement, we insert demo entries into auth.users if accessible,
--- or use safe upserts into public.profiles.
+    insert into public.student_skills (student_id, skill_name)
+    select v_student_id, unnest(v_rec.skills)
+    on conflict do nothing;
 
+    if v_rec.status = 'selected' then
+      insert into public.applications (student_id, job_id, status, applied_at)
+      values (v_student_id, '20000000-0000-4000-a000-000000000001'::uuid, 'selected', now() - interval '10 days')
+      on conflict (student_id, job_id) do nothing;
+    elsif v_rec.status in ('submitted', 'shortlisted', 'interview', 'rejected') then
+      insert into public.applications (student_id, job_id, status, applied_at)
+      values (v_student_id, '20000000-0000-4000-a000-000000000001'::uuid, v_rec.status::application_status_type, now() - interval '5 days')
+      on conflict (student_id, job_id) do nothing;
+    end if;
+  end loop;
+end;
+$$ language plpgsql security definer set search_path = public;
+
+-- ==============================================================================
+-- 11. DEMO ACCOUNTS & SYNTHETIC SEED DATA
+-- ==============================================================================
 do $$
 declare
-  v_student_auth_id uuid := 'aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa';
-  v_recruiter_auth_id uuid := 'bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbbb';
-  v_admin_auth_id uuid := 'cccccccc-cccc-4ccc-cccc-cccccccccccc';
+  -- STRICTLY VALID HEXADECIMAL UUIDS FOR ALL ENTITIES
+  v_student_auth_id uuid := 'a0000000-0000-4000-a000-000000000001';
+  v_recruiter_auth_id uuid := 'b0000000-0000-4000-a000-000000000001';
+  v_admin_auth_id uuid := 'c0000000-0000-4000-a000-000000000001';
 
   v_company_aetos uuid := '11111111-1111-4111-a111-111111111111';
   v_company_nova uuid := '22222222-2222-4222-a222-222222222222';
@@ -29,35 +87,102 @@ declare
   v_drive_nova uuid := 'd2222222-2222-4222-a222-222222222222';
   v_drive_orbit uuid := 'd4444444-4444-4444-a444-444444444444';
 
-  v_job_aetos uuid := 'j1111111-1111-4111-a111-111111111111';
-  v_job_nova_swe uuid := 'j2222222-2222-4222-a222-222222222222';
-  v_job_nova_cloud uuid := 'j2222222-3333-4222-a222-333333333333';
-  v_job_orbit_analyst uuid := 'j4444444-1111-4444-a444-111111111111';
-  v_job_agnext_ai uuid := 'j3333333-1111-4333-a333-111111111111';
-  v_job_medrenova_cv uuid := 'j5555555-1111-4555-a555-111111111111';
-  v_job_vertex_fs uuid := 'j6666666-1111-4666-a666-111111111111';
+  v_job_aetos uuid := '10000000-0000-4000-a000-000000000001';
+  v_job_nova_swe uuid := '20000000-0000-4000-a000-000000000001';
+  v_job_nova_cloud uuid := '20000000-0000-4000-a000-000000000002';
+  v_job_agnext_ai uuid := '30000000-0000-4000-a000-000000000001';
+  v_job_orbit_analyst uuid := '40000000-0000-4000-a000-000000000001';
+  v_job_medrenova_cv uuid := '50000000-0000-4000-a000-000000000001';
+  v_job_vertex_fs uuid := '60000000-0000-4000-a000-000000000001';
 
   v_primary_student_id uuid;
-  v_app_1 uuid := 'a1111111-1111-4111-a111-111111111111';
-  v_app_2 uuid := 'a2222222-2222-4222-a222-222222222222';
-  v_app_3 uuid := 'a3333333-3333-4333-a333-333333333333';
-  v_app_4 uuid := 'a4444444-4444-4444-a444-444444444444';
+  v_app_1 uuid := 'a1000000-0000-4000-a000-000000000001';
+  v_app_2 uuid := 'a2000000-0000-4000-a000-000000000002';
+  v_app_3 uuid := 'a3000000-0000-4000-a000-000000000003';
+  v_app_4 uuid := 'a4000000-0000-4000-a000-000000000004';
 begin
-  -- 1. Create or ensure auth.users entries for the three demo roles if auth schema is writable
+  -- 1. Create Demo Users in auth.users with Password "CampusFlow2026!"
   begin
-    insert into auth.users (id, email, raw_user_meta_data, role, aud)
+    insert into auth.users (
+      instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
+      raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
+      confirmation_token, email_change, email_change_token_new, recovery_token
+    )
     values
-      (v_student_auth_id, 'aarav.sharma@campus.edu', '{"role":"student","full_name":"Aarav Sharma"}'::jsonb, 'authenticated', 'authenticated'),
-      (v_recruiter_auth_id, 'priya.nair@novatech.io', '{"role":"recruiter","full_name":"Priya Nair"}'::jsonb, 'authenticated', 'authenticated'),
-      (v_admin_auth_id, 'placements@campus.edu', '{"role":"placement_admin","full_name":"Dr. Rajesh Rao"}'::jsonb, 'authenticated', 'authenticated')
-    on conflict (id) do nothing;
+      (
+        '00000000-0000-0000-0000-000000000000',
+        v_student_auth_id,
+        'authenticated', 'authenticated',
+        'aarav.sharma@campus.edu',
+        crypt('CampusFlow2026!', gen_salt('bf')),
+        now(),
+        '{"provider":"email","providers":["email"]}'::jsonb,
+        '{"full_name":"Aarav Sharma"}'::jsonb,
+        now(), now(), '', '', '', ''
+      ),
+      (
+        '00000000-0000-0000-0000-000000000000',
+        v_recruiter_auth_id,
+        'authenticated', 'authenticated',
+        'priya.nair@novatech.io',
+        crypt('CampusFlow2026!', gen_salt('bf')),
+        now(),
+        '{"provider":"email","providers":["email"]}'::jsonb,
+        '{"full_name":"Priya Nair"}'::jsonb,
+        now(), now(), '', '', '', ''
+      ),
+      (
+        '00000000-0000-0000-0000-000000000000',
+        v_admin_auth_id,
+        'authenticated', 'authenticated',
+        'placements@campus.edu',
+        crypt('CampusFlow2026!', gen_salt('bf')),
+        now(),
+        '{"provider":"email","providers":["email"]}'::jsonb,
+        '{"full_name":"Dr. Rajesh Rao"}'::jsonb,
+        now(), now(), '', '', '', ''
+      )
+    on conflict (id) do update set
+      email = excluded.email,
+      encrypted_password = excluded.encrypted_password,
+      updated_at = now();
+
+    -- Ensure matching auth.identities exist for password-based GoTrue authentication
+    insert into auth.identities (
+      id, user_id, identity_data, provider, provider_id, last_sign_in_at, created_at, updated_at
+    )
+    values
+      (
+        v_student_auth_id::text,
+        v_student_auth_id,
+        jsonb_build_object('sub', v_student_auth_id::text, 'email', 'aarav.sharma@campus.edu'),
+        'email',
+        v_student_auth_id::text,
+        now(), now(), now()
+      ),
+      (
+        v_recruiter_auth_id::text,
+        v_recruiter_auth_id,
+        jsonb_build_object('sub', v_recruiter_auth_id::text, 'email', 'priya.nair@novatech.io'),
+        'email',
+        v_recruiter_auth_id::text,
+        now(), now(), now()
+      ),
+      (
+        v_admin_auth_id::text,
+        v_admin_auth_id,
+        jsonb_build_object('sub', v_admin_auth_id::text, 'email', 'placements@campus.edu'),
+        'email',
+        v_admin_auth_id::text,
+        now(), now(), now()
+      )
+    on conflict do nothing;
   exception
     when others then
-      -- If running in an environment without direct auth.users insert privileges, proceed with public.profiles
-      null;
+      raise notice 'Notice: auth.users managed externally: %', sqlerrm;
   end;
 
-  -- 2. Insert Profiles
+  -- 2. Insert Profiles with Trusted Administrative Roles
   insert into public.profiles (id, email, full_name, role, avatar_path)
   values
     (v_student_auth_id, 'aarav.sharma@campus.edu', 'Aarav Sharma', 'student', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'),
@@ -68,25 +193,20 @@ begin
     full_name = excluded.full_name,
     role = excluded.role;
 
-  -- 3. Insert Student Profile for Aarav Sharma
+  -- Remove any accidental student profiles created for recruiter or placement_admin
+  delete from public.student_profiles where user_id in (v_recruiter_auth_id, v_admin_auth_id);
+
+  -- 3. Upsert Student Profile for Aarav Sharma
   insert into public.student_profiles (
-    id,
-    user_id,
-    roll_number,
-    course,
-    branch,
-    graduation_year,
-    cgpa,
-    active_backlogs,
-    phone,
-    bio,
-    github_url,
-    linkedin_url,
-    portfolio_url
+    id, user_id, full_name, email, roll_number, course, branch,
+    graduation_year, cgpa, active_backlogs, phone, bio,
+    github_url, linkedin_url, portfolio_url
   )
   values (
-    's1111111-1111-4111-a111-111111111111',
+    'e0000000-0000-4000-a000-000000000001',
     v_student_auth_id,
+    'Aarav Sharma',
+    'aarav.sharma@campus.edu',
     'N25H02A0325',
     'B.Tech',
     'Computer Science & Engineering',
@@ -101,10 +221,20 @@ begin
   )
   on conflict (user_id) do update set
     roll_number = excluded.roll_number,
-    cgpa = excluded.cgpa
+    cgpa = excluded.cgpa,
+    full_name = excluded.full_name,
+    email = excluded.email,
+    course = excluded.course,
+    branch = excluded.branch,
+    graduation_year = excluded.graduation_year,
+    phone = excluded.phone,
+    bio = excluded.bio,
+    github_url = excluded.github_url,
+    linkedin_url = excluded.linkedin_url,
+    portfolio_url = excluded.portfolio_url
   returning id into v_primary_student_id;
 
-  -- Insert Skills for Aarav
+  -- Skills
   insert into public.student_skills (student_id, skill_name)
   values
     (v_primary_student_id, 'React'),
@@ -117,7 +247,7 @@ begin
     (v_primary_student_id, 'Docker')
   on conflict (student_id, skill_name) do nothing;
 
-  -- Insert Projects for Aarav
+  -- Projects
   insert into public.student_projects (student_id, title, description, project_url, technologies)
   values
     (
@@ -136,7 +266,7 @@ begin
     )
   on conflict do nothing;
 
-  -- 4. Insert Companies
+  -- 4. Companies
   insert into public.companies (id, name, industry, description, website, logo_path, status)
   values
     (v_company_aetos, 'Aetos DigiLog', 'Artificial Intelligence & Defense Tech', 'Next-generation intelligent autonomy and multi-agent coordination systems.', 'https://aetosdigilog.com', 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=128&auto=format&fit=crop&q=80', 'active'),
@@ -149,7 +279,7 @@ begin
     name = excluded.name,
     industry = excluded.industry;
 
-  -- 5. Recruiter Memberships
+  -- 5. Recruiter Company Memberships
   insert into public.recruiter_company_memberships (recruiter_user_id, company_id, membership_role, approved_at)
   values
     (v_recruiter_auth_id, v_company_nova, 'lead_recruiter', now()),
@@ -241,7 +371,7 @@ begin
   )
   values (
     v_job_orbit_analyst, 7.20, 1,
-    array[]::text[], -- All branches allowed
+    array[]::text[],
     array[2026],
     array['SQL', 'Python']
   ) on conflict (job_id) do nothing;
@@ -260,7 +390,7 @@ begin
     array['Build automated edge deployment pipelines', 'Implement performance instrumentation and telemetry', 'Evaluate model drift across agricultural dataset batches'],
     'Internship', 'Remote', 'Remote (India)',
     15000.00, 20000.00, 'monthly', 'INR',
-    3, now() - interval '2 days', 'closed' -- Closed drive
+    3, now() - interval '2 days', 'closed'
   ) on conflict (id) do nothing;
 
   insert into public.job_eligibility_rules (
@@ -273,7 +403,7 @@ begin
     array['Python']
   ) on conflict (job_id) do nothing;
 
-  -- 8. Seed Applications for Aarav Sharma
+  -- 8. Applications for Aarav Sharma
   -- App 1: AI Intern (Interview Scheduled)
   insert into public.applications (id, student_id, job_id, status, applied_at)
   values (v_app_1, v_primary_student_id, v_job_aetos, 'interview', now() - interval '8 days')
@@ -326,7 +456,7 @@ begin
     mode, location, meeting_url, round, status, feedback
   )
   values (
-    'i1111111-1111-4111-a111-111111111111',
+    'f0000000-0000-4000-a000-000000000001',
     v_app_1,
     v_recruiter_auth_id,
     now() + interval '3 days',
@@ -348,78 +478,16 @@ begin
     (v_recruiter_auth_id, 'New Application Received', 'Aarav Sharma submitted an application for Software Engineer Trainee.', 'application', v_app_2::text, false, now() - interval '6 days')
   on conflict do nothing;
 
-  -- 11. Seed 19 additional synthetic students across branches and placement statuses
-  -- to guarantee the mandatory 20 synthetic student records
+  -- 11. Call Pre-Defined Seed Helper for 19 Synthetic Students
   perform public.seed_synthetic_batch();
 end $$;
 
--- Helper Function to Seed 20 Synthetic Students
-create or replace function public.seed_synthetic_batch()
-returns void as $$
-declare
-  v_rec record;
-  v_new_user_id uuid;
-  v_student_id uuid;
-  v_idx int := 1;
-  v_students jsonb := '[
-    {"name": "Bhavna Kulkarni", "roll": "N25H02A0326", "email": "bhavna.k@campus.edu", "branch": "Computer Science & Engineering", "cgpa": 9.20, "year": 2026, "skills": ["Python", "Django", "AWS", "PostgreSQL"], "status": "selected"},
-    {"name": "Chirag Mehra", "roll": "N25H02A0327", "email": "chirag.m@campus.edu", "branch": "Information Technology", "cgpa": 8.40, "year": 2026, "skills": ["Java", "Spring Boot", "Kafka", "Docker"], "status": "interview"},
-    {"name": "Divya Iyer", "roll": "N25H02A0328", "email": "divya.i@campus.edu", "branch": "Artificial Intelligence & Data Science", "cgpa": 9.45, "year": 2026, "skills": ["PyTorch", "Computer Vision", "Python", "MLOps"], "status": "selected"},
-    {"name": "Eshaan Gupta", "roll": "N25H02A0329", "email": "eshaan.g@campus.edu", "branch": "Computer Science & Engineering", "cgpa": 7.65, "year": 2026, "skills": ["React", "JavaScript", "Tailwind", "HTML5"], "status": "submitted"},
-    {"name": "Farhan Ali", "roll": "N25H02A0330", "email": "farhan.a@campus.edu", "branch": "Electronics & Communication", "cgpa": 8.10, "year": 2026, "skills": ["C++", "Embedded C", "IoT", "Python"], "status": "shortlisted"},
-    {"name": "Gayatri Joshi", "roll": "N25H02A0331", "email": "gayatri.j@campus.edu", "branch": "Information Technology", "cgpa": 8.75, "year": 2026, "skills": ["Go", "Kubernetes", "Linux", "SQL"], "status": "selected"},
-    {"name": "Harsh Vardhan", "roll": "N25H02A0332", "email": "harsh.v@campus.edu", "branch": "Computer Science & Engineering", "cgpa": 6.95, "year": 2026, "skills": ["Python", "SQL", "Excel", "Tableau"], "status": "rejected"},
-    {"name": "Ishita Sen", "roll": "N25H02A0333", "email": "ishita.s@campus.edu", "branch": "Artificial Intelligence & Data Science", "cgpa": 8.90, "year": 2026, "skills": ["SQL", "R", "Tableau", "PowerBI"], "status": "selected"},
-    {"name": "Jayant Patel", "roll": "N25H02A0334", "email": "jayant.p@campus.edu", "branch": "Computer Science & Engineering", "cgpa": 7.80, "year": 2026, "skills": ["Node.js", "MongoDB", "Express", "React"], "status": "submitted"},
-    {"name": "Kavya Pillai", "roll": "N25H02A0335", "email": "kavya.p@campus.edu", "branch": "Information Technology", "cgpa": 9.05, "year": 2026, "skills": ["Rust", "C++", "Systems", "Networks"], "status": "selected"},
-    {"name": "Lokesh Nair", "roll": "N25H02A0336", "email": "lokesh.n@campus.edu", "branch": "Electronics & Communication", "cgpa": 7.30, "year": 2026, "skills": ["Python", "VLSI", "Verilog", "MATLAB"], "status": "unplaced"},
-    {"name": "Meera Nambiar", "roll": "N25H02A0337", "email": "meera.n@campus.edu", "branch": "Computer Science & Engineering", "cgpa": 8.60, "year": 2026, "skills": ["React Native", "Swift", "Flutter", "Firebase"], "status": "interview"},
-    {"name": "Nikhil Saxena", "roll": "N25H02A0338", "email": "nikhil.s@campus.edu", "branch": "Information Technology", "cgpa": 8.35, "year": 2026, "skills": ["TypeScript", "GraphQL", "Next.js", "Jest"], "status": "selected"},
-    {"name": "Ojas Deshmukh", "roll": "N25H02A0339", "email": "ojas.d@campus.edu", "branch": "Computer Science & Engineering", "cgpa": 7.40, "year": 2026, "skills": ["Java", "SQL", "HTML/CSS", "Git"], "status": "unplaced"},
-    {"name": "Prerna Singhania", "roll": "N25H02A0340", "email": "prerna.s@campus.edu", "branch": "Artificial Intelligence & Data Science", "cgpa": 9.30, "year": 2026, "skills": ["LLMs", "Prompt Engineering", "LangChain", "Python"], "status": "selected"},
-    {"name": "Rohan Bose", "roll": "N25H02A0341", "email": "rohan.b@campus.edu", "branch": "Mechanical Engineering", "cgpa": 8.15, "year": 2026, "skills": ["Python", "Data Analytics", "AutoCAD", "SQL"], "status": "submitted"},
-    {"name": "Sneha Chatterjee", "roll": "N25H02A0342", "email": "sneha.c@campus.edu", "branch": "Computer Science & Engineering", "cgpa": 8.70, "year": 2026, "skills": ["Cybersecurity", "Linux", "Network Security", "Python"], "status": "selected"},
-    {"name": "Tanmay Bhatt", "roll": "N25H02A0343", "email": "tanmay.b@campus.edu", "branch": "Information Technology", "cgpa": 7.10, "year": 2026, "skills": ["PHP", "MySQL", "JavaScript", "Bootstrap"], "status": "unplaced"},
-    {"name": "Urvi Shah", "roll": "N25H02A0344", "email": "urvi.s@campus.edu", "branch": "Computer Science & Engineering", "cgpa": 9.15, "year": 2026, "skills": ["Kubernetes", "Cloud Architecture", "Go", "GCP"], "status": "selected"}
-  ]'::jsonb;
-begin
-  for v_rec in select * from jsonb_to_recordset(v_students) as x(
-    name text, roll text, email text, branch text, cgpa numeric, year int, skills text[], status text
-  )
-  loop
-    v_new_user_id := gen_random_uuid();
-
-    -- Create profile
-    insert into public.profiles (id, email, full_name, role)
-    values (v_new_user_id, v_rec.email, v_rec.name, 'student')
-    on conflict (email) do update set full_name = excluded.full_name
-    returning id into v_new_user_id;
-
-    -- Create student_profile
-    insert into public.student_profiles (
-      user_id, roll_number, course, branch, graduation_year, cgpa, active_backlogs
-    )
-    values (
-      v_new_user_id, v_rec.roll, 'B.Tech', v_rec.branch, v_rec.year, v_rec.cgpa, 0
-    )
-    on conflict (roll_number) do update set cgpa = excluded.cgpa
-    returning id into v_student_id;
-
-    -- Skills
-    insert into public.student_skills (student_id, skill_name)
-    select v_student_id, unnest(v_rec.skills)
-    on conflict do nothing;
-
-    -- If placed (selected), link an application to NovaTech SWE
-    if v_rec.status = 'selected' then
-      insert into public.applications (student_id, job_id, status, applied_at)
-      values (v_student_id, 'j2222222-2222-4222-a222-222222222222'::uuid, 'selected', now() - interval '10 days')
-      on conflict (student_id, job_id) do nothing;
-    elsif v_rec.status in ('submitted', 'shortlisted', 'interview', 'rejected') then
-      insert into public.applications (student_id, job_id, status, applied_at)
-      values (v_student_id, 'j2222222-2222-4222-a222-222222222222'::uuid, v_rec.status::application_status_type, now() - interval '5 days')
-      on conflict (student_id, job_id) do nothing;
-    end if;
-  end loop;
-end;
-$$ language plpgsql security definer set search_path = public;
+-- ==============================================================================
+-- 12. VERIFICATION QUERIES
+-- ==============================================================================
+select 'Deployment verification complete.' as status,
+       (select count(*) from public.companies) as companies_count,
+       (select count(*) from public.job_postings) as jobs_count,
+       (select count(*) from public.student_profiles) as students_count,
+       (select count(*) from public.applications) as applications_count,
+       (select count(*) from public.interviews) as interviews_count;
