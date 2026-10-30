@@ -34,21 +34,25 @@ import { AdminInterviews } from './pages/admin/AdminInterviews';
 import { AdminAnalytics } from './pages/admin/AdminAnalytics';
 import { AdminReports } from './pages/admin/AdminReports';
 
-import { NotFound } from './pages/common/NotFound';
+// Public Landing & Auth Pages
+import { LandingPage } from './pages/landing/LandingPage';
+import { LoginPage } from './pages/auth/LoginPage';
+import { SignupPage } from './pages/auth/SignupPage';
 
-const RootRedirect = () => {
-  const { currentRole } = useApp();
-  return <Navigate to={`/${currentRole}/dashboard`} replace />;
-};
+import { NotFound } from './pages/common/NotFound';
 
 export const App: React.FC = () => {
   return (
     <AppProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<AppShell />}>
-            <Route index element={<RootRedirect />} />
+          {/* Public Cinematic Landing Experience */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
 
+          {/* Authenticated Workspace Shell */}
+          <Route element={<AppShell />}>
             {/* Student Experience Routes */}
             <Route path="student">
               <Route index element={<Navigate to="dashboard" replace />} />

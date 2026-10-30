@@ -67,6 +67,38 @@ export const authService = {
     return { user, error: null };
   },
 
+  async signUp(fullName: string, email: string, password: string): Promise<{ user: User | null; error: string | null; confirmationRequired?: boolean }> {
+    if (!isSupabaseConfigured()) {
+      return { user: mockUsers.student, error: null };
+    }
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: fullName,
+          role: 'student', // Public signup strictly restricted to student accounts per security requirements!
+        },
+      },
+    });
+
+    if (error) {
+      return { user: null, error: error.message };
+    }
+
+    if (data.session) {
+      const user = await this.getCurrentUser();
+      return { user, error: null };
+    }
+
+    return {
+      user: null,
+      error: null,
+      confirmationRequired: !data.session,
+    };
+  },
+
   async signOut(): Promise<void> {
     if (isSupabaseConfigured()) {
       await supabase.auth.signOut();

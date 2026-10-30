@@ -38,7 +38,11 @@ interface AppContextType {
   currentRole: UserRole;
   currentUser: User;
   isDatabaseConnected: boolean;
+  isAuthenticated: boolean;
   switchRole: (role: UserRole, silent?: boolean) => void;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; role?: UserRole }>;
+  signup: (fullName: string, email: string, password: string) => Promise<{ success: boolean; error?: string; confirmationRequired?: boolean }>;
+  logout: () => Promise<void>;
   jobs: JobPosting[];
   applications: Application[];
   interviews: Interview[];
@@ -72,6 +76,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentRole, setCurrentRole] = useState<UserRole>('student');
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
   const [jobs, setJobs] = useState<JobPosting[]>(mockJobPostings);
   const [applications, setApplications] = useState<Application[]>(initialApplications);
   const [interviews, setInterviews] = useState<Interview[]>(initialInterviews);
@@ -128,6 +133,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const switchRole = async (role: UserRole, silent = false) => {
     setCurrentRole(role);
+    setIsAuthenticated(true);
     if (!silent) {
       showToast(
         'info',
@@ -156,6 +162,63 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         console.warn('Backend persona authentication sync warning:', err);
       }
     }
+  };
+
+  const login = async (email: string, password: string) => {
+    try {
+      const res = await authService.signIn(email, password);
+      if (res.error || !res.user) {
+        showToast('error', 'Login Failed', res.error || 'Invalid credentials');
+        return { success: false, error: res.error || 'Invalid credentials' };
+      }
+      setIsAuthenticated(true);
+      setCurrentRole(res.user.role);
+      const [remoteApps, remoteInts, remoteNotifs] = await Promise.all([
+        applicationService.fetchApplications(),
+        interviewService.fetchInterviews(),
+        notificationService.fetchNotifications(),
+      ]);
+      if (remoteApps) setApplications(remoteApps);
+      if (remoteInts) setInterviews(remoteInts);
+      if (remoteNotifs) setNotifications(remoteNotifs);
+      if (res.user.role === 'student') {
+        const remoteProfile = await studentService.getStudentProfile();
+        if (remoteProfile) setStudentProfile(remoteProfile);
+      }
+      showToast('success', `Welcome back, ${res.user.name}`, `Signed in as ${res.user.role.toUpperCase()}`);
+      return { success: true, role: res.user.role };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Authentication error' };
+    }
+  };
+
+  const signup = async (fullName: string, email: string, password: string) => {
+    try {
+      const res = await authService.signUp(fullName, email, password);
+      if (res.error) {
+        showToast('error', 'Registration Failed', res.error);
+        return { success: false, error: res.error };
+      }
+      if (res.confirmationRequired) {
+        showToast('info', 'Verification Required', 'Please check your email to verify your student account.');
+        return { success: true, confirmationRequired: true };
+      }
+      if (res.user) {
+        setIsAuthenticated(true);
+        setCurrentRole('student');
+        showToast('success', 'Account Created', `Welcome to CampusFlow, ${fullName}!`);
+        return { success: true, confirmationRequired: false };
+      }
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Signup failed' };
+    }
+  };
+
+  const logout = async () => {
+    await authService.signOut();
+    setIsAuthenticated(false);
+    showToast('info', 'Signed Out', 'You have been logged out of CampusFlow.');
   };
 
   const updateStudentProfile = async (updated: Partial<StudentProfileData>) => {
@@ -528,7 +591,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         currentRole,
         currentUser,
         isDatabaseConnected,
+        isAuthenticated,
         switchRole,
+        login,
+        signup,
+        logout,
         jobs,
         applications,
         interviews,

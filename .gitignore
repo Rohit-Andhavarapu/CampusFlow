@@ -31,3 +31,7 @@ uploads/
 *.sqlite
 *.sqlite3
 *.db
+
+# Tool caches
+.taste-skill/
+
