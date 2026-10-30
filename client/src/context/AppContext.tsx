@@ -17,6 +17,13 @@ import {
   mockNotifications,
   mockUsers,
 } from '../data/mockData';
+import { isSupabaseConfigured } from '../services/supabase';
+import {
+  applicationService,
+  interviewService,
+  jobsService,
+  studentService,
+} from '../services/campusflowService';
 
 interface ToastInfo {
   id: string;
@@ -28,6 +35,7 @@ interface ToastInfo {
 interface AppContextType {
   currentRole: UserRole;
   currentUser: User;
+  isDatabaseConnected: boolean;
   switchRole: (role: UserRole, silent?: boolean) => void;
   jobs: JobPosting[];
   applications: Application[];
@@ -37,12 +45,12 @@ interface AppContextType {
   toasts: ToastInfo[];
   showToast: (type: ToastInfo['type'], title: string, message?: string) => void;
   removeToast: (id: string) => void;
-  updateStudentProfile: (updated: Partial<StudentProfileData>) => void;
-  applyToJob: (jobId: string) => { success: boolean; message: string };
-  withdrawApplication: (appId: string) => void;
-  shortlistApplication: (appId: string) => void;
-  rejectApplication: (appId: string) => void;
-  markSelected: (appId: string) => void;
+  updateStudentProfile: (updated: Partial<StudentProfileData>) => Promise<void>;
+  applyToJob: (jobId: string) => Promise<{ success: boolean; message: string }> | { success: boolean; message: string };
+  withdrawApplication: (appId: string) => Promise<void>;
+  shortlistApplication: (appId: string) => Promise<void>;
+  rejectApplication: (appId: string) => Promise<void>;
+  markSelected: (appId: string) => Promise<void>;
   scheduleInterview: (
     appId: string,
     details: {
@@ -52,8 +60,8 @@ interface AppContextType {
       round: string;
       notes?: string;
     }
-  ) => void;
-  createJobPosting: (job: Omit<JobPosting, 'id' | 'createdAt' | 'applicantsCount'>) => void;
+  ) => Promise<void>;
+  createJobPosting: (job: Omit<JobPosting, 'id' | 'createdAt' | 'applicantsCount'>) => Promise<void>;
   markNotificationRead: (id: string) => void;
   markAllNotificationsRead: () => void;
 }
@@ -68,6 +76,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [notifications, setNotifications] = useState<Notification[]>(mockNotifications);
   const [studentProfile, setStudentProfile] = useState<StudentProfileData>(initialStudentProfile);
   const [toasts, setToasts] = useState<ToastInfo[]>([]);
+  const isDatabaseConnected = isSupabaseConfigured();
+
+  // Load from Supabase on mount if configured
+  useEffect(() => {
+    if (isDatabaseConnected) {
+      jobsService.fetchJobs().then((remoteJobs) => {
+        if (remoteJobs && remoteJobs.length > 0) setJobs(remoteJobs);
+      }).catch(console.error);
+
+      studentService.getStudentProfile().then((remoteProfile) => {
+        if (remoteProfile) setStudentProfile(remoteProfile);
+      }).catch(console.error);
+    }
+  }, [isDatabaseConnected]);
 
   const currentUser = mockUsers[currentRole];
 
@@ -94,16 +116,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  const updateStudentProfile = (updated: Partial<StudentProfileData>) => {
+  const updateStudentProfile = async (updated: Partial<StudentProfileData>) => {
     setStudentProfile((prev) => ({ ...prev, ...updated }));
+    if (isDatabaseConnected) {
+      await studentService.updateStudentProfile(currentUser.id, updated);
+    }
     showToast('success', 'Profile Updated', 'Your student credentials have been saved.');
   };
 
-  const applyToJob = (jobId: string): { success: boolean; message: string } => {
+  const applyToJob = async (jobId: string): Promise<{ success: boolean; message: string }> => {
     const job = jobs.find((j) => j.id === jobId);
     if (!job) return { success: false, message: 'Job not found' };
 
-    // Check duplicate
+    // Duplicate check
     const existing = applications.find(
       (a) => a.jobId === jobId && a.studentId === currentUser.id && a.status !== 'Withdrawn'
     );
@@ -112,8 +137,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return { success: false, message: 'Already applied' };
     }
 
+    let generatedAppId = 'app_' + Date.now();
+
+    // If live Supabase connection is active, submit via authoritative PostgreSQL RPC
+    if (isDatabaseConnected) {
+      const res = await applicationService.submitApplication(jobId);
+      if (!res.success) {
+        showToast('error', 'Application Denied', res.message);
+        return { success: false, message: res.message };
+      }
+      if (res.applicationId) generatedAppId = res.applicationId;
+    }
+
     const newApp: Application = {
-      id: 'app_' + Date.now(),
+      id: generatedAppId,
       jobId: job.id,
       jobTitle: job.title,
       companyName: job.companyName,
@@ -143,12 +180,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     setApplications((prev) => [newApp, ...prev]);
 
-    // Update applicant count
+    // Increment applicant count
     setJobs((prev) =>
       prev.map((j) => (j.id === jobId ? { ...j, applicantsCount: (j.applicantsCount || 0) + 1 } : j))
     );
 
-    // Create notification
+    // Create in-app notification
     const newNotif: Notification = {
       id: 'notif_' + Date.now(),
       userId: currentUser.id,
@@ -165,7 +202,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return { success: true, message: 'Success' };
   };
 
-  const withdrawApplication = (appId: string) => {
+  const withdrawApplication = async (appId: string) => {
+    if (isDatabaseConnected) {
+      await applicationService.withdrawApplication(appId);
+    }
+
     setApplications((prev) =>
       prev.map((app) => {
         if (app.id === appId) {
@@ -190,7 +231,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast('info', 'Application Withdrawn', 'Your application status has been updated.');
   };
 
-  const shortlistApplication = (appId: string) => {
+  const shortlistApplication = async (appId: string) => {
+    if (isDatabaseConnected) {
+      await applicationService.updateApplicationStatus(appId, 'Shortlisted', 'Shortlisted by recruitment team.');
+    }
+
     setApplications((prev) =>
       prev.map((app) => {
         if (app.id === appId) {
@@ -215,7 +260,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast('success', 'Candidate Shortlisted', 'Candidate moved to shortlisted stage.');
   };
 
-  const rejectApplication = (appId: string) => {
+  const rejectApplication = async (appId: string) => {
+    if (isDatabaseConnected) {
+      await applicationService.updateApplicationStatus(appId, 'Rejected', 'Application not selected to advance.');
+    }
+
     setApplications((prev) =>
       prev.map((app) => {
         if (app.id === appId) {
@@ -240,7 +289,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast('info', 'Status Updated', 'Candidate status updated to Rejected.');
   };
 
-  const markSelected = (appId: string) => {
+  const markSelected = async (appId: string) => {
+    if (isDatabaseConnected) {
+      await applicationService.updateApplicationStatus(appId, 'Selected', 'Offer confirmed and recorded.');
+    }
+
     setApplications((prev) =>
       prev.map((app) => {
         if (app.id === appId) {
@@ -265,7 +318,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast('success', 'Candidate Selected!', 'Offer confirmed and recorded.');
   };
 
-  const scheduleInterview = (
+  const scheduleInterview = async (
     appId: string,
     details: {
       dateTime: string;
@@ -278,8 +331,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const app = applications.find((a) => a.id === appId);
     if (!app) return;
 
+    let generatedInterviewId = 'int_' + Date.now();
+
+    if (isDatabaseConnected) {
+      const res = await interviewService.scheduleInterview({
+        applicationId: appId,
+        dateTime: details.dateTime,
+        mode: details.mode,
+        locationOrLink: details.locationOrLink,
+        round: details.round,
+        notes: details.notes,
+      });
+      if (res.interviewId) generatedInterviewId = res.interviewId;
+    }
+
     const newInterview: Interview = {
-      id: 'int_' + Date.now(),
+      id: generatedInterviewId,
       applicationId: app.id,
       jobId: app.jobId,
       jobTitle: app.jobTitle,
@@ -323,7 +390,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       })
     );
 
-    // Notification
+    // In-app Notification
     const notif: Notification = {
       id: 'notif_' + Date.now(),
       userId: app.studentId,
@@ -339,10 +406,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast('success', 'Interview Scheduled', `${details.round} scheduled for candidate.`);
   };
 
-  const createJobPosting = (newJobData: Omit<JobPosting, 'id' | 'createdAt' | 'applicantsCount'>) => {
+  const createJobPosting = async (newJobData: Omit<JobPosting, 'id' | 'createdAt' | 'applicantsCount'>) => {
+    let generatedJobId = 'job_' + Date.now();
+
+    if (isDatabaseConnected) {
+      const res = await jobsService.createJobPosting(newJobData);
+      if (res.jobId) generatedJobId = res.jobId;
+    }
+
     const newJob: JobPosting = {
       ...newJobData,
-      id: 'job_' + Date.now(),
+      id: generatedJobId,
       createdAt: new Date().toISOString(),
       applicantsCount: 0,
     };
@@ -366,6 +440,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       value={{
         currentRole,
         currentUser,
+        isDatabaseConnected,
         switchRole,
         jobs,
         applications,

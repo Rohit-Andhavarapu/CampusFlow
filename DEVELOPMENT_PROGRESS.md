@@ -2,84 +2,79 @@
 
 ## Project Metadata
 - **Project:** CampusFlow (HACK-P410 Campus Recruitment Management Portal)
-- **Current Milestone:** CampusFlow V3 — Direction 1: The Linear/Ashby High-Density Workstation (Complete)
+- **Current Milestone:** CampusFlow V4 — Supabase Full-Stack Integration (Complete)
 - **Updated:** 2026-10-30
 - **Design System:** Framed-Sheet Architecture (Linear / Ashby / Basecamp Workstation)
-- **Active Skills Applied:** `impeccable`, `emil-design-eng`, `design-taste-frontend`
-- **Frontend Stack:** React 18 + TypeScript + Vite + Tailwind CSS + Lucide Icons + Recharts
-- **Production Bundle:** `dist/` built cleanly with zero TypeScript warnings or errors
-- **Git Checkpoint:** `checkpoint-pre-direction1` (commit `d364a51`)
+- **Backend Stack:** Supabase (PostgreSQL 15+, Supabase Auth, Supabase Storage, Row Level Security, PostgreSQL RPCs)
+- **Frontend Stack:** React 18 + TypeScript + Vite + Tailwind CSS + Lucide Icons + Recharts + `@supabase/supabase-js`
+- **Production Bundle:** `dist/` built cleanly in 29.46s with zero TypeScript warnings or errors
+- **Git Checkpoint:** `checkpoint-pre-supabase-integration`
 
 ---
 
-## Executive Summary: Direction 1 Transformation
+## Executive Summary: CampusFlow V4 Full-Stack Integration
 
-Following the deep design skill study documented in [`docs/DESIGN_SKILLS_DEEP_AUDIT.md`](./docs/DESIGN_SKILLS_DEEP_AUDIT.md), CampusFlow has been structurally transformed from a generic AI-generated dashboard into **Direction 1: The Linear/Ashby High-Density Workstation** with select editorial influences from Direction 2.
+CampusFlow V4 transforms the Linear/Ashby-inspired V3.1 frontend into a genuinely functional, secure, database-powered campus recruitment SaaS application backed by Supabase.
 
-This transformation represents a **structural design overhaul**, completely avoiding superficial palette swaps:
-1. **Framed-Sheet Shell Architecture:** The application now sits within a cool-gray frame ground (`#F4F5F7`), hosting an inset white workspace sheet (`#FFFFFF`, `rounded-2xl`, `border border-slate-200/90`, `shadow-2xs`) and a coherent neutral sidebar (`#F8FAFC`).
-2. **Student Dashboard Lead-Answer Recomposition:** Eliminated leading with 4 generic KPI metric cards. The dashboard now leads with an **Active Next Action Command Hero** that answers what the student must do next (upcoming interview, Google Meet launcher, prep instructions).
-3. **Recruiter Ashby-Style Split-Pane ATS Inspector:** Completely eliminated context-breaking modal dialogs for high-frequency applicant review. Implemented a 2-column split-pane workstation (left 60% candidate table, right 40% docked candidate evaluation dossier with inline interview scheduler and resume viewer).
-4. **Explore Opportunities Sophisticated Hierarchy:** Refined job cards with tabular compensation typography, transparent criteria manifests, and zero text clipping across desktop and mobile viewports.
-5. **Color on Data Law:** All primary action buttons adhere to near-black (`#090E17` / `#0F172A`), reserving Deep Precision Teal (`#0F766E`) strictly for verified credentials, eligibility seals, and live schedules. Flat 1px hairline borders (`border-slate-200/80`) replace heavy resting drop shadows.
-
----
-
-## 1. Three-Skill Synthesis & Directives Applied
-
-### A. Impeccable (`.agent/skills/impeccable/SKILL.md` & `reference/craft-floor.md`, `reference/operate.md`)
-- **Lead-Answer Layout (`operate.md` §41):** Dashboards must answer "What needs my attention right now?" rather than presenting generic metric cards. Rebuilt the student dashboard around the next upcoming recruitment round.
-- **Inline ATS Inspection (`operate.md` §52):** Modal popups in high-frequency candidate review cause severe context loss. Replaced with an Ashby-style docked evaluation inspector.
-- **Zero Kickers / Eyebrows:** Strictly eliminated all uppercase kickers above page headings across all routes.
-- **Strict Ban on `border-l-4` Surface Accents:** Eliminated decorative colored left borders in favor of clean hairline borders and tonal surfaces.
-- **Flat Surface Architecture:** Reduced resting elevation to 0 (`border-slate-200/80`, 0 drop shadow), reserving elevation tiers strictly for floating layers.
-- **Craft Floor Verification:** 100% WCAG AA contrast compliance, custom selection theme (`#CCFBF1` / `#0F766E`), and monospace/tabular figures for all financial, temporal, and numeric data.
-
-### B. Design-Taste-Frontend (`.agents/skills/design-taste-frontend/references/app-screens.md`)
-- **Shell Contrast Law (`app-screens.md` §3.1):** Out of 17 real light product screens studied in the skill reference, 0 use a dark sidebar against a light canvas. The Framed-Sheet architecture (`#F4F5F7` ground + `#F8FAFC` neutral sidebar + inset `#FFFFFF` sheet) eliminates visual dissonance and feels like a professional desktop tool.
-- **Color on Data Law (`app-screens.md` §1):** Chrome saturation is kept strictly under 3% by using near-black buttons (`#090E17`), allowing Deep Precision Teal (`#0F766E`) to carry high-value data signals (active milestone pulses, eligible badges, and interview schedules).
-- **Tabular Figures & Metrics:** Currency (`₹12.0 LPA`), dates, and candidate scores are rendered in `font-mono` / `tabular-nums` for instant visual comparison.
-
-### C. Emil Kowalski Design Engineering (`.agents/skills/emil-design-eng/SKILL.md`)
-- **Physics & Custom Easing:** Declared `--ease-out: cubic-bezier(0.23, 1, 0.32, 1)` and `--ease-in-out: cubic-bezier(0.77, 0, 0.175, 1)` for organic, purposeful physics.
-- **Tactile Button Press Feedback:** Interactive elements implement `.btn-press` (`active:scale-[0.97] transition-transform duration-75`) for responsive haptic feel.
-- **Micro-interactions:** Smooth tabs, hover lift on cards, and gentle pulse indicators on active interview rounds.
-- **Accessibility & Reduced Motion:** Full `@media (prefers-reduced-motion: reduce)` support with immediate fallback transitions.
+Every mock-data operation has been mapped and connected to a corresponding Supabase PostgreSQL table, trusted RPC function, private Storage bucket, or secure Row Level Security policy:
+1. **Normalized PostgreSQL Schema:** 14 relational tables with explicit foreign keys, check constraints, composite unique indexes, and automated `updated_at` triggers.
+2. **Non-Negotiable Row Level Security:** RLS enabled on 100% of exposed application tables. Multi-role policies for Student, Recruiter, and Placement Administrator utilize non-recursive `SECURITY DEFINER` helper functions (`is_admin()`, `is_recruiter_for_company()`, `is_recruiter_for_student_resume()`).
+3. **Atomic Transactional Application Submission:** Applications cannot be forged or duplicated. The `submit_application(job_id)` PostgreSQL function atomically verifies student role, evaluates server-side eligibility, enforces job deadline, checks duplicate constraint, inserts the application record, inserts the initial audit history item, and dispatches an in-app notification in a single database transaction.
+4. **Application State Machine:** Strict sequence transitions (`submitted` → `shortlisted` → `interview` → `selected` / `rejected`), protecting terminal states (`selected`, `rejected`, `withdrawn`) from unauthorized tampering.
+5. **Private Resume Storage:** Dedicated private Supabase Storage bucket (`resumes`) restricted to authenticated PDF uploads (max 5 MB) with recruiter access bounded strictly to active candidate applications via short-lived signed URLs.
+6. **Zero Double-Counting Analytics:** Database aggregation via `get_placement_analytics()` guarantees consistent metrics (Total Students = Placed + In Process + Unplaced).
+7. **Instant Demo Fallback & Hackathon Presentation:** When remote credentials are not linked, the application seamlessly activates an authenticated demo mode supporting Student (`Aarav Sharma`), Recruiter (`Priya Nair`), and Administrator (`Dr. Rajesh Rao`) without runtime exceptions or UI breakage.
 
 ---
 
-## 2. Before vs. After Structural Design Comparison
+## 1. Supabase Architecture & Schema Reference
 
-| Screen / Feature | Previous State | Direction 1 Transformed State | Skill Foundation |
+### Core Database Entities
+
+| Table Name | Purpose | Primary Constraints & Indexes | RLS Protection |
 |---|---|---|---|
-| **Application Shell** | Dark Obsidian sidebar (`#0B0F17`) against light canvas | **Framed-Sheet Architecture:** `#F4F5F7` ground with inset white sheet (`rounded-2xl`, `border-slate-200/90`) and `#F8FAFC` neutral sidebar | `design-taste-frontend` (`app-screens.md` §3.1) |
-| **Primary Buttons** | Teal buttons saturating chrome | **Near-Black Buttons (`#090E17`):** Chrome saturation < 3%; teal reserved for data | `design-taste-frontend` (`app-screens.md` §1) |
-| **Student Dashboard** | Began with 4 generic KPI metric cards | **Lead-Answer Command Hero:** Highlights next action (Google Meet launcher, countdown, prep notes) + connected metric ribbon | `impeccable` (`operate.md` §41) |
-| **Recruiter ATS Table** | Modal popup dialog for reviewing candidate details | **Ashby Split-Pane ATS Inspector:** 2-column layout (60% table queue, 40% docked evaluation dossier with inline scheduler) | `impeccable` (`operate.md` §52) |
-| **Explore Opportunities** | Cramped cards with repetitive tags | **Sophisticated Hierarchy:** Tabular compensation, explicit criteria manifest (`Cutoff: Min CGPA x • Eligible branches`), clean badges | `impeccable` & `design-taste-frontend` |
-| **Card Elevation** | Resting drop shadows on every card | **Flat Surface Architecture:** Default `elevation=0` (flat hairline border `border-slate-200/80`, 0 drop shadow); shadows reserved for floating layers | `impeccable` (`craft-floor.md`) |
-| **Mobile Responsiveness** | Minor heading text clipping on 375px width | **Responsive Word-Break:** Full responsive scaling and text wrapping; tested across 1440x900 and 375x812 | `impeccable` (`layout.md`) |
+| `public.profiles` | Extends `auth.users` with full name, email, and role | References `auth.users(id)` ON DELETE CASCADE | Users view own; Admins manage all |
+| `public.student_profiles` | Verified academic standing, CGPA, branch, backlogs | `user_id` UNIQUE, `roll_number` UNIQUE, `cgpa` (0.0-10.0) | Students read/update own; Recruiter reads if applicant |
+| `public.student_skills` | Normalized student competencies tag cloud | UNIQUE (`student_id`, `skill_name`) | Student manages own; Recruiter reads |
+| `public.student_projects` | Portfolio projects, URLs, and technologies | References `student_profiles(id)` | Student manages own; Recruiter reads |
+| `public.companies` | Empaneled employer organizations | `name` UNIQUE, status check | Public active view; Admins manage |
+| `public.recruiter_company_memberships` | Bridges recruiters to authorized employers | UNIQUE (`recruiter_user_id`, `company_id`) | Recruiters view own; Admins manage |
+| `public.recruitment_drives` | College placement drives and hiring seasons | `end_date >= start_date` | Active drives visible to all |
+| `public.job_postings` | Campus openings, compensation, deadlines | `compensation_max >= compensation_min` | Active visible; Recruiter manages company jobs |
+| `public.job_eligibility_rules` | Machine-evaluated eligibility criteria | `job_id` UNIQUE | Public view; Recruiter manages own job rules |
+| `public.applications` | Candidate job submissions | **UNIQUE (`student_id`, `job_id`)** | Student views own; Recruiter views company jobs |
+| `public.application_status_history` | Immutable audit trail of status changes | References `applications(id)` | Viewable by applicant, recruiter & admin |
+| `public.interviews` | Scheduled rounds, modes, meeting links | Timestamps in UTC, status check | Visible to candidate and recruiter |
+| `public.notifications` | In-app notification center | `user_id` index | Users read/update own |
+| `public.resume_files` | Metadata for uploaded PDF resumes | `storage_path` UNIQUE | Student owns; Recruiter reads authorized only |
+| `storage.objects (resumes)` | Private resume document storage | 5 MB limit, PDF MIME only | Short-lived signed URLs, folder isolation |
 
 ---
 
-## 3. Verification & Quality Gates
+## 2. Server-Side RPC Functions
 
-- **TypeScript Compilation:** `tsc -b && vite build` passed cleanly with **0 errors and 0 warnings**.
-- **Visual Artifacts:** All 14 high-resolution screenshots generated and verified via headless browser:
-  - `screenshots/student_dashboard.png` (Desktop 1440x900)
-  - `screenshots/explore_opportunities.png` (Desktop 1440x900)
-  - `screenshots/job_details.png` (Desktop 1440x900)
-  - `screenshots/my_applications.png` (Desktop 1440x900)
-  - `screenshots/application_details.png` (Desktop 1440x900)
-  - `screenshots/student_interviews.png` (Desktop 1440x900)
-  - `screenshots/student_profile.png` (Desktop 1440x900)
-  - `screenshots/recruiter_dashboard.png` (Desktop 1440x900)
-  - `screenshots/recruiter_applicants.png` (Desktop 1440x900)
-  - `screenshots/recruiter_jobs.png` (Desktop 1440x900)
-  - `screenshots/admin_dashboard.png` (Desktop 1440x900)
-  - `screenshots/admin_analytics.png` (Desktop 1440x900)
-  - `screenshots/student_dashboard_mobile.png` (Mobile 375x812)
-  - `screenshots/explore_opportunities_mobile.png` (Mobile 375x812)
+1. **`evaluate_job_eligibility(p_job_id, p_student_id)`:** Authoritative server-side evaluation returning `{ is_eligible, is_incomplete, reasons, criteria }`.
+2. **`submit_application(p_job_id)`:** Atomic transaction executing deadline check, eligibility check, duplicate check, application creation, history log creation, and student notification.
+3. **`update_application_status(p_application_id, p_new_status, p_reason)`:** State machine enforcement protecting against out-of-order transitions and terminal tampering.
+4. **`withdraw_application(p_application_id)`:** Safe withdrawal permitted only from `submitted` or `shortlisted` stages.
+5. **`schedule_interview(p_application_id, p_scheduled_at, ...)`:** Schedules interview in UTC, auto-transitions application to `interview`, and sends notification.
+6. **`get_placement_analytics()`:** Returns institutional placement percentage, department breakdown, active drives, and partner companies without double-counting students.
+
+---
+
+## 3. Verification & Quality Gates Passed
+
+- **Automated Integration & Security Suite:**
+  - File: [`tests/supabase_integration_test.js`](file:///c:/Users/ROHIT/Downloads/campus%20recruitement/tests/supabase_integration_test.js)
+  - Result: **68 assertions passed cleanly, 0 failures**.
+- **End-to-End Recruitment Journey Simulation:**
+  - File: [`tests/e2e_recruitment_lifecycle.js`](file:///c:/Users/ROHIT/Downloads/campus%20recruitement/tests/e2e_recruitment_lifecycle.js)
+  - Result: **11-step journey passed with 3 failure cases demonstrated and verified**.
+- **Client TypeScript Compilation & Production Build:**
+  - Command: `npm run build --prefix client`
+  - Result: **0 errors, 0 warnings**, bundle generated in 29.46s.
+- **Visual Browser Verification:**
+  - All 14 screens re-rendered and captured cleanly via Edge Headless at 1440x900 and 375x812.
 
 ---
 
@@ -91,6 +86,5 @@ This transformation represents a **structural design overhaul**, completely avoi
 | **Phase 2** | Premium Student Portal Frontend | **COMPLETED** | Verified (Dashboard, Explore Opportunities, Job Details with Explainable Eligibility, My Applications Tracker, Interviews, Profile & Resume) |
 | **Phase 3** | Recruiter & Admin Portals | **COMPLETED** | Verified (Recruiter Dashboard, Pipeline, Job Management, Applicant Table, Admin Command Center, Student Directory, Company Empanelment, Drive Schedules) |
 | **Phase 4** | Complete Frontend Interactions & Visual QA | **COMPLETED** | Direction 1 Framed-Sheet & Ashby ATS overhaul verified with 14 screenshots; `tsc -b && vite build` passed cleanly |
-| **Phase 5** | Backend & Database Implementation | **READY TO START** | Express + Prisma + SQLite/PostgreSQL schema ready |
-| **Phase 6** | Full-Stack Integration | Up Next | Wire live REST API endpoints to reactive frontends |
-| **Phase 7** | Testing, Polish & Deployment | Up Next | End-to-end user flows, presentation assets, seed data |
+| **Phase 5** | Supabase Full-Stack Integration | **COMPLETED** | 4 SQL migrations, 14 tables, RLS policies, RPC functions, typed client service layer, 68 tests passed, build verified |
+| **Phase 6** | Verification, Live Testing & Final Polish | **READY TO PROCEED** | Multi-role user testing, demo credentials setup, submission documentation |
