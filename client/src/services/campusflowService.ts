@@ -54,11 +54,13 @@ export const authService = {
 
     if (!profile) return null;
 
+    const normalizedRole = (profile.role === 'placement_admin' ? 'admin' : profile.role) as UserRole;
+
     return {
       id: profile.id,
       name: profile.full_name,
       email: profile.email,
-      role: profile.role as UserRole,
+      role: normalizedRole,
       avatar: profile.avatar_path || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
     };
   },

@@ -17,6 +17,7 @@ import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Tabs } from '../../components/ui/Tabs';
 import { formatDateTime } from '../../utils/formatters';
+import { calendarExportService } from '../../services/campusflowService';
 
 export const StudentInterviews: React.FC = () => {
   const { interviews } = useApp();
@@ -165,6 +166,25 @@ export const StudentInterviews: React.FC = () => {
                       Round Completed
                     </Button>
                   )}
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs flex items-center gap-1.5"
+                    leftIcon={<Calendar className="w-3.5 h-3.5 text-teal-700" />}
+                    onClick={() => {
+                      calendarExportService.downloadInterviewIcs({
+                        round: interview.round,
+                        jobTitle: interview.jobTitle,
+                        companyName: interview.companyName,
+                        dateTime: interview.dateTime,
+                        locationOrLink: interview.locationOrLink,
+                        notes: interview.notes,
+                      });
+                    }}
+                  >
+                    Add to Calendar (.ics)
+                  </Button>
 
                   <Button
                     variant="ghost"

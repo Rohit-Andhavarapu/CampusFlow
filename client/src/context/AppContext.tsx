@@ -61,6 +61,7 @@ interface AppContextType {
   currentUser: User;
   isDatabaseConnected: boolean;
   isAuthenticated: boolean;
+  isAuthLoading: boolean;
   switchRole: (role: UserRole, silent?: boolean) => void;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string; role?: UserRole }>;
   loginWithGoogle: () => Promise<{ success: boolean; error?: string }>;
@@ -103,6 +104,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentRole, setCurrentRole] = useState<UserRole>('student');
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true);
   const [activeUser, setActiveUser] = useState<User | null>(null);
   const [jobs, setJobs] = useState<JobPosting[]>(mockJobPostings);
   const [applications, setApplications] = useState<Application[]>([]);
@@ -172,6 +174,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           setInterviews([]);
           setNotifications([]);
           setWatchlist([]);
+        } finally {
+          setIsAuthLoading(false);
         }
       };
       initApp();
@@ -753,6 +757,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         currentUser,
         isDatabaseConnected,
         isAuthenticated,
+        isAuthLoading,
         switchRole,
         login,
         loginWithGoogle,

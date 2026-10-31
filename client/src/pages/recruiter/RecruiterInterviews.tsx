@@ -4,6 +4,7 @@ import { useApp } from '../../context/AppContext';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { formatDateTime } from '../../utils/formatters';
+import { calendarExportService } from '../../services/campusflowService';
 
 export const RecruiterInterviews: React.FC = () => {
   const { interviews } = useApp();
@@ -47,6 +48,24 @@ export const RecruiterInterviews: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  calendarExportService.downloadInterviewIcs({
+                    round: int.round,
+                    jobTitle: int.jobTitle,
+                    companyName: int.companyName,
+                    dateTime: int.dateTime,
+                    locationOrLink: int.locationOrLink,
+                    notes: int.notes,
+                  });
+                }}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-xs font-semibold hover:bg-slate-50 transition-colors"
+                title="Download .ics Calendar Invite"
+              >
+                <Calendar className="w-3.5 h-3.5 text-brand" />
+                <span>Export (.ics)</span>
+              </button>
               {int.locationOrLink && (
                 <a
                   href={int.locationOrLink}
