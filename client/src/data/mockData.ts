@@ -51,8 +51,10 @@ export const initialStudentProfile: StudentProfileData = {
   linkedinUrl: 'https://linkedin.com/in/aarav-sharma-campus',
   portfolioUrl: 'https://aaravsharma.dev',
   resumeFileName: 'Aarav_Sharma_Resume_2026.pdf',
-  resumeFileSize: '1.4 MB',
-  resumeLastUpdated: '2026-10-15T10:30:00Z',
+  resumeFileSize: '4.1 KB',
+  resumeLastUpdated: '2026-10-31T10:17:13Z',
+  resumeStoragePath: '28296879-9cd1-43ef-bb8e-7939cb71d213/Aarav_Sharma_Resume_2026.pdf',
+  resumeFileId: 'edab95e9-8e03-4ed2-8163-3c890f4774a6',
   projects: [
     {
       id: 'proj_1',

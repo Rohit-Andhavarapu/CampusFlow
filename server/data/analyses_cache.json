@@ -1,0 +1,2873 @@
+{
+  "8b982c0c-4d8d-448e-8b9e-dba8bf138286_3e32e6277ddd238c3c756c4a4f45b3494bf7f0012228376cbb5575bd1fb263e7": {
+    "analysisId": "4d7da2cc-5278-4b32-8b9f-1c0fe539a3fa",
+    "studentId": "8b982c0c-4d8d-448e-8b9e-dba8bf138286",
+    "model": "openai/gpt-oss-120b",
+    "modelName": "openai/gpt-oss-120b",
+    "filename": "Aarav_Sharma_Resume_2026.pdf",
+    "fileHash": "3e32e6277ddd238c3c756c4a4f45b3494bf7f0012228376cbb5575bd1fb263e7",
+    "pageCount": 1,
+    "analysisStatus": "completed",
+    "analyzedAt": "2026-10-31T10:28:43.378Z",
+    "analysis": {
+      "resume_summary": "Aarav Sharma is a B.Tech Computer Science student at NIT Surathkal with strong full‑stack development experience. He has built AI‑enhanced recruitment platforms, high‑throughput task queues, and scalable microservice APIs using modern TypeScript, Python, and cloud technologies. His internship at NovaTech and multiple certifications demonstrate competence in cloud, containerization, and DevOps.",
+      "extracted_skills": [
+        {
+          "name": "TypeScript",
+          "category": "Programming Languages",
+          "evidence": "Programming Languages: TypeScript",
+          "is_explicit": true
+        },
+        {
+          "name": "JavaScript",
+          "category": "Programming Languages",
+          "evidence": "Programming Languages: JavaScript",
+          "is_explicit": true
+        },
+        {
+          "name": "Python",
+          "category": "Programming Languages",
+          "evidence": "Programming Languages: Python",
+          "is_explicit": true
+        },
+        {
+          "name": "Java",
+          "category": "Programming Languages",
+          "evidence": "Programming Languages: Java",
+          "is_explicit": true
+        },
+        {
+          "name": "SQL",
+          "category": "Programming Languages",
+          "evidence": "Programming Languages: SQL",
+          "is_explicit": true
+        },
+        {
+          "name": "C++",
+          "category": "Programming Languages",
+          "evidence": "Programming Languages: C++",
+          "is_explicit": true
+        },
+        {
+          "name": "React.js",
+          "category": "Frontend",
+          "evidence": "Frontend Development: React.js",
+          "is_explicit": true
+        },
+        {
+          "name": "Next.js",
+          "category": "Frontend",
+          "evidence": "Frontend Development: Next.js",
+          "is_explicit": true
+        },
+        {
+          "name": "Redux Toolkit",
+          "category": "Frontend",
+          "evidence": "Frontend Development: Redux Toolkit",
+          "is_explicit": true
+        },
+        {
+          "name": "Tailwind CSS",
+          "category": "Frontend",
+          "evidence": "Frontend Development: Tailwind CSS",
+          "is_explicit": true
+        },
+        {
+          "name": "HTML5",
+          "category": "Frontend",
+          "evidence": "Frontend Development: HTML5",
+          "is_explicit": true
+        },
+        {
+          "name": "CSS3",
+          "category": "Frontend",
+          "evidence": "Frontend Development: CSS3",
+          "is_explicit": true
+        },
+        {
+          "name": "Node.js",
+          "category": "Backend",
+          "evidence": "Backend & APIs: Node.js",
+          "is_explicit": true
+        },
+        {
+          "name": "Express.js",
+          "category": "Backend",
+          "evidence": "Backend & APIs: Express.js",
+          "is_explicit": true
+        },
+        {
+          "name": "FastAPI",
+          "category": "Backend",
+          "evidence": "Backend & APIs: FastAPI",
+          "is_explicit": true
+        },
+        {
+          "name": "RESTful APIs",
+          "category": "Backend",
+          "evidence": "Backend & APIs: RESTful APIs",
+          "is_explicit": true
+        },
+        {
+          "name": "GraphQL",
+          "category": "Backend",
+          "evidence": "Backend & APIs: GraphQL",
+          "is_explicit": true
+        },
+        {
+          "name": "Microservices",
+          "category": "Backend",
+          "evidence": "Backend & APIs: Microservices",
+          "is_explicit": true
+        },
+        {
+          "name": "PostgreSQL",
+          "category": "Databases",
+          "evidence": "Databases & Caching: PostgreSQL",
+          "is_explicit": true
+        },
+        {
+          "name": "Redis",
+          "category": "Databases",
+          "evidence": "Databases & Caching: Redis",
+          "is_explicit": true
+        },
+        {
+          "name": "MongoDB",
+          "category": "Databases",
+          "evidence": "Databases & Caching: MongoDB",
+          "is_explicit": true
+        },
+        {
+          "name": "Supabase PostgreSQL",
+          "category": "Databases",
+          "evidence": "Databases & Caching: Supabase PostgreSQL",
+          "is_explicit": true
+        },
+        {
+          "name": "Prisma ORM",
+          "category": "Databases",
+          "evidence": "Databases & Caching: Prisma ORM",
+          "is_explicit": true
+        },
+        {
+          "name": "Docker",
+          "category": "Cloud & DevOps",
+          "evidence": "Cloud & DevOps: Docker",
+          "is_explicit": true
+        },
+        {
+          "name": "AWS S3",
+          "category": "Cloud & DevOps",
+          "evidence": "AWS (S3, EC2, Lambda)",
+          "is_explicit": true
+        },
+        {
+          "name": "AWS EC2",
+          "category": "Cloud & DevOps",
+          "evidence": "AWS (S3, EC2, Lambda)",
+          "is_explicit": true
+        },
+        {
+          "name": "AWS Lambda",
+          "category": "Cloud & DevOps",
+          "evidence": "AWS (S3, EC2, Lambda)",
+          "is_explicit": true
+        },
+        {
+          "name": "Git",
+          "category": "Tools",
+          "evidence": "Git",
+          "is_explicit": true
+        },
+        {
+          "name": "GitHub Actions CI/CD",
+          "category": "Tools",
+          "evidence": "GitHub Actions CI/CD",
+          "is_explicit": true
+        },
+        {
+          "name": "Linux",
+          "category": "Tools",
+          "evidence": "Linux",
+          "is_explicit": true
+        },
+        {
+          "name": "Postman",
+          "category": "Tools",
+          "evidence": "Postman",
+          "is_explicit": true
+        }
+      ],
+      "technical_categories": {
+        "Programming Languages": [
+          "TypeScript",
+          "JavaScript",
+          "Python",
+          "Java",
+          "SQL",
+          "C++"
+        ],
+        "Frameworks & Libraries": [
+          "React.js",
+          "Next.js",
+          "Redux Toolkit",
+          "Tailwind CSS",
+          "Node.js",
+          "Express.js",
+          "FastAPI",
+          "GraphQL",
+          "Prisma ORM"
+        ],
+        "Databases": [
+          "PostgreSQL",
+          "Redis",
+          "MongoDB",
+          "Supabase PostgreSQL"
+        ],
+        "Cloud & DevOps": [
+          "Docker",
+          "AWS S3",
+          "AWS EC2",
+          "AWS Lambda",
+          "GitHub Actions CI/CD",
+          "Linux"
+        ],
+        "Tools": [
+          "Git",
+          "Postman"
+        ]
+      },
+      "projects": [
+        {
+          "name": "CampusFlow Campus Recruitment Intelligence Platform",
+          "technologies": [
+            "React",
+            "TypeScript",
+            "Supabase",
+            "Groq AI"
+          ],
+          "description": "Architected a university placement platform serving students, recruiters, and placement directors with AI‑driven resume parsing and real‑time interview scheduling.",
+          "impact": "Integrated Groq LPU engine for automatic skill taxonomy extraction and automated calendar sync; platform enables role‑based access control across multiple user types."
+        },
+        {
+          "name": "Distributed Task Queue & Event Processor",
+          "technologies": [
+            "Python",
+            "Redis",
+            "Docker",
+            "Prometheus"
+          ],
+          "description": "Built an asynchronous distributed background task processor capable of handling up to 10,000 tasks per minute with exponential backoff retries and Pub/Sub event broadcasting.",
+          "impact": "Provided high‑throughput processing with observability via Prometheus metrics."
+        },
+        {
+          "name": "Cloud Commerce Scalable Microservices API",
+          "technologies": [
+            "Node.js",
+            "Express",
+            "PostgreSQL",
+            "Docker",
+            "JWT",
+            "Rate Limiting"
+          ],
+          "description": "Engineered decoupled REST API microservices with JWT authentication, rate limiting, and ACID‑compliant transactions.",
+          "impact": "Optimized query plans and indexes, reducing average p95 latency by 42%."
+        }
+      ],
+      "experience": [
+        {
+          "role": "Software Engineering Intern",
+          "company": "NovaTech Systems",
+          "duration": "May 2025 - July 2025",
+          "responsibilities": [
+            "Developed enterprise microservices using TypeScript, Node.js, and PostgreSQL for customer analytics.",
+            "Automated unit and integration test coverage to 92% with Jest and Supertest across 14 API endpoints.",
+            "Collaborated on AWS ECS container deployments and performed database indexing improvements."
+          ]
+        }
+      ],
+      "certifications": [
+        "AWS Certified Cloud Practitioner (2025)",
+        "Docker Certified Associate (2025)"
+      ],
+      "recommended_roles": [
+        {
+          "role": "Full-Stack Developer",
+          "why": "Aarav has demonstrated end‑to‑end development of web applications (React/TypeScript front‑end, Node.js/Express back‑end) and integration of databases and cloud services, matching core full‑stack responsibilities.",
+          "supporting_skills": [
+            "React.js",
+            "TypeScript",
+            "Node.js",
+            "Express.js",
+            "PostgreSQL",
+            "Docker",
+            "AWS"
+          ],
+          "supporting_projects": [
+            "CampusFlow Campus Recruitment Intelligence Platform",
+            "Cloud Commerce Scalable Microservices API"
+          ],
+          "missing_competencies": [
+            "Advanced testing frameworks (Cypress/Playwright)",
+            "State‑management beyond Redux (e.g., Zustand)",
+            "CI/CD pipelines with Terraform or Kubernetes"
+          ],
+          "suggested_next_steps": "Add end‑to‑end UI tests with Cypress, explore container orchestration (Kubernetes) and IaC (Terraform) to strengthen deployment expertise."
+        },
+        {
+          "role": "Backend Developer",
+          "why": "The candidate’s experience building high‑throughput task queues, microservice APIs, and database optimizations aligns with backend engineering focus on performance and scalability.",
+          "supporting_skills": [
+            "Python",
+            "Node.js",
+            "FastAPI",
+            "Redis",
+            "PostgreSQL",
+            "Microservices",
+            "Performance Optimization"
+          ],
+          "supporting_projects": [
+            "Distributed Task Queue & Event Processor",
+            "Cloud Commerce Scalable Microservices API"
+          ],
+          "missing_competencies": [
+            "Deep expertise in Go or Rust for systems‑level services",
+            "Experience with message brokers like Kafka"
+          ],
+          "suggested_next_steps": "Learn Go or Rust basics and experiment with Kafka or RabbitMQ to broaden backend toolkit."
+        },
+        {
+          "role": "Cloud Engineer",
+          "why": "Aarav holds AWS Cloud Practitioner and Docker certifications, has deployed services on AWS ECS, and uses Docker containers, indicating readiness for cloud‑focused roles.",
+          "supporting_skills": [
+            "AWS S3",
+            "AWS EC2",
+            "AWS Lambda",
+            "Docker",
+            "GitHub Actions CI/CD"
+          ],
+          "supporting_projects": [
+            "Cloud Commerce Scalable Microservices API",
+            "Software Engineering Intern at NovaTech"
+          ],
+          "missing_competencies": [
+            "Infrastructure as Code (Terraform, CloudFormation)",
+            "Kubernetes orchestration",
+            "Serverless architecture beyond Lambda (e.g., Step Functions)"
+          ],
+          "suggested_next_steps": "Complete a Terraform certification and build a Kubernetes‑based deployment pipeline for a personal project."
+        }
+      ],
+      "strengths": [
+        "Proven ability to design and deliver end‑to‑end full‑stack systems with AI integration.",
+        "Experience with high‑throughput asynchronous architectures and performance optimization."
+      ],
+      "skill_gaps": [
+        "Limited exposure to advanced UI testing frameworks (Cypress, Playwright).",
+        "No hands‑on experience with Kubernetes or Terraform for infrastructure automation.",
+        "Lack of Go or Rust experience for low‑level backend services."
+      ],
+      "improvement_suggestions": [
+        "Add end‑to‑end testing using Cypress or Playwright to strengthen frontend reliability.",
+        "Learn Kubernetes and Terraform to enable production‑grade cloud deployments.",
+        "Explore Go or Rust to diversify backend language expertise."
+      ],
+      "analysis_warnings": [],
+      "model_version": "openai/gpt-oss-120b"
+    },
+    "extractedSkills": [
+      {
+        "name": "TypeScript",
+        "category": "Programming Languages",
+        "evidence": "Programming Languages: TypeScript",
+        "is_explicit": true
+      },
+      {
+        "name": "JavaScript",
+        "category": "Programming Languages",
+        "evidence": "Programming Languages: JavaScript",
+        "is_explicit": true
+      },
+      {
+        "name": "Python",
+        "category": "Programming Languages",
+        "evidence": "Programming Languages: Python",
+        "is_explicit": true
+      },
+      {
+        "name": "Java",
+        "category": "Programming Languages",
+        "evidence": "Programming Languages: Java",
+        "is_explicit": true
+      },
+      {
+        "name": "SQL",
+        "category": "Programming Languages",
+        "evidence": "Programming Languages: SQL",
+        "is_explicit": true
+      },
+      {
+        "name": "C++",
+        "category": "Programming Languages",
+        "evidence": "Programming Languages: C++",
+        "is_explicit": true
+      },
+      {
+        "name": "React.js",
+        "category": "Frontend",
+        "evidence": "Frontend Development: React.js",
+        "is_explicit": true
+      },
+      {
+        "name": "Next.js",
+        "category": "Frontend",
+        "evidence": "Frontend Development: Next.js",
+        "is_explicit": true
+      },
+      {
+        "name": "Redux Toolkit",
+        "category": "Frontend",
+        "evidence": "Frontend Development: Redux Toolkit",
+        "is_explicit": true
+      },
+      {
+        "name": "Tailwind CSS",
+        "category": "Frontend",
+        "evidence": "Frontend Development: Tailwind CSS",
+        "is_explicit": true
+      },
+      {
+        "name": "HTML5",
+        "category": "Frontend",
+        "evidence": "Frontend Development: HTML5",
+        "is_explicit": true
+      },
+      {
+        "name": "CSS3",
+        "category": "Frontend",
+        "evidence": "Frontend Development: CSS3",
+        "is_explicit": true
+      },
+      {
+        "name": "Node.js",
+        "category": "Backend",
+        "evidence": "Backend & APIs: Node.js",
+        "is_explicit": true
+      },
+      {
+        "name": "Express.js",
+        "category": "Backend",
+        "evidence": "Backend & APIs: Express.js",
+        "is_explicit": true
+      },
+      {
+        "name": "FastAPI",
+        "category": "Backend",
+        "evidence": "Backend & APIs: FastAPI",
+        "is_explicit": true
+      },
+      {
+        "name": "RESTful APIs",
+        "category": "Backend",
+        "evidence": "Backend & APIs: RESTful APIs",
+        "is_explicit": true
+      },
+      {
+        "name": "GraphQL",
+        "category": "Backend",
+        "evidence": "Backend & APIs: GraphQL",
+        "is_explicit": true
+      },
+      {
+        "name": "Microservices",
+        "category": "Backend",
+        "evidence": "Backend & APIs: Microservices",
+        "is_explicit": true
+      },
+      {
+        "name": "PostgreSQL",
+        "category": "Databases",
+        "evidence": "Databases & Caching: PostgreSQL",
+        "is_explicit": true
+      },
+      {
+        "name": "Redis",
+        "category": "Databases",
+        "evidence": "Databases & Caching: Redis",
+        "is_explicit": true
+      },
+      {
+        "name": "MongoDB",
+        "category": "Databases",
+        "evidence": "Databases & Caching: MongoDB",
+        "is_explicit": true
+      },
+      {
+        "name": "Supabase PostgreSQL",
+        "category": "Databases",
+        "evidence": "Databases & Caching: Supabase PostgreSQL",
+        "is_explicit": true
+      },
+      {
+        "name": "Prisma ORM",
+        "category": "Databases",
+        "evidence": "Databases & Caching: Prisma ORM",
+        "is_explicit": true
+      },
+      {
+        "name": "Docker",
+        "category": "Cloud & DevOps",
+        "evidence": "Cloud & DevOps: Docker",
+        "is_explicit": true
+      },
+      {
+        "name": "AWS S3",
+        "category": "Cloud & DevOps",
+        "evidence": "AWS (S3, EC2, Lambda)",
+        "is_explicit": true
+      },
+      {
+        "name": "AWS EC2",
+        "category": "Cloud & DevOps",
+        "evidence": "AWS (S3, EC2, Lambda)",
+        "is_explicit": true
+      },
+      {
+        "name": "AWS Lambda",
+        "category": "Cloud & DevOps",
+        "evidence": "AWS (S3, EC2, Lambda)",
+        "is_explicit": true
+      },
+      {
+        "name": "Git",
+        "category": "Tools",
+        "evidence": "Git",
+        "is_explicit": true
+      },
+      {
+        "name": "GitHub Actions CI/CD",
+        "category": "Tools",
+        "evidence": "GitHub Actions CI/CD",
+        "is_explicit": true
+      },
+      {
+        "name": "Linux",
+        "category": "Tools",
+        "evidence": "Linux",
+        "is_explicit": true
+      },
+      {
+        "name": "Postman",
+        "category": "Tools",
+        "evidence": "Postman",
+        "is_explicit": true
+      }
+    ],
+    "careerMatches": [
+      {
+        "role": "Full-Stack Developer",
+        "why": "Aarav has demonstrated end‑to‑end development of web applications (React/TypeScript front‑end, Node.js/Express back‑end) and integration of databases and cloud services, matching core full‑stack responsibilities.",
+        "supportingSkills": [
+          "React.js",
+          "TypeScript",
+          "Node.js",
+          "Express.js",
+          "PostgreSQL",
+          "Docker",
+          "AWS"
+        ],
+        "supportingProjects": [
+          "CampusFlow Campus Recruitment Intelligence Platform",
+          "Cloud Commerce Scalable Microservices API"
+        ],
+        "missingCompetencies": [
+          "Advanced testing frameworks (Cypress/Playwright)",
+          "State‑management beyond Redux (e.g., Zustand)",
+          "CI/CD pipelines with Terraform or Kubernetes"
+        ],
+        "suggestedNextSteps": "Add end‑to‑end UI tests with Cypress, explore container orchestration (Kubernetes) and IaC (Terraform) to strengthen deployment expertise."
+      },
+      {
+        "role": "Backend Developer",
+        "why": "The candidate’s experience building high‑throughput task queues, microservice APIs, and database optimizations aligns with backend engineering focus on performance and scalability.",
+        "supportingSkills": [
+          "Python",
+          "Node.js",
+          "FastAPI",
+          "Redis",
+          "PostgreSQL",
+          "Microservices",
+          "Performance Optimization"
+        ],
+        "supportingProjects": [
+          "Distributed Task Queue & Event Processor",
+          "Cloud Commerce Scalable Microservices API"
+        ],
+        "missingCompetencies": [
+          "Deep expertise in Go or Rust for systems‑level services",
+          "Experience with message brokers like Kafka"
+        ],
+        "suggestedNextSteps": "Learn Go or Rust basics and experiment with Kafka or RabbitMQ to broaden backend toolkit."
+      },
+      {
+        "role": "Cloud Engineer",
+        "why": "Aarav holds AWS Cloud Practitioner and Docker certifications, has deployed services on AWS ECS, and uses Docker containers, indicating readiness for cloud‑focused roles.",
+        "supportingSkills": [
+          "AWS S3",
+          "AWS EC2",
+          "AWS Lambda",
+          "Docker",
+          "GitHub Actions CI/CD"
+        ],
+        "supportingProjects": [
+          "Cloud Commerce Scalable Microservices API",
+          "Software Engineering Intern at NovaTech"
+        ],
+        "missingCompetencies": [
+          "Infrastructure as Code (Terraform, CloudFormation)",
+          "Kubernetes orchestration",
+          "Serverless architecture beyond Lambda (e.g., Step Functions)"
+        ],
+        "suggestedNextSteps": "Complete a Terraform certification and build a Kubernetes‑based deployment pipeline for a personal project."
+      }
+    ],
+    "skillGaps": [
+      "Limited exposure to advanced UI testing frameworks (Cypress, Playwright).",
+      "No hands‑on experience with Kubernetes or Terraform for infrastructure automation.",
+      "Lack of Go or Rust experience for low‑level backend services."
+    ],
+    "summary": "Aarav Sharma is a B.Tech Computer Science student at NIT Surathkal with strong full‑stack development experience. He has built AI‑enhanced recruitment platforms, high‑throughput task queues, and scalable microservice APIs using modern TypeScript, Python, and cloud technologies. His internship at NovaTech and multiple certifications demonstrate competence in cloud, containerization, and DevOps.",
+    "totalExtractedSkills": 31,
+    "matchedJobs": [
+      {
+        "jobId": "20000000-0000-4000-a000-000000000001",
+        "job_id": "20000000-0000-4000-a000-000000000001",
+        "title": "Software Engineer Trainee",
+        "companyName": "NovaTech Systems",
+        "company_name": "NovaTech Systems",
+        "companyLogo": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=128&auto=format&fit=crop&q=80",
+        "location": "Hyderabad, Telangana (On-site)",
+        "workMode": "On-site",
+        "type": "Full-time",
+        "stipendOrSalary": "₹14.0 - ₹18.0 LPA",
+        "deadline": "2026-11-20T13:55:28.119115+00:00",
+        "minCgpa": 7.5,
+        "suitabilityBand": "Strong",
+        "suitabilityScore": 100,
+        "suitability_score": 100,
+        "matchingSkills": [
+          "TypeScript",
+          "React",
+          "Node.js"
+        ],
+        "matching_skills": [
+          "TypeScript",
+          "React",
+          "Node.js"
+        ],
+        "missingSkills": [],
+        "missing_skills": [],
+        "reasoning": "Matched 3 of 3 required competencies for this position.",
+        "academicEligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 7.5,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 7.5)"
+        },
+        "academic_eligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 7.5,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 7.5)"
+        }
+      },
+      {
+        "jobId": "40000000-0000-4000-a000-000000000001",
+        "job_id": "40000000-0000-4000-a000-000000000001",
+        "title": "Data Analyst Trainee",
+        "companyName": "Orbit Analytics",
+        "company_name": "Orbit Analytics",
+        "companyLogo": "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=128&auto=format&fit=crop&q=80",
+        "location": "Pune, Maharashtra (Hybrid)",
+        "workMode": "Hybrid",
+        "type": "Full-time",
+        "stipendOrSalary": "₹9.0 - ₹12.0 LPA",
+        "deadline": "2026-11-24T13:55:28.119115+00:00",
+        "minCgpa": 7.2,
+        "suitabilityBand": "Strong",
+        "suitabilityScore": 100,
+        "suitability_score": 100,
+        "matchingSkills": [
+          "SQL",
+          "Python"
+        ],
+        "matching_skills": [
+          "SQL",
+          "Python"
+        ],
+        "missingSkills": [],
+        "missing_skills": [],
+        "reasoning": "Matched 2 of 2 required competencies for this position.",
+        "academicEligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 7.2,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 7.2)"
+        },
+        "academic_eligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 7.2,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 7.2)"
+        }
+      },
+      {
+        "jobId": "10000000-0000-4000-a000-000000000001",
+        "job_id": "10000000-0000-4000-a000-000000000001",
+        "title": "Graduate AI Engineer (Agentic Systems)",
+        "companyName": "Aetos DigiLog",
+        "company_name": "Aetos DigiLog",
+        "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=128&auto=format&fit=crop&q=80",
+        "location": "Bengaluru, Karnataka (Hybrid)",
+        "workMode": "Hybrid",
+        "type": "Full-time",
+        "stipendOrSalary": "₹18.0 - ₹24.0 LPA",
+        "deadline": "2026-11-20T13:55:28.119115+00:00",
+        "minCgpa": 8,
+        "suitabilityBand": "Good",
+        "suitabilityScore": 67,
+        "suitability_score": 67,
+        "matchingSkills": [
+          "Python",
+          "PostgreSQL"
+        ],
+        "matching_skills": [
+          "Python",
+          "PostgreSQL"
+        ],
+        "missingSkills": [
+          "Agentic AI"
+        ],
+        "missing_skills": [
+          "Agentic AI"
+        ],
+        "reasoning": "Matched 2 of 3 required competencies for this position.",
+        "academicEligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 8,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 8)"
+        },
+        "academic_eligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 8,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 8)"
+        }
+      },
+      {
+        "jobId": "20000000-0000-4000-a000-000000000002",
+        "job_id": "20000000-0000-4000-a000-000000000002",
+        "title": "Cloud Infrastructure Specialist",
+        "companyName": "NovaTech Systems",
+        "company_name": "NovaTech Systems",
+        "companyLogo": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=128&auto=format&fit=crop&q=80",
+        "location": "Remote (India)",
+        "workMode": "Remote",
+        "type": "Full-time",
+        "stipendOrSalary": "₹15.0 - ₹20.0 LPA",
+        "deadline": "2026-11-17T13:55:28.119115+00:00",
+        "minCgpa": 7,
+        "suitabilityBand": "Good",
+        "suitabilityScore": 67,
+        "suitability_score": 67,
+        "matchingSkills": [
+          "Docker",
+          "Linux"
+        ],
+        "matching_skills": [
+          "Docker",
+          "Linux"
+        ],
+        "missingSkills": [
+          "Kubernetes"
+        ],
+        "missing_skills": [
+          "Kubernetes"
+        ],
+        "reasoning": "Matched 2 of 3 required competencies for this position.",
+        "academicEligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 7,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 7)"
+        },
+        "academic_eligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 7,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 7)"
+        }
+      },
+      {
+        "jobId": "60000000-0000-4000-a000-000000000001",
+        "job_id": "60000000-0000-4000-a000-000000000001",
+        "title": "Quantitative Systems Engineer",
+        "companyName": "Vertex Solutions",
+        "company_name": "Vertex Solutions",
+        "companyLogo": "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=128&auto=format&fit=crop&q=80",
+        "location": "Mumbai, Maharashtra (On-site)",
+        "workMode": "On-site",
+        "type": "Full-time",
+        "stipendOrSalary": "₹24.0 - ₹32.0 LPA",
+        "deadline": "2026-11-14T13:55:28.119115+00:00",
+        "minCgpa": 8.5,
+        "suitabilityBand": "Developing",
+        "suitabilityScore": 33,
+        "suitability_score": 33,
+        "matchingSkills": [
+          "C++"
+        ],
+        "matching_skills": [
+          "C++"
+        ],
+        "missingSkills": [
+          "Rust",
+          "Algorithms"
+        ],
+        "missing_skills": [
+          "Rust",
+          "Algorithms"
+        ],
+        "reasoning": "Matched 1 of 3 required competencies for this position.",
+        "academicEligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 8.5,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 8.5)"
+        },
+        "academic_eligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 8.5,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 8.5)"
+        }
+      },
+      {
+        "jobId": "50000000-0000-4000-a000-000000000001",
+        "job_id": "50000000-0000-4000-a000-000000000001",
+        "title": "Medical Imaging AI Research Engineer",
+        "companyName": "MedRenova Diagnostics",
+        "company_name": "MedRenova Diagnostics",
+        "companyLogo": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=128&auto=format&fit=crop&q=80",
+        "location": "Bengaluru, Karnataka (Hybrid)",
+        "workMode": "Hybrid",
+        "type": "Full-time",
+        "stipendOrSalary": "₹20.0 - ₹28.0 LPA",
+        "deadline": "2026-11-29T13:55:28.119115+00:00",
+        "minCgpa": 8.2,
+        "suitabilityBand": "Developing",
+        "suitabilityScore": 0,
+        "suitability_score": 0,
+        "matchingSkills": [],
+        "matching_skills": [],
+        "missingSkills": [
+          "PyTorch",
+          "Computer Vision"
+        ],
+        "missing_skills": [
+          "PyTorch",
+          "Computer Vision"
+        ],
+        "reasoning": "Requires developing prerequisite skills (PyTorch, Computer Vision).",
+        "academicEligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 8.2,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 8.2)"
+        },
+        "academic_eligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 8.2,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 8.2)"
+        }
+      }
+    ]
+  },
+  "8b982c0c-4d8d-448e-8b9e-dba8bf138286": {
+    "analysisId": "4d7da2cc-5278-4b32-8b9f-1c0fe539a3fa",
+    "studentId": "8b982c0c-4d8d-448e-8b9e-dba8bf138286",
+    "model": "openai/gpt-oss-120b",
+    "modelName": "openai/gpt-oss-120b",
+    "filename": "Aarav_Sharma_Resume_2026.pdf",
+    "fileHash": "3e32e6277ddd238c3c756c4a4f45b3494bf7f0012228376cbb5575bd1fb263e7",
+    "pageCount": 1,
+    "analysisStatus": "completed",
+    "analyzedAt": "2026-10-31T10:28:43.378Z",
+    "analysis": {
+      "resume_summary": "Aarav Sharma is a B.Tech Computer Science student at NIT Surathkal with strong full‑stack development experience. He has built AI‑enhanced recruitment platforms, high‑throughput task queues, and scalable microservice APIs using modern TypeScript, Python, and cloud technologies. His internship at NovaTech and multiple certifications demonstrate competence in cloud, containerization, and DevOps.",
+      "extracted_skills": [
+        {
+          "name": "TypeScript",
+          "category": "Programming Languages",
+          "evidence": "Programming Languages: TypeScript",
+          "is_explicit": true
+        },
+        {
+          "name": "JavaScript",
+          "category": "Programming Languages",
+          "evidence": "Programming Languages: JavaScript",
+          "is_explicit": true
+        },
+        {
+          "name": "Python",
+          "category": "Programming Languages",
+          "evidence": "Programming Languages: Python",
+          "is_explicit": true
+        },
+        {
+          "name": "Java",
+          "category": "Programming Languages",
+          "evidence": "Programming Languages: Java",
+          "is_explicit": true
+        },
+        {
+          "name": "SQL",
+          "category": "Programming Languages",
+          "evidence": "Programming Languages: SQL",
+          "is_explicit": true
+        },
+        {
+          "name": "C++",
+          "category": "Programming Languages",
+          "evidence": "Programming Languages: C++",
+          "is_explicit": true
+        },
+        {
+          "name": "React.js",
+          "category": "Frontend",
+          "evidence": "Frontend Development: React.js",
+          "is_explicit": true
+        },
+        {
+          "name": "Next.js",
+          "category": "Frontend",
+          "evidence": "Frontend Development: Next.js",
+          "is_explicit": true
+        },
+        {
+          "name": "Redux Toolkit",
+          "category": "Frontend",
+          "evidence": "Frontend Development: Redux Toolkit",
+          "is_explicit": true
+        },
+        {
+          "name": "Tailwind CSS",
+          "category": "Frontend",
+          "evidence": "Frontend Development: Tailwind CSS",
+          "is_explicit": true
+        },
+        {
+          "name": "HTML5",
+          "category": "Frontend",
+          "evidence": "Frontend Development: HTML5",
+          "is_explicit": true
+        },
+        {
+          "name": "CSS3",
+          "category": "Frontend",
+          "evidence": "Frontend Development: CSS3",
+          "is_explicit": true
+        },
+        {
+          "name": "Node.js",
+          "category": "Backend",
+          "evidence": "Backend & APIs: Node.js",
+          "is_explicit": true
+        },
+        {
+          "name": "Express.js",
+          "category": "Backend",
+          "evidence": "Backend & APIs: Express.js",
+          "is_explicit": true
+        },
+        {
+          "name": "FastAPI",
+          "category": "Backend",
+          "evidence": "Backend & APIs: FastAPI",
+          "is_explicit": true
+        },
+        {
+          "name": "RESTful APIs",
+          "category": "Backend",
+          "evidence": "Backend & APIs: RESTful APIs",
+          "is_explicit": true
+        },
+        {
+          "name": "GraphQL",
+          "category": "Backend",
+          "evidence": "Backend & APIs: GraphQL",
+          "is_explicit": true
+        },
+        {
+          "name": "Microservices",
+          "category": "Backend",
+          "evidence": "Backend & APIs: Microservices",
+          "is_explicit": true
+        },
+        {
+          "name": "PostgreSQL",
+          "category": "Databases",
+          "evidence": "Databases & Caching: PostgreSQL",
+          "is_explicit": true
+        },
+        {
+          "name": "Redis",
+          "category": "Databases",
+          "evidence": "Databases & Caching: Redis",
+          "is_explicit": true
+        },
+        {
+          "name": "MongoDB",
+          "category": "Databases",
+          "evidence": "Databases & Caching: MongoDB",
+          "is_explicit": true
+        },
+        {
+          "name": "Supabase PostgreSQL",
+          "category": "Databases",
+          "evidence": "Databases & Caching: Supabase PostgreSQL",
+          "is_explicit": true
+        },
+        {
+          "name": "Prisma ORM",
+          "category": "Databases",
+          "evidence": "Databases & Caching: Prisma ORM",
+          "is_explicit": true
+        },
+        {
+          "name": "Docker",
+          "category": "Cloud & DevOps",
+          "evidence": "Cloud & DevOps: Docker",
+          "is_explicit": true
+        },
+        {
+          "name": "AWS S3",
+          "category": "Cloud & DevOps",
+          "evidence": "AWS (S3, EC2, Lambda)",
+          "is_explicit": true
+        },
+        {
+          "name": "AWS EC2",
+          "category": "Cloud & DevOps",
+          "evidence": "AWS (S3, EC2, Lambda)",
+          "is_explicit": true
+        },
+        {
+          "name": "AWS Lambda",
+          "category": "Cloud & DevOps",
+          "evidence": "AWS (S3, EC2, Lambda)",
+          "is_explicit": true
+        },
+        {
+          "name": "Git",
+          "category": "Tools",
+          "evidence": "Git",
+          "is_explicit": true
+        },
+        {
+          "name": "GitHub Actions CI/CD",
+          "category": "Tools",
+          "evidence": "GitHub Actions CI/CD",
+          "is_explicit": true
+        },
+        {
+          "name": "Linux",
+          "category": "Tools",
+          "evidence": "Linux",
+          "is_explicit": true
+        },
+        {
+          "name": "Postman",
+          "category": "Tools",
+          "evidence": "Postman",
+          "is_explicit": true
+        }
+      ],
+      "technical_categories": {
+        "Programming Languages": [
+          "TypeScript",
+          "JavaScript",
+          "Python",
+          "Java",
+          "SQL",
+          "C++"
+        ],
+        "Frameworks & Libraries": [
+          "React.js",
+          "Next.js",
+          "Redux Toolkit",
+          "Tailwind CSS",
+          "Node.js",
+          "Express.js",
+          "FastAPI",
+          "GraphQL",
+          "Prisma ORM"
+        ],
+        "Databases": [
+          "PostgreSQL",
+          "Redis",
+          "MongoDB",
+          "Supabase PostgreSQL"
+        ],
+        "Cloud & DevOps": [
+          "Docker",
+          "AWS S3",
+          "AWS EC2",
+          "AWS Lambda",
+          "GitHub Actions CI/CD",
+          "Linux"
+        ],
+        "Tools": [
+          "Git",
+          "Postman"
+        ]
+      },
+      "projects": [
+        {
+          "name": "CampusFlow Campus Recruitment Intelligence Platform",
+          "technologies": [
+            "React",
+            "TypeScript",
+            "Supabase",
+            "Groq AI"
+          ],
+          "description": "Architected a university placement platform serving students, recruiters, and placement directors with AI‑driven resume parsing and real‑time interview scheduling.",
+          "impact": "Integrated Groq LPU engine for automatic skill taxonomy extraction and automated calendar sync; platform enables role‑based access control across multiple user types."
+        },
+        {
+          "name": "Distributed Task Queue & Event Processor",
+          "technologies": [
+            "Python",
+            "Redis",
+            "Docker",
+            "Prometheus"
+          ],
+          "description": "Built an asynchronous distributed background task processor capable of handling up to 10,000 tasks per minute with exponential backoff retries and Pub/Sub event broadcasting.",
+          "impact": "Provided high‑throughput processing with observability via Prometheus metrics."
+        },
+        {
+          "name": "Cloud Commerce Scalable Microservices API",
+          "technologies": [
+            "Node.js",
+            "Express",
+            "PostgreSQL",
+            "Docker",
+            "JWT",
+            "Rate Limiting"
+          ],
+          "description": "Engineered decoupled REST API microservices with JWT authentication, rate limiting, and ACID‑compliant transactions.",
+          "impact": "Optimized query plans and indexes, reducing average p95 latency by 42%."
+        }
+      ],
+      "experience": [
+        {
+          "role": "Software Engineering Intern",
+          "company": "NovaTech Systems",
+          "duration": "May 2025 - July 2025",
+          "responsibilities": [
+            "Developed enterprise microservices using TypeScript, Node.js, and PostgreSQL for customer analytics.",
+            "Automated unit and integration test coverage to 92% with Jest and Supertest across 14 API endpoints.",
+            "Collaborated on AWS ECS container deployments and performed database indexing improvements."
+          ]
+        }
+      ],
+      "certifications": [
+        "AWS Certified Cloud Practitioner (2025)",
+        "Docker Certified Associate (2025)"
+      ],
+      "recommended_roles": [
+        {
+          "role": "Full-Stack Developer",
+          "why": "Aarav has demonstrated end‑to‑end development of web applications (React/TypeScript front‑end, Node.js/Express back‑end) and integration of databases and cloud services, matching core full‑stack responsibilities.",
+          "supporting_skills": [
+            "React.js",
+            "TypeScript",
+            "Node.js",
+            "Express.js",
+            "PostgreSQL",
+            "Docker",
+            "AWS"
+          ],
+          "supporting_projects": [
+            "CampusFlow Campus Recruitment Intelligence Platform",
+            "Cloud Commerce Scalable Microservices API"
+          ],
+          "missing_competencies": [
+            "Advanced testing frameworks (Cypress/Playwright)",
+            "State‑management beyond Redux (e.g., Zustand)",
+            "CI/CD pipelines with Terraform or Kubernetes"
+          ],
+          "suggested_next_steps": "Add end‑to‑end UI tests with Cypress, explore container orchestration (Kubernetes) and IaC (Terraform) to strengthen deployment expertise."
+        },
+        {
+          "role": "Backend Developer",
+          "why": "The candidate’s experience building high‑throughput task queues, microservice APIs, and database optimizations aligns with backend engineering focus on performance and scalability.",
+          "supporting_skills": [
+            "Python",
+            "Node.js",
+            "FastAPI",
+            "Redis",
+            "PostgreSQL",
+            "Microservices",
+            "Performance Optimization"
+          ],
+          "supporting_projects": [
+            "Distributed Task Queue & Event Processor",
+            "Cloud Commerce Scalable Microservices API"
+          ],
+          "missing_competencies": [
+            "Deep expertise in Go or Rust for systems‑level services",
+            "Experience with message brokers like Kafka"
+          ],
+          "suggested_next_steps": "Learn Go or Rust basics and experiment with Kafka or RabbitMQ to broaden backend toolkit."
+        },
+        {
+          "role": "Cloud Engineer",
+          "why": "Aarav holds AWS Cloud Practitioner and Docker certifications, has deployed services on AWS ECS, and uses Docker containers, indicating readiness for cloud‑focused roles.",
+          "supporting_skills": [
+            "AWS S3",
+            "AWS EC2",
+            "AWS Lambda",
+            "Docker",
+            "GitHub Actions CI/CD"
+          ],
+          "supporting_projects": [
+            "Cloud Commerce Scalable Microservices API",
+            "Software Engineering Intern at NovaTech"
+          ],
+          "missing_competencies": [
+            "Infrastructure as Code (Terraform, CloudFormation)",
+            "Kubernetes orchestration",
+            "Serverless architecture beyond Lambda (e.g., Step Functions)"
+          ],
+          "suggested_next_steps": "Complete a Terraform certification and build a Kubernetes‑based deployment pipeline for a personal project."
+        }
+      ],
+      "strengths": [
+        "Proven ability to design and deliver end‑to‑end full‑stack systems with AI integration.",
+        "Experience with high‑throughput asynchronous architectures and performance optimization."
+      ],
+      "skill_gaps": [
+        "Limited exposure to advanced UI testing frameworks (Cypress, Playwright).",
+        "No hands‑on experience with Kubernetes or Terraform for infrastructure automation.",
+        "Lack of Go or Rust experience for low‑level backend services."
+      ],
+      "improvement_suggestions": [
+        "Add end‑to‑end testing using Cypress or Playwright to strengthen frontend reliability.",
+        "Learn Kubernetes and Terraform to enable production‑grade cloud deployments.",
+        "Explore Go or Rust to diversify backend language expertise."
+      ],
+      "analysis_warnings": [],
+      "model_version": "openai/gpt-oss-120b"
+    },
+    "extractedSkills": [
+      {
+        "name": "TypeScript",
+        "category": "Programming Languages",
+        "evidence": "Programming Languages: TypeScript",
+        "is_explicit": true
+      },
+      {
+        "name": "JavaScript",
+        "category": "Programming Languages",
+        "evidence": "Programming Languages: JavaScript",
+        "is_explicit": true
+      },
+      {
+        "name": "Python",
+        "category": "Programming Languages",
+        "evidence": "Programming Languages: Python",
+        "is_explicit": true
+      },
+      {
+        "name": "Java",
+        "category": "Programming Languages",
+        "evidence": "Programming Languages: Java",
+        "is_explicit": true
+      },
+      {
+        "name": "SQL",
+        "category": "Programming Languages",
+        "evidence": "Programming Languages: SQL",
+        "is_explicit": true
+      },
+      {
+        "name": "C++",
+        "category": "Programming Languages",
+        "evidence": "Programming Languages: C++",
+        "is_explicit": true
+      },
+      {
+        "name": "React.js",
+        "category": "Frontend",
+        "evidence": "Frontend Development: React.js",
+        "is_explicit": true
+      },
+      {
+        "name": "Next.js",
+        "category": "Frontend",
+        "evidence": "Frontend Development: Next.js",
+        "is_explicit": true
+      },
+      {
+        "name": "Redux Toolkit",
+        "category": "Frontend",
+        "evidence": "Frontend Development: Redux Toolkit",
+        "is_explicit": true
+      },
+      {
+        "name": "Tailwind CSS",
+        "category": "Frontend",
+        "evidence": "Frontend Development: Tailwind CSS",
+        "is_explicit": true
+      },
+      {
+        "name": "HTML5",
+        "category": "Frontend",
+        "evidence": "Frontend Development: HTML5",
+        "is_explicit": true
+      },
+      {
+        "name": "CSS3",
+        "category": "Frontend",
+        "evidence": "Frontend Development: CSS3",
+        "is_explicit": true
+      },
+      {
+        "name": "Node.js",
+        "category": "Backend",
+        "evidence": "Backend & APIs: Node.js",
+        "is_explicit": true
+      },
+      {
+        "name": "Express.js",
+        "category": "Backend",
+        "evidence": "Backend & APIs: Express.js",
+        "is_explicit": true
+      },
+      {
+        "name": "FastAPI",
+        "category": "Backend",
+        "evidence": "Backend & APIs: FastAPI",
+        "is_explicit": true
+      },
+      {
+        "name": "RESTful APIs",
+        "category": "Backend",
+        "evidence": "Backend & APIs: RESTful APIs",
+        "is_explicit": true
+      },
+      {
+        "name": "GraphQL",
+        "category": "Backend",
+        "evidence": "Backend & APIs: GraphQL",
+        "is_explicit": true
+      },
+      {
+        "name": "Microservices",
+        "category": "Backend",
+        "evidence": "Backend & APIs: Microservices",
+        "is_explicit": true
+      },
+      {
+        "name": "PostgreSQL",
+        "category": "Databases",
+        "evidence": "Databases & Caching: PostgreSQL",
+        "is_explicit": true
+      },
+      {
+        "name": "Redis",
+        "category": "Databases",
+        "evidence": "Databases & Caching: Redis",
+        "is_explicit": true
+      },
+      {
+        "name": "MongoDB",
+        "category": "Databases",
+        "evidence": "Databases & Caching: MongoDB",
+        "is_explicit": true
+      },
+      {
+        "name": "Supabase PostgreSQL",
+        "category": "Databases",
+        "evidence": "Databases & Caching: Supabase PostgreSQL",
+        "is_explicit": true
+      },
+      {
+        "name": "Prisma ORM",
+        "category": "Databases",
+        "evidence": "Databases & Caching: Prisma ORM",
+        "is_explicit": true
+      },
+      {
+        "name": "Docker",
+        "category": "Cloud & DevOps",
+        "evidence": "Cloud & DevOps: Docker",
+        "is_explicit": true
+      },
+      {
+        "name": "AWS S3",
+        "category": "Cloud & DevOps",
+        "evidence": "AWS (S3, EC2, Lambda)",
+        "is_explicit": true
+      },
+      {
+        "name": "AWS EC2",
+        "category": "Cloud & DevOps",
+        "evidence": "AWS (S3, EC2, Lambda)",
+        "is_explicit": true
+      },
+      {
+        "name": "AWS Lambda",
+        "category": "Cloud & DevOps",
+        "evidence": "AWS (S3, EC2, Lambda)",
+        "is_explicit": true
+      },
+      {
+        "name": "Git",
+        "category": "Tools",
+        "evidence": "Git",
+        "is_explicit": true
+      },
+      {
+        "name": "GitHub Actions CI/CD",
+        "category": "Tools",
+        "evidence": "GitHub Actions CI/CD",
+        "is_explicit": true
+      },
+      {
+        "name": "Linux",
+        "category": "Tools",
+        "evidence": "Linux",
+        "is_explicit": true
+      },
+      {
+        "name": "Postman",
+        "category": "Tools",
+        "evidence": "Postman",
+        "is_explicit": true
+      }
+    ],
+    "careerMatches": [
+      {
+        "role": "Full-Stack Developer",
+        "why": "Aarav has demonstrated end‑to‑end development of web applications (React/TypeScript front‑end, Node.js/Express back‑end) and integration of databases and cloud services, matching core full‑stack responsibilities.",
+        "supportingSkills": [
+          "React.js",
+          "TypeScript",
+          "Node.js",
+          "Express.js",
+          "PostgreSQL",
+          "Docker",
+          "AWS"
+        ],
+        "supportingProjects": [
+          "CampusFlow Campus Recruitment Intelligence Platform",
+          "Cloud Commerce Scalable Microservices API"
+        ],
+        "missingCompetencies": [
+          "Advanced testing frameworks (Cypress/Playwright)",
+          "State‑management beyond Redux (e.g., Zustand)",
+          "CI/CD pipelines with Terraform or Kubernetes"
+        ],
+        "suggestedNextSteps": "Add end‑to‑end UI tests with Cypress, explore container orchestration (Kubernetes) and IaC (Terraform) to strengthen deployment expertise."
+      },
+      {
+        "role": "Backend Developer",
+        "why": "The candidate’s experience building high‑throughput task queues, microservice APIs, and database optimizations aligns with backend engineering focus on performance and scalability.",
+        "supportingSkills": [
+          "Python",
+          "Node.js",
+          "FastAPI",
+          "Redis",
+          "PostgreSQL",
+          "Microservices",
+          "Performance Optimization"
+        ],
+        "supportingProjects": [
+          "Distributed Task Queue & Event Processor",
+          "Cloud Commerce Scalable Microservices API"
+        ],
+        "missingCompetencies": [
+          "Deep expertise in Go or Rust for systems‑level services",
+          "Experience with message brokers like Kafka"
+        ],
+        "suggestedNextSteps": "Learn Go or Rust basics and experiment with Kafka or RabbitMQ to broaden backend toolkit."
+      },
+      {
+        "role": "Cloud Engineer",
+        "why": "Aarav holds AWS Cloud Practitioner and Docker certifications, has deployed services on AWS ECS, and uses Docker containers, indicating readiness for cloud‑focused roles.",
+        "supportingSkills": [
+          "AWS S3",
+          "AWS EC2",
+          "AWS Lambda",
+          "Docker",
+          "GitHub Actions CI/CD"
+        ],
+        "supportingProjects": [
+          "Cloud Commerce Scalable Microservices API",
+          "Software Engineering Intern at NovaTech"
+        ],
+        "missingCompetencies": [
+          "Infrastructure as Code (Terraform, CloudFormation)",
+          "Kubernetes orchestration",
+          "Serverless architecture beyond Lambda (e.g., Step Functions)"
+        ],
+        "suggestedNextSteps": "Complete a Terraform certification and build a Kubernetes‑based deployment pipeline for a personal project."
+      }
+    ],
+    "skillGaps": [
+      "Limited exposure to advanced UI testing frameworks (Cypress, Playwright).",
+      "No hands‑on experience with Kubernetes or Terraform for infrastructure automation.",
+      "Lack of Go or Rust experience for low‑level backend services."
+    ],
+    "summary": "Aarav Sharma is a B.Tech Computer Science student at NIT Surathkal with strong full‑stack development experience. He has built AI‑enhanced recruitment platforms, high‑throughput task queues, and scalable microservice APIs using modern TypeScript, Python, and cloud technologies. His internship at NovaTech and multiple certifications demonstrate competence in cloud, containerization, and DevOps.",
+    "totalExtractedSkills": 31,
+    "matchedJobs": [
+      {
+        "jobId": "20000000-0000-4000-a000-000000000001",
+        "job_id": "20000000-0000-4000-a000-000000000001",
+        "title": "Software Engineer Trainee",
+        "companyName": "NovaTech Systems",
+        "company_name": "NovaTech Systems",
+        "companyLogo": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=128&auto=format&fit=crop&q=80",
+        "location": "Hyderabad, Telangana (On-site)",
+        "workMode": "On-site",
+        "type": "Full-time",
+        "stipendOrSalary": "₹14.0 - ₹18.0 LPA",
+        "deadline": "2026-11-20T13:55:28.119115+00:00",
+        "minCgpa": 7.5,
+        "suitabilityBand": "Strong",
+        "suitabilityScore": 100,
+        "suitability_score": 100,
+        "matchingSkills": [
+          "TypeScript",
+          "React",
+          "Node.js"
+        ],
+        "matching_skills": [
+          "TypeScript",
+          "React",
+          "Node.js"
+        ],
+        "missingSkills": [],
+        "missing_skills": [],
+        "reasoning": "Matched 3 of 3 required competencies for this position.",
+        "academicEligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 7.5,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 7.5)"
+        },
+        "academic_eligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 7.5,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 7.5)"
+        }
+      },
+      {
+        "jobId": "40000000-0000-4000-a000-000000000001",
+        "job_id": "40000000-0000-4000-a000-000000000001",
+        "title": "Data Analyst Trainee",
+        "companyName": "Orbit Analytics",
+        "company_name": "Orbit Analytics",
+        "companyLogo": "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=128&auto=format&fit=crop&q=80",
+        "location": "Pune, Maharashtra (Hybrid)",
+        "workMode": "Hybrid",
+        "type": "Full-time",
+        "stipendOrSalary": "₹9.0 - ₹12.0 LPA",
+        "deadline": "2026-11-24T13:55:28.119115+00:00",
+        "minCgpa": 7.2,
+        "suitabilityBand": "Strong",
+        "suitabilityScore": 100,
+        "suitability_score": 100,
+        "matchingSkills": [
+          "SQL",
+          "Python"
+        ],
+        "matching_skills": [
+          "SQL",
+          "Python"
+        ],
+        "missingSkills": [],
+        "missing_skills": [],
+        "reasoning": "Matched 2 of 2 required competencies for this position.",
+        "academicEligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 7.2,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 7.2)"
+        },
+        "academic_eligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 7.2,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 7.2)"
+        }
+      },
+      {
+        "jobId": "10000000-0000-4000-a000-000000000001",
+        "job_id": "10000000-0000-4000-a000-000000000001",
+        "title": "Graduate AI Engineer (Agentic Systems)",
+        "companyName": "Aetos DigiLog",
+        "company_name": "Aetos DigiLog",
+        "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=128&auto=format&fit=crop&q=80",
+        "location": "Bengaluru, Karnataka (Hybrid)",
+        "workMode": "Hybrid",
+        "type": "Full-time",
+        "stipendOrSalary": "₹18.0 - ₹24.0 LPA",
+        "deadline": "2026-11-20T13:55:28.119115+00:00",
+        "minCgpa": 8,
+        "suitabilityBand": "Good",
+        "suitabilityScore": 67,
+        "suitability_score": 67,
+        "matchingSkills": [
+          "Python",
+          "PostgreSQL"
+        ],
+        "matching_skills": [
+          "Python",
+          "PostgreSQL"
+        ],
+        "missingSkills": [
+          "Agentic AI"
+        ],
+        "missing_skills": [
+          "Agentic AI"
+        ],
+        "reasoning": "Matched 2 of 3 required competencies for this position.",
+        "academicEligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 8,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 8)"
+        },
+        "academic_eligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 8,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 8)"
+        }
+      },
+      {
+        "jobId": "20000000-0000-4000-a000-000000000002",
+        "job_id": "20000000-0000-4000-a000-000000000002",
+        "title": "Cloud Infrastructure Specialist",
+        "companyName": "NovaTech Systems",
+        "company_name": "NovaTech Systems",
+        "companyLogo": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=128&auto=format&fit=crop&q=80",
+        "location": "Remote (India)",
+        "workMode": "Remote",
+        "type": "Full-time",
+        "stipendOrSalary": "₹15.0 - ₹20.0 LPA",
+        "deadline": "2026-11-17T13:55:28.119115+00:00",
+        "minCgpa": 7,
+        "suitabilityBand": "Good",
+        "suitabilityScore": 67,
+        "suitability_score": 67,
+        "matchingSkills": [
+          "Docker",
+          "Linux"
+        ],
+        "matching_skills": [
+          "Docker",
+          "Linux"
+        ],
+        "missingSkills": [
+          "Kubernetes"
+        ],
+        "missing_skills": [
+          "Kubernetes"
+        ],
+        "reasoning": "Matched 2 of 3 required competencies for this position.",
+        "academicEligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 7,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 7)"
+        },
+        "academic_eligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 7,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 7)"
+        }
+      },
+      {
+        "jobId": "60000000-0000-4000-a000-000000000001",
+        "job_id": "60000000-0000-4000-a000-000000000001",
+        "title": "Quantitative Systems Engineer",
+        "companyName": "Vertex Solutions",
+        "company_name": "Vertex Solutions",
+        "companyLogo": "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=128&auto=format&fit=crop&q=80",
+        "location": "Mumbai, Maharashtra (On-site)",
+        "workMode": "On-site",
+        "type": "Full-time",
+        "stipendOrSalary": "₹24.0 - ₹32.0 LPA",
+        "deadline": "2026-11-14T13:55:28.119115+00:00",
+        "minCgpa": 8.5,
+        "suitabilityBand": "Developing",
+        "suitabilityScore": 33,
+        "suitability_score": 33,
+        "matchingSkills": [
+          "C++"
+        ],
+        "matching_skills": [
+          "C++"
+        ],
+        "missingSkills": [
+          "Rust",
+          "Algorithms"
+        ],
+        "missing_skills": [
+          "Rust",
+          "Algorithms"
+        ],
+        "reasoning": "Matched 1 of 3 required competencies for this position.",
+        "academicEligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 8.5,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 8.5)"
+        },
+        "academic_eligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 8.5,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 8.5)"
+        }
+      },
+      {
+        "jobId": "50000000-0000-4000-a000-000000000001",
+        "job_id": "50000000-0000-4000-a000-000000000001",
+        "title": "Medical Imaging AI Research Engineer",
+        "companyName": "MedRenova Diagnostics",
+        "company_name": "MedRenova Diagnostics",
+        "companyLogo": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=128&auto=format&fit=crop&q=80",
+        "location": "Bengaluru, Karnataka (Hybrid)",
+        "workMode": "Hybrid",
+        "type": "Full-time",
+        "stipendOrSalary": "₹20.0 - ₹28.0 LPA",
+        "deadline": "2026-11-29T13:55:28.119115+00:00",
+        "minCgpa": 8.2,
+        "suitabilityBand": "Developing",
+        "suitabilityScore": 0,
+        "suitability_score": 0,
+        "matchingSkills": [],
+        "matching_skills": [],
+        "missingSkills": [
+          "PyTorch",
+          "Computer Vision"
+        ],
+        "missing_skills": [
+          "PyTorch",
+          "Computer Vision"
+        ],
+        "reasoning": "Requires developing prerequisite skills (PyTorch, Computer Vision).",
+        "academicEligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 8.2,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 8.2)"
+        },
+        "academic_eligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 8.2,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 8.2)"
+        }
+      }
+    ]
+  },
+  "28296879-9cd1-43ef-bb8e-7939cb71d213": {
+    "analysisId": "4d7da2cc-5278-4b32-8b9f-1c0fe539a3fa",
+    "studentId": "8b982c0c-4d8d-448e-8b9e-dba8bf138286",
+    "model": "openai/gpt-oss-120b",
+    "modelName": "openai/gpt-oss-120b",
+    "filename": "Aarav_Sharma_Resume_2026.pdf",
+    "fileHash": "3e32e6277ddd238c3c756c4a4f45b3494bf7f0012228376cbb5575bd1fb263e7",
+    "pageCount": 1,
+    "analysisStatus": "completed",
+    "analyzedAt": "2026-10-31T10:28:43.378Z",
+    "analysis": {
+      "resume_summary": "Aarav Sharma is a B.Tech Computer Science student at NIT Surathkal with strong full‑stack development experience. He has built AI‑enhanced recruitment platforms, high‑throughput task queues, and scalable microservice APIs using modern TypeScript, Python, and cloud technologies. His internship at NovaTech and multiple certifications demonstrate competence in cloud, containerization, and DevOps.",
+      "extracted_skills": [
+        {
+          "name": "TypeScript",
+          "category": "Programming Languages",
+          "evidence": "Programming Languages: TypeScript",
+          "is_explicit": true
+        },
+        {
+          "name": "JavaScript",
+          "category": "Programming Languages",
+          "evidence": "Programming Languages: JavaScript",
+          "is_explicit": true
+        },
+        {
+          "name": "Python",
+          "category": "Programming Languages",
+          "evidence": "Programming Languages: Python",
+          "is_explicit": true
+        },
+        {
+          "name": "Java",
+          "category": "Programming Languages",
+          "evidence": "Programming Languages: Java",
+          "is_explicit": true
+        },
+        {
+          "name": "SQL",
+          "category": "Programming Languages",
+          "evidence": "Programming Languages: SQL",
+          "is_explicit": true
+        },
+        {
+          "name": "C++",
+          "category": "Programming Languages",
+          "evidence": "Programming Languages: C++",
+          "is_explicit": true
+        },
+        {
+          "name": "React.js",
+          "category": "Frontend",
+          "evidence": "Frontend Development: React.js",
+          "is_explicit": true
+        },
+        {
+          "name": "Next.js",
+          "category": "Frontend",
+          "evidence": "Frontend Development: Next.js",
+          "is_explicit": true
+        },
+        {
+          "name": "Redux Toolkit",
+          "category": "Frontend",
+          "evidence": "Frontend Development: Redux Toolkit",
+          "is_explicit": true
+        },
+        {
+          "name": "Tailwind CSS",
+          "category": "Frontend",
+          "evidence": "Frontend Development: Tailwind CSS",
+          "is_explicit": true
+        },
+        {
+          "name": "HTML5",
+          "category": "Frontend",
+          "evidence": "Frontend Development: HTML5",
+          "is_explicit": true
+        },
+        {
+          "name": "CSS3",
+          "category": "Frontend",
+          "evidence": "Frontend Development: CSS3",
+          "is_explicit": true
+        },
+        {
+          "name": "Node.js",
+          "category": "Backend",
+          "evidence": "Backend & APIs: Node.js",
+          "is_explicit": true
+        },
+        {
+          "name": "Express.js",
+          "category": "Backend",
+          "evidence": "Backend & APIs: Express.js",
+          "is_explicit": true
+        },
+        {
+          "name": "FastAPI",
+          "category": "Backend",
+          "evidence": "Backend & APIs: FastAPI",
+          "is_explicit": true
+        },
+        {
+          "name": "RESTful APIs",
+          "category": "Backend",
+          "evidence": "Backend & APIs: RESTful APIs",
+          "is_explicit": true
+        },
+        {
+          "name": "GraphQL",
+          "category": "Backend",
+          "evidence": "Backend & APIs: GraphQL",
+          "is_explicit": true
+        },
+        {
+          "name": "Microservices",
+          "category": "Backend",
+          "evidence": "Backend & APIs: Microservices",
+          "is_explicit": true
+        },
+        {
+          "name": "PostgreSQL",
+          "category": "Databases",
+          "evidence": "Databases & Caching: PostgreSQL",
+          "is_explicit": true
+        },
+        {
+          "name": "Redis",
+          "category": "Databases",
+          "evidence": "Databases & Caching: Redis",
+          "is_explicit": true
+        },
+        {
+          "name": "MongoDB",
+          "category": "Databases",
+          "evidence": "Databases & Caching: MongoDB",
+          "is_explicit": true
+        },
+        {
+          "name": "Supabase PostgreSQL",
+          "category": "Databases",
+          "evidence": "Databases & Caching: Supabase PostgreSQL",
+          "is_explicit": true
+        },
+        {
+          "name": "Prisma ORM",
+          "category": "Databases",
+          "evidence": "Databases & Caching: Prisma ORM",
+          "is_explicit": true
+        },
+        {
+          "name": "Docker",
+          "category": "Cloud & DevOps",
+          "evidence": "Cloud & DevOps: Docker",
+          "is_explicit": true
+        },
+        {
+          "name": "AWS S3",
+          "category": "Cloud & DevOps",
+          "evidence": "AWS (S3, EC2, Lambda)",
+          "is_explicit": true
+        },
+        {
+          "name": "AWS EC2",
+          "category": "Cloud & DevOps",
+          "evidence": "AWS (S3, EC2, Lambda)",
+          "is_explicit": true
+        },
+        {
+          "name": "AWS Lambda",
+          "category": "Cloud & DevOps",
+          "evidence": "AWS (S3, EC2, Lambda)",
+          "is_explicit": true
+        },
+        {
+          "name": "Git",
+          "category": "Tools",
+          "evidence": "Git",
+          "is_explicit": true
+        },
+        {
+          "name": "GitHub Actions CI/CD",
+          "category": "Tools",
+          "evidence": "GitHub Actions CI/CD",
+          "is_explicit": true
+        },
+        {
+          "name": "Linux",
+          "category": "Tools",
+          "evidence": "Linux",
+          "is_explicit": true
+        },
+        {
+          "name": "Postman",
+          "category": "Tools",
+          "evidence": "Postman",
+          "is_explicit": true
+        }
+      ],
+      "technical_categories": {
+        "Programming Languages": [
+          "TypeScript",
+          "JavaScript",
+          "Python",
+          "Java",
+          "SQL",
+          "C++"
+        ],
+        "Frameworks & Libraries": [
+          "React.js",
+          "Next.js",
+          "Redux Toolkit",
+          "Tailwind CSS",
+          "Node.js",
+          "Express.js",
+          "FastAPI",
+          "GraphQL",
+          "Prisma ORM"
+        ],
+        "Databases": [
+          "PostgreSQL",
+          "Redis",
+          "MongoDB",
+          "Supabase PostgreSQL"
+        ],
+        "Cloud & DevOps": [
+          "Docker",
+          "AWS S3",
+          "AWS EC2",
+          "AWS Lambda",
+          "GitHub Actions CI/CD",
+          "Linux"
+        ],
+        "Tools": [
+          "Git",
+          "Postman"
+        ]
+      },
+      "projects": [
+        {
+          "name": "CampusFlow Campus Recruitment Intelligence Platform",
+          "technologies": [
+            "React",
+            "TypeScript",
+            "Supabase",
+            "Groq AI"
+          ],
+          "description": "Architected a university placement platform serving students, recruiters, and placement directors with AI‑driven resume parsing and real‑time interview scheduling.",
+          "impact": "Integrated Groq LPU engine for automatic skill taxonomy extraction and automated calendar sync; platform enables role‑based access control across multiple user types."
+        },
+        {
+          "name": "Distributed Task Queue & Event Processor",
+          "technologies": [
+            "Python",
+            "Redis",
+            "Docker",
+            "Prometheus"
+          ],
+          "description": "Built an asynchronous distributed background task processor capable of handling up to 10,000 tasks per minute with exponential backoff retries and Pub/Sub event broadcasting.",
+          "impact": "Provided high‑throughput processing with observability via Prometheus metrics."
+        },
+        {
+          "name": "Cloud Commerce Scalable Microservices API",
+          "technologies": [
+            "Node.js",
+            "Express",
+            "PostgreSQL",
+            "Docker",
+            "JWT",
+            "Rate Limiting"
+          ],
+          "description": "Engineered decoupled REST API microservices with JWT authentication, rate limiting, and ACID‑compliant transactions.",
+          "impact": "Optimized query plans and indexes, reducing average p95 latency by 42%."
+        }
+      ],
+      "experience": [
+        {
+          "role": "Software Engineering Intern",
+          "company": "NovaTech Systems",
+          "duration": "May 2025 - July 2025",
+          "responsibilities": [
+            "Developed enterprise microservices using TypeScript, Node.js, and PostgreSQL for customer analytics.",
+            "Automated unit and integration test coverage to 92% with Jest and Supertest across 14 API endpoints.",
+            "Collaborated on AWS ECS container deployments and performed database indexing improvements."
+          ]
+        }
+      ],
+      "certifications": [
+        "AWS Certified Cloud Practitioner (2025)",
+        "Docker Certified Associate (2025)"
+      ],
+      "recommended_roles": [
+        {
+          "role": "Full-Stack Developer",
+          "why": "Aarav has demonstrated end‑to‑end development of web applications (React/TypeScript front‑end, Node.js/Express back‑end) and integration of databases and cloud services, matching core full‑stack responsibilities.",
+          "supporting_skills": [
+            "React.js",
+            "TypeScript",
+            "Node.js",
+            "Express.js",
+            "PostgreSQL",
+            "Docker",
+            "AWS"
+          ],
+          "supporting_projects": [
+            "CampusFlow Campus Recruitment Intelligence Platform",
+            "Cloud Commerce Scalable Microservices API"
+          ],
+          "missing_competencies": [
+            "Advanced testing frameworks (Cypress/Playwright)",
+            "State‑management beyond Redux (e.g., Zustand)",
+            "CI/CD pipelines with Terraform or Kubernetes"
+          ],
+          "suggested_next_steps": "Add end‑to‑end UI tests with Cypress, explore container orchestration (Kubernetes) and IaC (Terraform) to strengthen deployment expertise."
+        },
+        {
+          "role": "Backend Developer",
+          "why": "The candidate’s experience building high‑throughput task queues, microservice APIs, and database optimizations aligns with backend engineering focus on performance and scalability.",
+          "supporting_skills": [
+            "Python",
+            "Node.js",
+            "FastAPI",
+            "Redis",
+            "PostgreSQL",
+            "Microservices",
+            "Performance Optimization"
+          ],
+          "supporting_projects": [
+            "Distributed Task Queue & Event Processor",
+            "Cloud Commerce Scalable Microservices API"
+          ],
+          "missing_competencies": [
+            "Deep expertise in Go or Rust for systems‑level services",
+            "Experience with message brokers like Kafka"
+          ],
+          "suggested_next_steps": "Learn Go or Rust basics and experiment with Kafka or RabbitMQ to broaden backend toolkit."
+        },
+        {
+          "role": "Cloud Engineer",
+          "why": "Aarav holds AWS Cloud Practitioner and Docker certifications, has deployed services on AWS ECS, and uses Docker containers, indicating readiness for cloud‑focused roles.",
+          "supporting_skills": [
+            "AWS S3",
+            "AWS EC2",
+            "AWS Lambda",
+            "Docker",
+            "GitHub Actions CI/CD"
+          ],
+          "supporting_projects": [
+            "Cloud Commerce Scalable Microservices API",
+            "Software Engineering Intern at NovaTech"
+          ],
+          "missing_competencies": [
+            "Infrastructure as Code (Terraform, CloudFormation)",
+            "Kubernetes orchestration",
+            "Serverless architecture beyond Lambda (e.g., Step Functions)"
+          ],
+          "suggested_next_steps": "Complete a Terraform certification and build a Kubernetes‑based deployment pipeline for a personal project."
+        }
+      ],
+      "strengths": [
+        "Proven ability to design and deliver end‑to‑end full‑stack systems with AI integration.",
+        "Experience with high‑throughput asynchronous architectures and performance optimization."
+      ],
+      "skill_gaps": [
+        "Limited exposure to advanced UI testing frameworks (Cypress, Playwright).",
+        "No hands‑on experience with Kubernetes or Terraform for infrastructure automation.",
+        "Lack of Go or Rust experience for low‑level backend services."
+      ],
+      "improvement_suggestions": [
+        "Add end‑to‑end testing using Cypress or Playwright to strengthen frontend reliability.",
+        "Learn Kubernetes and Terraform to enable production‑grade cloud deployments.",
+        "Explore Go or Rust to diversify backend language expertise."
+      ],
+      "analysis_warnings": [],
+      "model_version": "openai/gpt-oss-120b"
+    },
+    "extractedSkills": [
+      {
+        "name": "TypeScript",
+        "category": "Programming Languages",
+        "evidence": "Programming Languages: TypeScript",
+        "is_explicit": true
+      },
+      {
+        "name": "JavaScript",
+        "category": "Programming Languages",
+        "evidence": "Programming Languages: JavaScript",
+        "is_explicit": true
+      },
+      {
+        "name": "Python",
+        "category": "Programming Languages",
+        "evidence": "Programming Languages: Python",
+        "is_explicit": true
+      },
+      {
+        "name": "Java",
+        "category": "Programming Languages",
+        "evidence": "Programming Languages: Java",
+        "is_explicit": true
+      },
+      {
+        "name": "SQL",
+        "category": "Programming Languages",
+        "evidence": "Programming Languages: SQL",
+        "is_explicit": true
+      },
+      {
+        "name": "C++",
+        "category": "Programming Languages",
+        "evidence": "Programming Languages: C++",
+        "is_explicit": true
+      },
+      {
+        "name": "React.js",
+        "category": "Frontend",
+        "evidence": "Frontend Development: React.js",
+        "is_explicit": true
+      },
+      {
+        "name": "Next.js",
+        "category": "Frontend",
+        "evidence": "Frontend Development: Next.js",
+        "is_explicit": true
+      },
+      {
+        "name": "Redux Toolkit",
+        "category": "Frontend",
+        "evidence": "Frontend Development: Redux Toolkit",
+        "is_explicit": true
+      },
+      {
+        "name": "Tailwind CSS",
+        "category": "Frontend",
+        "evidence": "Frontend Development: Tailwind CSS",
+        "is_explicit": true
+      },
+      {
+        "name": "HTML5",
+        "category": "Frontend",
+        "evidence": "Frontend Development: HTML5",
+        "is_explicit": true
+      },
+      {
+        "name": "CSS3",
+        "category": "Frontend",
+        "evidence": "Frontend Development: CSS3",
+        "is_explicit": true
+      },
+      {
+        "name": "Node.js",
+        "category": "Backend",
+        "evidence": "Backend & APIs: Node.js",
+        "is_explicit": true
+      },
+      {
+        "name": "Express.js",
+        "category": "Backend",
+        "evidence": "Backend & APIs: Express.js",
+        "is_explicit": true
+      },
+      {
+        "name": "FastAPI",
+        "category": "Backend",
+        "evidence": "Backend & APIs: FastAPI",
+        "is_explicit": true
+      },
+      {
+        "name": "RESTful APIs",
+        "category": "Backend",
+        "evidence": "Backend & APIs: RESTful APIs",
+        "is_explicit": true
+      },
+      {
+        "name": "GraphQL",
+        "category": "Backend",
+        "evidence": "Backend & APIs: GraphQL",
+        "is_explicit": true
+      },
+      {
+        "name": "Microservices",
+        "category": "Backend",
+        "evidence": "Backend & APIs: Microservices",
+        "is_explicit": true
+      },
+      {
+        "name": "PostgreSQL",
+        "category": "Databases",
+        "evidence": "Databases & Caching: PostgreSQL",
+        "is_explicit": true
+      },
+      {
+        "name": "Redis",
+        "category": "Databases",
+        "evidence": "Databases & Caching: Redis",
+        "is_explicit": true
+      },
+      {
+        "name": "MongoDB",
+        "category": "Databases",
+        "evidence": "Databases & Caching: MongoDB",
+        "is_explicit": true
+      },
+      {
+        "name": "Supabase PostgreSQL",
+        "category": "Databases",
+        "evidence": "Databases & Caching: Supabase PostgreSQL",
+        "is_explicit": true
+      },
+      {
+        "name": "Prisma ORM",
+        "category": "Databases",
+        "evidence": "Databases & Caching: Prisma ORM",
+        "is_explicit": true
+      },
+      {
+        "name": "Docker",
+        "category": "Cloud & DevOps",
+        "evidence": "Cloud & DevOps: Docker",
+        "is_explicit": true
+      },
+      {
+        "name": "AWS S3",
+        "category": "Cloud & DevOps",
+        "evidence": "AWS (S3, EC2, Lambda)",
+        "is_explicit": true
+      },
+      {
+        "name": "AWS EC2",
+        "category": "Cloud & DevOps",
+        "evidence": "AWS (S3, EC2, Lambda)",
+        "is_explicit": true
+      },
+      {
+        "name": "AWS Lambda",
+        "category": "Cloud & DevOps",
+        "evidence": "AWS (S3, EC2, Lambda)",
+        "is_explicit": true
+      },
+      {
+        "name": "Git",
+        "category": "Tools",
+        "evidence": "Git",
+        "is_explicit": true
+      },
+      {
+        "name": "GitHub Actions CI/CD",
+        "category": "Tools",
+        "evidence": "GitHub Actions CI/CD",
+        "is_explicit": true
+      },
+      {
+        "name": "Linux",
+        "category": "Tools",
+        "evidence": "Linux",
+        "is_explicit": true
+      },
+      {
+        "name": "Postman",
+        "category": "Tools",
+        "evidence": "Postman",
+        "is_explicit": true
+      }
+    ],
+    "careerMatches": [
+      {
+        "role": "Full-Stack Developer",
+        "why": "Aarav has demonstrated end‑to‑end development of web applications (React/TypeScript front‑end, Node.js/Express back‑end) and integration of databases and cloud services, matching core full‑stack responsibilities.",
+        "supportingSkills": [
+          "React.js",
+          "TypeScript",
+          "Node.js",
+          "Express.js",
+          "PostgreSQL",
+          "Docker",
+          "AWS"
+        ],
+        "supportingProjects": [
+          "CampusFlow Campus Recruitment Intelligence Platform",
+          "Cloud Commerce Scalable Microservices API"
+        ],
+        "missingCompetencies": [
+          "Advanced testing frameworks (Cypress/Playwright)",
+          "State‑management beyond Redux (e.g., Zustand)",
+          "CI/CD pipelines with Terraform or Kubernetes"
+        ],
+        "suggestedNextSteps": "Add end‑to‑end UI tests with Cypress, explore container orchestration (Kubernetes) and IaC (Terraform) to strengthen deployment expertise."
+      },
+      {
+        "role": "Backend Developer",
+        "why": "The candidate’s experience building high‑throughput task queues, microservice APIs, and database optimizations aligns with backend engineering focus on performance and scalability.",
+        "supportingSkills": [
+          "Python",
+          "Node.js",
+          "FastAPI",
+          "Redis",
+          "PostgreSQL",
+          "Microservices",
+          "Performance Optimization"
+        ],
+        "supportingProjects": [
+          "Distributed Task Queue & Event Processor",
+          "Cloud Commerce Scalable Microservices API"
+        ],
+        "missingCompetencies": [
+          "Deep expertise in Go or Rust for systems‑level services",
+          "Experience with message brokers like Kafka"
+        ],
+        "suggestedNextSteps": "Learn Go or Rust basics and experiment with Kafka or RabbitMQ to broaden backend toolkit."
+      },
+      {
+        "role": "Cloud Engineer",
+        "why": "Aarav holds AWS Cloud Practitioner and Docker certifications, has deployed services on AWS ECS, and uses Docker containers, indicating readiness for cloud‑focused roles.",
+        "supportingSkills": [
+          "AWS S3",
+          "AWS EC2",
+          "AWS Lambda",
+          "Docker",
+          "GitHub Actions CI/CD"
+        ],
+        "supportingProjects": [
+          "Cloud Commerce Scalable Microservices API",
+          "Software Engineering Intern at NovaTech"
+        ],
+        "missingCompetencies": [
+          "Infrastructure as Code (Terraform, CloudFormation)",
+          "Kubernetes orchestration",
+          "Serverless architecture beyond Lambda (e.g., Step Functions)"
+        ],
+        "suggestedNextSteps": "Complete a Terraform certification and build a Kubernetes‑based deployment pipeline for a personal project."
+      }
+    ],
+    "skillGaps": [
+      "Limited exposure to advanced UI testing frameworks (Cypress, Playwright).",
+      "No hands‑on experience with Kubernetes or Terraform for infrastructure automation.",
+      "Lack of Go or Rust experience for low‑level backend services."
+    ],
+    "summary": "Aarav Sharma is a B.Tech Computer Science student at NIT Surathkal with strong full‑stack development experience. He has built AI‑enhanced recruitment platforms, high‑throughput task queues, and scalable microservice APIs using modern TypeScript, Python, and cloud technologies. His internship at NovaTech and multiple certifications demonstrate competence in cloud, containerization, and DevOps.",
+    "totalExtractedSkills": 31,
+    "matchedJobs": [
+      {
+        "jobId": "20000000-0000-4000-a000-000000000001",
+        "job_id": "20000000-0000-4000-a000-000000000001",
+        "title": "Software Engineer Trainee",
+        "companyName": "NovaTech Systems",
+        "company_name": "NovaTech Systems",
+        "companyLogo": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=128&auto=format&fit=crop&q=80",
+        "location": "Hyderabad, Telangana (On-site)",
+        "workMode": "On-site",
+        "type": "Full-time",
+        "stipendOrSalary": "₹14.0 - ₹18.0 LPA",
+        "deadline": "2026-11-20T13:55:28.119115+00:00",
+        "minCgpa": 7.5,
+        "suitabilityBand": "Strong",
+        "suitabilityScore": 100,
+        "suitability_score": 100,
+        "matchingSkills": [
+          "TypeScript",
+          "React",
+          "Node.js"
+        ],
+        "matching_skills": [
+          "TypeScript",
+          "React",
+          "Node.js"
+        ],
+        "missingSkills": [],
+        "missing_skills": [],
+        "reasoning": "Matched 3 of 3 required competencies for this position.",
+        "academicEligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 7.5,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 7.5)"
+        },
+        "academic_eligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 7.5,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 7.5)"
+        }
+      },
+      {
+        "jobId": "40000000-0000-4000-a000-000000000001",
+        "job_id": "40000000-0000-4000-a000-000000000001",
+        "title": "Data Analyst Trainee",
+        "companyName": "Orbit Analytics",
+        "company_name": "Orbit Analytics",
+        "companyLogo": "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=128&auto=format&fit=crop&q=80",
+        "location": "Pune, Maharashtra (Hybrid)",
+        "workMode": "Hybrid",
+        "type": "Full-time",
+        "stipendOrSalary": "₹9.0 - ₹12.0 LPA",
+        "deadline": "2026-11-24T13:55:28.119115+00:00",
+        "minCgpa": 7.2,
+        "suitabilityBand": "Strong",
+        "suitabilityScore": 100,
+        "suitability_score": 100,
+        "matchingSkills": [
+          "SQL",
+          "Python"
+        ],
+        "matching_skills": [
+          "SQL",
+          "Python"
+        ],
+        "missingSkills": [],
+        "missing_skills": [],
+        "reasoning": "Matched 2 of 2 required competencies for this position.",
+        "academicEligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 7.2,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 7.2)"
+        },
+        "academic_eligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 7.2,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 7.2)"
+        }
+      },
+      {
+        "jobId": "10000000-0000-4000-a000-000000000001",
+        "job_id": "10000000-0000-4000-a000-000000000001",
+        "title": "Graduate AI Engineer (Agentic Systems)",
+        "companyName": "Aetos DigiLog",
+        "company_name": "Aetos DigiLog",
+        "companyLogo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=128&auto=format&fit=crop&q=80",
+        "location": "Bengaluru, Karnataka (Hybrid)",
+        "workMode": "Hybrid",
+        "type": "Full-time",
+        "stipendOrSalary": "₹18.0 - ₹24.0 LPA",
+        "deadline": "2026-11-20T13:55:28.119115+00:00",
+        "minCgpa": 8,
+        "suitabilityBand": "Good",
+        "suitabilityScore": 67,
+        "suitability_score": 67,
+        "matchingSkills": [
+          "Python",
+          "PostgreSQL"
+        ],
+        "matching_skills": [
+          "Python",
+          "PostgreSQL"
+        ],
+        "missingSkills": [
+          "Agentic AI"
+        ],
+        "missing_skills": [
+          "Agentic AI"
+        ],
+        "reasoning": "Matched 2 of 3 required competencies for this position.",
+        "academicEligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 8,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 8)"
+        },
+        "academic_eligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 8,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 8)"
+        }
+      },
+      {
+        "jobId": "20000000-0000-4000-a000-000000000002",
+        "job_id": "20000000-0000-4000-a000-000000000002",
+        "title": "Cloud Infrastructure Specialist",
+        "companyName": "NovaTech Systems",
+        "company_name": "NovaTech Systems",
+        "companyLogo": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=128&auto=format&fit=crop&q=80",
+        "location": "Remote (India)",
+        "workMode": "Remote",
+        "type": "Full-time",
+        "stipendOrSalary": "₹15.0 - ₹20.0 LPA",
+        "deadline": "2026-11-17T13:55:28.119115+00:00",
+        "minCgpa": 7,
+        "suitabilityBand": "Good",
+        "suitabilityScore": 67,
+        "suitability_score": 67,
+        "matchingSkills": [
+          "Docker",
+          "Linux"
+        ],
+        "matching_skills": [
+          "Docker",
+          "Linux"
+        ],
+        "missingSkills": [
+          "Kubernetes"
+        ],
+        "missing_skills": [
+          "Kubernetes"
+        ],
+        "reasoning": "Matched 2 of 3 required competencies for this position.",
+        "academicEligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 7,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 7)"
+        },
+        "academic_eligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 7,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 7)"
+        }
+      },
+      {
+        "jobId": "60000000-0000-4000-a000-000000000001",
+        "job_id": "60000000-0000-4000-a000-000000000001",
+        "title": "Quantitative Systems Engineer",
+        "companyName": "Vertex Solutions",
+        "company_name": "Vertex Solutions",
+        "companyLogo": "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=128&auto=format&fit=crop&q=80",
+        "location": "Mumbai, Maharashtra (On-site)",
+        "workMode": "On-site",
+        "type": "Full-time",
+        "stipendOrSalary": "₹24.0 - ₹32.0 LPA",
+        "deadline": "2026-11-14T13:55:28.119115+00:00",
+        "minCgpa": 8.5,
+        "suitabilityBand": "Developing",
+        "suitabilityScore": 33,
+        "suitability_score": 33,
+        "matchingSkills": [
+          "C++"
+        ],
+        "matching_skills": [
+          "C++"
+        ],
+        "missingSkills": [
+          "Rust",
+          "Algorithms"
+        ],
+        "missing_skills": [
+          "Rust",
+          "Algorithms"
+        ],
+        "reasoning": "Matched 1 of 3 required competencies for this position.",
+        "academicEligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 8.5,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 8.5)"
+        },
+        "academic_eligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 8.5,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 8.5)"
+        }
+      },
+      {
+        "jobId": "50000000-0000-4000-a000-000000000001",
+        "job_id": "50000000-0000-4000-a000-000000000001",
+        "title": "Medical Imaging AI Research Engineer",
+        "companyName": "MedRenova Diagnostics",
+        "company_name": "MedRenova Diagnostics",
+        "companyLogo": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=128&auto=format&fit=crop&q=80",
+        "location": "Bengaluru, Karnataka (Hybrid)",
+        "workMode": "Hybrid",
+        "type": "Full-time",
+        "stipendOrSalary": "₹20.0 - ₹28.0 LPA",
+        "deadline": "2026-11-29T13:55:28.119115+00:00",
+        "minCgpa": 8.2,
+        "suitabilityBand": "Developing",
+        "suitabilityScore": 0,
+        "suitability_score": 0,
+        "matchingSkills": [],
+        "matching_skills": [],
+        "missingSkills": [
+          "PyTorch",
+          "Computer Vision"
+        ],
+        "missing_skills": [
+          "PyTorch",
+          "Computer Vision"
+        ],
+        "reasoning": "Requires developing prerequisite skills (PyTorch, Computer Vision).",
+        "academicEligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 8.2,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 8.2)"
+        },
+        "academic_eligibility": {
+          "isEligible": true,
+          "eligible": true,
+          "cgpaPassed": true,
+          "branchPassed": true,
+          "backlogsPassed": true,
+          "cgpa_cutoff": 8.2,
+          "student_cgpa": 8.85,
+          "cutoffExplanation": "Meets all published department CGPA and backlog thresholds.",
+          "reason": "Eligible (CGPA 8.85 meets cutoff 8.2)"
+        }
+      }
+    ]
+  }
+}

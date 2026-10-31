@@ -183,7 +183,7 @@ export const studentService = {
         profiles!inner(full_name, email),
         student_skills(skill_name),
         student_projects(id, title, description, project_url, technologies),
-        resume_files(original_filename, file_size, uploaded_at)
+        resume_files(id, storage_path, original_filename, file_size, uploaded_at)
       `)
       .eq('user_id', targetUserId)
       .maybeSingle();
@@ -221,9 +221,20 @@ export const studentService = {
       };
     }
 
-    const latestResume = sp.resume_files?.[0];
+    // Sort resume_files by uploaded_at descending
+    const sortedResumes = (sp.resume_files || []).slice().sort((a: any, b: any) =>
+      new Date(b.uploaded_at || 0).getTime() - new Date(a.uploaded_at || 0).getTime()
+    );
+    const latestResume = sortedResumes[0];
+
+    const sizeFormatted = latestResume
+      ? Number(latestResume.file_size) >= 1024 * 1024
+        ? `${(Number(latestResume.file_size) / (1024 * 1024)).toFixed(1)} MB`
+        : `${Math.round(Number(latestResume.file_size) / 1024)} KB`
+      : undefined;
 
     return {
+      id: sp.id,
       fullName: (sp as any).profiles?.full_name || (sp as any).full_name || 'Student Candidate',
       rollNo: sp.roll_number || '',
       email: (sp as any).profiles?.email || (sp as any).email || '',
@@ -239,8 +250,10 @@ export const studentService = {
       githubUrl: sp.github_url || '',
       linkedinUrl: sp.linkedin_url || '',
       portfolioUrl: sp.portfolio_url || '',
+      resumeFileId: latestResume?.id,
       resumeFileName: latestResume?.original_filename,
-      resumeFileSize: latestResume ? `${(latestResume.file_size / (1024 * 1024)).toFixed(1)} MB` : undefined,
+      resumeStoragePath: latestResume?.storage_path,
+      resumeFileSize: sizeFormatted,
       resumeLastUpdated: latestResume?.uploaded_at,
       projects: sp.student_projects?.map((p: { id: string; title: string; description: string; technologies: string[]; project_url: string | null }) => ({
         id: p.id,
@@ -292,9 +305,29 @@ export const studentService = {
     return { success: true };
   },
 
-  async uploadResume(file: File, studentProfileId: string, userId: string): Promise<{ success: boolean; storagePath?: string; error?: string }> {
+  async uploadResume(
+    file: File,
+    studentProfileId: string,
+    userId: string
+  ): Promise<{
+    success: boolean;
+    storagePath?: string;
+    originalFilename?: string;
+    fileSize?: string;
+    uploadedAt?: string;
+    error?: string;
+  }> {
     if (!isSupabaseConfigured()) {
-      return { success: true, storagePath: `resumes/${userId}/${file.name}` };
+      const sizeFormatted = file.size >= 1024 * 1024
+        ? `${(file.size / (1024 * 1024)).toFixed(1)} MB`
+        : `${Math.round(file.size / 1024)} KB`;
+      return {
+        success: true,
+        storagePath: `${userId}/${file.name}`,
+        originalFilename: file.name,
+        fileSize: sizeFormatted,
+        uploadedAt: new Date().toISOString(),
+      };
     }
 
     // Validate PDF
@@ -302,9 +335,9 @@ export const studentService = {
       return { success: false, error: 'Only PDF documents are accepted.' };
     }
 
-    // Max 5 MB
-    if (file.size > 5 * 1024 * 1024) {
-      return { success: false, error: 'File size exceeds maximum limit of 5 MB.' };
+    // Max 10 MB
+    if (file.size > 10 * 1024 * 1024) {
+      return { success: false, error: 'File size exceeds maximum limit of 10 MB.' };
     }
 
     const timestamp = Date.now();
@@ -324,15 +357,41 @@ export const studentService = {
       student_id: studentProfileId,
       storage_path: storagePath,
       original_filename: file.name,
-      content_type: file.type,
+      content_type: file.type || 'application/pdf',
       file_size: file.size,
     });
 
-    return { success: true, storagePath };
+    const sizeFormatted = file.size >= 1024 * 1024
+      ? `${(file.size / (1024 * 1024)).toFixed(1)} MB`
+      : `${Math.round(file.size / 1024)} KB`;
+
+    return {
+      success: true,
+      storagePath,
+      originalFilename: file.name,
+      fileSize: sizeFormatted,
+      uploadedAt: new Date().toISOString(),
+    };
+  },
+
+  async deleteResume(studentProfileId: string, storagePath?: string): Promise<{ success: boolean; error?: string }> {
+    if (!isSupabaseConfigured()) {
+      return { success: true };
+    }
+
+    try {
+      if (storagePath) {
+        await supabase.storage.from('resumes').remove([storagePath]);
+      }
+      await supabase.from('resume_files').delete().eq('student_id', studentProfileId);
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err.message };
+    }
   },
 
   async getResumeSignedUrl(storagePath: string): Promise<string | null> {
-    if (!isSupabaseConfigured()) {
+    if (!isSupabaseConfigured() || !storagePath) {
       return 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
     }
 
@@ -340,7 +399,10 @@ export const studentService = {
       .from('resumes')
       .createSignedUrl(storagePath, 3600); // 1-hour signed URL
 
-    if (error) return null;
+    if (error || !data?.signedUrl) {
+      const { data: pubData } = supabase.storage.from('resumes').getPublicUrl(storagePath);
+      return pubData?.publicUrl || null;
+    }
     return data.signedUrl;
   },
 };
@@ -1153,10 +1215,39 @@ export const resumeIntelligenceService = {
 
   async getStoredAnalysis(studentId?: string): Promise<ResumeAnalysisResult | null> {
     try {
+      const token = await this.getAuthToken();
+      if (token) {
+        const res = await fetch('/functions/v1/analyze-resume', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success && json.analysisStatus === 'completed') {
+            return {
+              analysisId: json.analysisId,
+              studentId: json.studentId,
+              model: json.model || 'openai/gpt-oss-120b',
+              extractedSkills: json.extractedSkills || [],
+              careerMatches: json.careerMatches || [],
+              matchedJobs: json.matchedJobs || [],
+              skillGaps: json.skillGaps || [],
+              totalExtractedSkills: json.totalExtractedSkills || (json.extractedSkills || []).length,
+              summary: json.summary || '',
+              cached: true,
+              analyzedAt: json.analyzedAt,
+            };
+          }
+        }
+      }
+
+      // Fallback check in Supabase resume_analyses
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return null;
 
-      const { data, error } = await (supabase as any)
+      const { data } = await (supabase as any)
         .from('resume_analyses')
         .select('*')
         .eq('student_id', studentId || user.id)
@@ -1165,16 +1256,22 @@ export const resumeIntelligenceService = {
         .maybeSingle();
 
       if (data && data.structured_analysis) {
+        const sa = data.structured_analysis;
+        const skills = sa.extracted_skills || sa.skills || [];
+        const roles = sa.recommended_roles || sa.career_matches || [];
+        const gaps = sa.skill_gaps || [];
+        const summary = sa.resume_summary || sa.summary || '';
+
         return {
           analysisId: data.id,
           studentId: data.student_id,
-          model: data.model_name || 'openai/gpt-oss-20b',
-          extractedSkills: data.structured_analysis.skills || [],
-          careerMatches: data.structured_analysis.career_matches || [],
+          model: data.model_name || 'openai/gpt-oss-120b',
+          extractedSkills: skills,
+          careerMatches: roles,
           matchedJobs: data.matched_jobs || [],
-          skillGaps: data.structured_analysis.skill_gaps || [],
-          totalExtractedSkills: data.structured_analysis.skills?.length || 0,
-          summary: data.structured_analysis.summary || '',
+          skillGaps: gaps,
+          totalExtractedSkills: skills.length,
+          summary: summary,
           cached: true,
           analyzedAt: data.completed_at || data.created_at,
         };

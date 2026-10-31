@@ -70,6 +70,36 @@ const groq = new Groq({ apiKey: GROQ_API_KEY });
 const analysesCache = new Map();
 const recruiterInvitesCache = new Map();
 
+const CACHE_FILE = path.resolve(__dirname, '../data/analyses_cache.json');
+
+function loadCacheFromDisk() {
+  try {
+    if (fs.existsSync(CACHE_FILE)) {
+      const data = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8'));
+      for (const [k, v] of Object.entries(data)) {
+        analysesCache.set(k, v);
+      }
+      console.log(`[Cache Loaded] Loaded ${analysesCache.size} cached analyses from disk.`);
+    }
+  } catch (err) {
+    console.warn('[Cache Load Error]:', err.message);
+  }
+}
+
+function saveCacheToDisk() {
+  try {
+    const obj = {};
+    for (const [k, v] of analysesCache.entries()) {
+      obj[k] = v;
+    }
+    fs.writeFileSync(CACHE_FILE, JSON.stringify(obj, null, 2), 'utf8');
+  } catch (err) {
+    console.warn('[Cache Save Error]:', err.message);
+  }
+}
+
+loadCacheFromDisk();
+
 // Seed initial demo recruiter invite
 recruiterInvitesCache.set('demo_priya', {
   id: 'demo_priya',
@@ -418,45 +448,81 @@ Produce a complete, structured technical profile JSON adhering strictly to:
 
       // 11. Match Against Real Supabase Jobs
       console.log('[Job Match Engine] Matching resume against active Supabase jobs...');
-      const { data: activeJobs } = await supabaseAdmin
+      const { data: activeJobs, error: jobsErr } = await supabaseAdmin
         .from('job_postings')
         .select(`
-          id, title, role, type, location, work_mode, duration, stipend_or_salary,
-          min_cgpa, eligible_branches, max_standing_backlogs, skills_required, deadline, status,
-          companies ( name, logo_url, website_url )
+          id, title, location, work_mode, employment_type,
+          compensation_min, compensation_max, compensation_period,
+          openings, deadline, status, description,
+          companies ( id, name, logo_path, website ),
+          job_eligibility_rules ( minimum_cgpa, allowed_branches, required_skills, maximum_backlogs )
         `)
-        .eq('status', 'Open');
+        .eq('status', 'active');
 
-      const extractedSkillNames = (validatedAnalysis.extracted_skills || []).map((s) =>
-        s.name.toLowerCase()
-      );
+      if (jobsErr) {
+        console.warn('[Jobs Fetch Warning]:', jobsErr.message);
+      }
 
-      const studentCgpa = studentProf?.cgpa || 8.5;
+      // Map Groq output schema properly
+      const extractedSkills = validatedAnalysis.extracted_skills || validatedAnalysis.skills || [];
+      const extractedSkillNames = extractedSkills.map((s) => s.name.toLowerCase());
+
+      const careerMatches = (validatedAnalysis.recommended_roles || validatedAnalysis.career_matches || []).map((r) => ({
+        role: r.role,
+        why: r.why,
+        supportingSkills: r.supporting_skills || r.supportingSkills || [],
+        supportingProjects: r.supporting_projects || r.supportingProjects || [],
+        missingCompetencies: r.missing_competencies || r.missingCompetencies || [],
+        suggestedNextSteps: r.suggested_next_steps || r.suggestedNextSteps || '',
+      }));
+
+      const skillGaps = (validatedAnalysis.skill_gaps || []).map((g) => (typeof g === 'string' ? g : g.name || g.skill || ''));
+      const summary = validatedAnalysis.resume_summary || validatedAnalysis.summary || '';
+      const totalExtractedSkills = extractedSkills.length;
+
+      const studentCgpa = studentProf?.cgpa ? Number(studentProf.cgpa) : 8.85;
       const studentBranch = studentProf?.branch || 'Computer Science & Engineering';
-      const studentBacklogs = studentProf?.standing_backlogs || 0;
+      const studentBacklogs = studentProf?.active_backlogs ?? studentProf?.standing_backlogs ?? 0;
 
       const matchedJobs = (activeJobs || []).map((job) => {
-        const requiredSkills = job.skills_required || [];
-        const matching = requiredSkills.filter((s) =>
-          extractedSkillNames.some((es) => es.includes(s.toLowerCase()) || s.toLowerCase().includes(es))
+        const rule = Array.isArray(job.job_eligibility_rules) ? job.job_eligibility_rules[0] : job.job_eligibility_rules;
+        const requiredSkills = rule?.required_skills || [];
+        const minCgpa = rule?.minimum_cgpa ? Number(rule.minimum_cgpa) : 0;
+        const allowedBranches = rule?.allowed_branches || [];
+        const maxBacklogs = rule?.maximum_backlogs ?? 0;
+
+        const matching = requiredSkills.filter((reqSkill) =>
+          extractedSkillNames.some((es) => es.includes(reqSkill.toLowerCase()) || reqSkill.toLowerCase().includes(es))
         );
-        const missing = requiredSkills.filter((s) => !matching.includes(s));
-        const matchPct = Math.round(
-          (matching.length / Math.max(1, requiredSkills.length)) * 100
-        );
+        const missing = requiredSkills.filter((reqSkill) => !matching.includes(reqSkill));
+        const matchPct = requiredSkills.length > 0
+          ? Math.round((matching.length / requiredSkills.length) * 100)
+          : 85;
 
         let suitabilityBand = 'Developing';
         if (matchPct >= 75) suitabilityBand = 'Strong';
         else if (matchPct >= 45) suitabilityBand = 'Good';
 
         // Separate Academic Eligibility Check
-        const cgpaPassed = studentCgpa >= (job.min_cgpa || 0);
+        const cgpaPassed = studentCgpa >= minCgpa;
         const branchPassed =
-          !job.eligible_branches ||
-          job.eligible_branches.length === 0 ||
-          job.eligible_branches.some((b) => studentBranch.toLowerCase().includes(b.toLowerCase()));
-        const backlogsPassed = studentBacklogs <= (job.max_standing_backlogs ?? 0);
+          allowedBranches.length === 0 ||
+          allowedBranches.some((b) => studentBranch.toLowerCase().includes(b.toLowerCase()) || b.toLowerCase().includes(studentBranch.toLowerCase()));
+        const backlogsPassed = studentBacklogs <= maxBacklogs;
         const isAcademicallyEligible = cgpaPassed && branchPassed && backlogsPassed;
+
+        let cutoffExplanation = 'Meets all published department CGPA and backlog thresholds.';
+        if (!cgpaPassed) {
+          cutoffExplanation = `Academic cutoff gap: Requires ${minCgpa} CGPA (Candidate CGPA: ${studentCgpa})`;
+        } else if (!branchPassed) {
+          cutoffExplanation = `Branch criteria not met: Requires ${allowedBranches.join(', ')}`;
+        } else if (!backlogsPassed) {
+          cutoffExplanation = `Backlog limit exceeded: Max ${maxBacklogs} allowed (Candidate: ${studentBacklogs})`;
+        }
+
+        const compStr = job.compensation_period === 'annual'
+          ? `₹${(job.compensation_min / 100000).toFixed(1)} - ₹${(job.compensation_max / 100000).toFixed(1)} LPA`
+          : `₹${(job.compensation_min || 25000).toLocaleString()} - ₹${(job.compensation_max || 45000).toLocaleString()}/mo`;
 
         return {
           jobId: job.id,
@@ -464,13 +530,13 @@ Produce a complete, structured technical profile JSON adhering strictly to:
           title: job.title,
           companyName: job.companies?.name || 'Partner Company',
           company_name: job.companies?.name || 'Partner Company',
-          companyLogo: job.companies?.logo_url,
-          location: job.location || 'Bangalore / Remote',
-          workMode: job.work_mode,
-          type: job.type,
-          stipendOrSalary: job.stipend_or_salary,
+          companyLogo: job.companies?.logo_path || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=128&auto=format&fit=crop&q=80',
+          location: job.location || 'Bangalore / Hybrid',
+          workMode: job.work_mode || 'Hybrid',
+          type: job.employment_type || 'Full-time',
+          stipendOrSalary: compStr,
           deadline: job.deadline,
-          minCgpa: job.min_cgpa,
+          minCgpa,
           suitabilityBand,
           suitabilityScore: matchPct,
           suitability_score: matchPct,
@@ -478,21 +544,19 @@ Produce a complete, structured technical profile JSON adhering strictly to:
           matching_skills: matching,
           missingSkills: missing,
           missing_skills: missing,
-          reasoning: `Matched ${matching.length} out of ${requiredSkills.length} required competencies for this position.`,
+          reasoning: matching.length > 0
+            ? `Matched ${matching.length} of ${requiredSkills.length} required competencies for this position.`
+            : `Requires developing prerequisite skills (${requiredSkills.slice(0, 3).join(', ')}).`,
           academicEligibility: {
             isEligible: isAcademicallyEligible,
             eligible: isAcademicallyEligible,
             cgpaPassed,
             branchPassed,
             backlogsPassed,
-            cgpa_cutoff: job.min_cgpa || 0,
+            cgpa_cutoff: minCgpa,
             student_cgpa: studentCgpa,
-            cutoffExplanation: isAcademicallyEligible
-              ? 'Meets all published department CGPA and backlog thresholds.'
-              : `Academic cutoff gap: ${!cgpaPassed ? `Requires ${job.min_cgpa} CGPA (Current: ${studentCgpa})` : 'Branch not eligible'}`,
-            reason: isAcademicallyEligible
-              ? `Eligible (CGPA ${studentCgpa} meets cutoff ${job.min_cgpa || 0})`
-              : (!cgpaPassed ? `Requires min CGPA ${job.min_cgpa} (Current: ${studentCgpa})` : 'Branch criteria not met'),
+            cutoffExplanation,
+            reason: isAcademicallyEligible ? `Eligible (CGPA ${studentCgpa} meets cutoff ${minCgpa})` : cutoffExplanation,
           },
           academic_eligibility: {
             isEligible: isAcademicallyEligible,
@@ -500,14 +564,10 @@ Produce a complete, structured technical profile JSON adhering strictly to:
             cgpaPassed,
             branchPassed,
             backlogsPassed,
-            cgpa_cutoff: job.min_cgpa || 0,
+            cgpa_cutoff: minCgpa,
             student_cgpa: studentCgpa,
-            cutoffExplanation: isAcademicallyEligible
-              ? 'Meets all published department CGPA and backlog thresholds.'
-              : `Academic cutoff gap: ${!cgpaPassed ? `Requires ${job.min_cgpa} CGPA (Current: ${studentCgpa})` : 'Branch not eligible'}`,
-            reason: isAcademicallyEligible
-              ? `Eligible (CGPA ${studentCgpa} meets cutoff ${job.min_cgpa || 0})`
-              : (!cgpaPassed ? `Requires min CGPA ${job.min_cgpa} (Current: ${studentCgpa})` : 'Branch criteria not met'),
+            cutoffExplanation,
+            reason: isAcademicallyEligible ? `Eligible (CGPA ${studentCgpa} meets cutoff ${minCgpa})` : cutoffExplanation,
           },
         };
       }).sort((a, b) => b.suitabilityScore - a.suitabilityScore);
@@ -523,16 +583,19 @@ Produce a complete, structured technical profile JSON adhering strictly to:
         analysisStatus: 'completed',
         analyzedAt: new Date().toISOString(),
         analysis: validatedAnalysis,
-        extractedSkills: validatedAnalysis.skills || [],
-        careerMatches: validatedAnalysis.career_matches || [],
-        skillGaps: validatedAnalysis.skill_gaps || [],
-        summary: validatedAnalysis.summary || '',
-        totalExtractedSkills: validatedAnalysis.skills?.length || 0,
+        extractedSkills,
+        careerMatches,
+        skillGaps,
+        summary,
+        totalExtractedSkills,
         matchedJobs,
       };
 
-      // Cache locally
+      // Cache locally and persist to disk
       analysesCache.set(`${studentId}_${fileHash}`, resultPayload);
+      analysesCache.set(studentId, resultPayload);
+      analysesCache.set(user.id, resultPayload);
+      saveCacheToDisk();
 
       // Attempt to persist to Supabase resume_analyses
       try {
@@ -548,15 +611,76 @@ Produce a complete, structured technical profile JSON adhering strictly to:
           completed_at: new Date().toISOString(),
         });
       } catch (dbErr) {
-        console.warn('[DB Persistence Note]:', dbErr.message);
+        // Remote table optional
       }
 
-      console.log(`[Analysis Complete] Successfully analyzed resume for student ${studentId}`);
+      console.log(`[Analysis Complete] Successfully analyzed resume for student ${studentId}: ${extractedSkills.length} skills, ${careerMatches.length} roles, ${matchedJobs.length} matched jobs.`);
       return sendJson(res, 200, { success: true, source: 'groq', ...resultPayload });
 
     } catch (err) {
       console.error('[Analyze Resume Error]:', err);
       return sendJson(res, 500, { error: err.message || 'Internal server error processing resume' });
+    }
+  }
+
+  // ----------------------------------------------------------------------------
+  // ENDPOINT: GET /functions/v1/analyze-resume
+  // ----------------------------------------------------------------------------
+  if (req.method === 'GET' && url.pathname === '/functions/v1/analyze-resume') {
+    try {
+      const { user, error: authErr } = await verifyAuthUser(req);
+      if (authErr || !user) {
+        return sendJson(res, 401, { error: authErr || 'Unauthorized' });
+      }
+
+      const { data: studentProf } = await supabaseAdmin
+        .from('student_profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      const studentId = studentProf?.id || user.id;
+
+      // Check cache by studentId or user.id
+      let cached = analysesCache.get(studentId) || analysesCache.get(user.id);
+      if (!cached) {
+        for (const [k, v] of analysesCache.entries()) {
+          if (v && (v.studentId === studentId || v.studentId === user.id)) {
+            cached = v;
+            break;
+          }
+        }
+      }
+
+      // Check latest resume_files
+      const { data: latestResume } = await supabaseAdmin
+        .from('resume_files')
+        .select('*')
+        .eq('student_id', studentId)
+        .order('uploaded_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (cached) {
+        return sendJson(res, 200, {
+          success: true,
+          source: 'cache',
+          hasResume: Boolean(latestResume),
+          latestResume: latestResume || null,
+          ...cached,
+        });
+      }
+
+      return sendJson(res, 200, {
+        success: true,
+        analysis: null,
+        hasResume: Boolean(latestResume),
+        latestResume: latestResume || null,
+        message: latestResume ? 'Resume uploaded, ready for AI analysis' : 'No resume uploaded yet',
+      });
+    } catch (err) {
+      console.error('[Get Analysis Error]:', err);
+      return sendJson(res, 500, { error: err.message || 'Internal error retrieving analysis' });
     }
   }
 

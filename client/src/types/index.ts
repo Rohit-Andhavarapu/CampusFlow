@@ -146,6 +146,8 @@ export interface StudentProfileData {
   resumeFileName?: string;
   resumeFileSize?: string;
   resumeLastUpdated?: string;
+  resumeStoragePath?: string;
+  resumeFileId?: string;
   projects: Array<{
     id: string;
     title: string;

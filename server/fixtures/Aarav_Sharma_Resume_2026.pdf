@@ -1,0 +1,76 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 3513 >>
+stream
+BT
+/F1 10 Tf
+12 TL
+36 756 Td
+(AARAV SHARMA) Tj
+T* (Email: aarav.sharma@campus.edu | Phone: +91 98765 43210 | Bangalore, Karnataka, India) Tj
+T* (LinkedIn: linkedin.com/in/aarav-sharma | GitHub: github.com/aarav-sharma | Portfolio: aaravsharma.dev) Tj
+T* (========================================================================================) Tj
+T* (EDUCATION) Tj
+T* (National Institute of Technology, Surathkal) Tj
+T* (Bachelor of Technology in Computer Science and Engineering | Class of 2026) Tj
+T* (Cumulative GPA: 8.85 / 10.00 | Standing Backlogs: 0 | Coursework: Data Structures, Algorithms, DBMS, OS, Networks) Tj
+T* (========================================================================================) Tj
+T* (TECHNICAL SKILLS) Tj
+T* (Programming Languages: TypeScript, JavaScript, Python, Java, SQL, C++) Tj
+T* (Frontend Development: React.js, Next.js, Redux Toolkit, Tailwind CSS, HTML5, CSS3) Tj
+T* (Backend & APIs: Node.js, Express.js, FastAPI, RESTful APIs, GraphQL, Microservices) Tj
+T* (Databases & Caching: PostgreSQL, Redis, MongoDB, Supabase PostgreSQL, Prisma ORM) Tj
+T* (Cloud & DevOps: Docker, AWS \(S3, EC2, Lambda\), Git, GitHub Actions CI/CD, Linux, Postman) Tj
+T* (Core Competencies: Object-Oriented Design, System Design, Asynchronous Architecture, Performance Optimization) Tj
+T* (========================================================================================) Tj
+T* (TECHNICAL PROJECTS) Tj
+T* (1. CampusFlow — Campus Recruitment Intelligence Platform \(React, TypeScript, Supabase, Groq AI\)) Tj
+T* (   - Architected university placement platform serving students, recruiters, and placement directors.) Tj
+T* (   - Integrated AI resume intelligence with Groq LPU engine for automatic skill taxonomy extraction.) Tj
+T* (   - Implemented real-time role-based access control and interview scheduling with automated ICS calendar sync.) Tj
+T* (2. Distributed Task Queue & Event Processor \(Python, Redis, Docker\)) Tj
+T* (   - Built an asynchronous distributed background task processor processing up to 10,000 tasks/min.) Tj
+T* (   - Integrated exponential backoff retries, Redis Pub/Sub event broadcasting, and Prometheus metrics.) Tj
+T* (3. Cloud Commerce Scalable Microservices API \(Node.js, Express, PostgreSQL, Docker\)) Tj
+T* (   - Engineered decoupled REST API services with JWT session validation, rate limiting, and ACID transactions.) Tj
+T* (   - Optimized PostgreSQL query execution plans and database indexes, reducing average p95 latency by 42%.) Tj
+T* (========================================================================================) Tj
+T* (PROFESSIONAL EXPERIENCE) Tj
+T* (Software Engineering Intern | NovaTech Systems, Bangalore \(May 2025 - July 2025\)) Tj
+T* (   - Developed enterprise microservices using TypeScript, Node.js, and PostgreSQL for customer analytics.) Tj
+T* (   - Automated unit and integration test coverage to 92% using Jest and Supertest across 14 API endpoints.) Tj
+T* (   - Collaborated with senior engineering team on AWS ECS container deployments and database indexing.) Tj
+T* (========================================================================================) Tj
+T* (CERTIFICATIONS & ACHIEVEMENTS) Tj
+T* (   - AWS Certified Cloud Practitioner \(Amazon Web Services, 2025\)) Tj
+T* (   - Docker Certified Associate \(Docker Inc., 2025\)) Tj
+T* (   - 1st Place Winner — Inter-College Hackathon 2025 \(Built automated proctoring platform\)) Tj
+T* (   - Dean's Academic Honors List for 4 Consecutive Semesters) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000003806 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+3876
+%%EOF
