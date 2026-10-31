@@ -14,6 +14,7 @@ import { useApp } from '../../context/AppContext';
 import { ChartPieDonut } from '../../components/charts/ChartPieDonut';
 import { ChartBarHorizontal } from '../../components/charts/ChartBarHorizontal';
 import { ChartFunnel } from '../../components/charts/ChartFunnel';
+import { ChartSegmentedBar } from '../../components/charts/ChartSegmentedBar';
 
 export const RecruiterAnalytics: React.FC = () => {
   const { applications, jobs, currentUser } = useApp();
@@ -27,11 +28,22 @@ export const RecruiterAnalytics: React.FC = () => {
     }, {} as Record<string, number>);
   }, [applications]);
 
-  const statusDonutData = useMemo(() => {
-    return Object.entries(statusCounts).map(([name, value]) => ({
-      name,
-      value,
-    }));
+  // 2. Ranked job postings by applicant volume
+  const jobPostingsData = useMemo(() => {
+    return jobs.map((j) => ({
+      name: `${j.title} (${j.type})`,
+      value: applications.filter((a) => a.jobId === j.id).length,
+    })).sort((a, b) => b.value - a.value);
+  }, [jobs, applications]);
+
+  const pipelineSegments = useMemo(() => {
+    return [
+      { name: 'Screening', count: statusCounts['Applied'] || 0, color: '#0284C7' },
+      { name: 'Shortlisted', count: statusCounts['Shortlisted'] || 0, color: '#6366F1' },
+      { name: 'Interview', count: statusCounts['Interview Scheduled'] || 0, color: '#D97706' },
+      { name: 'Offered', count: statusCounts['Selected'] || 0, color: '#059669' },
+      { name: 'Declined', count: statusCounts['Rejected'] || 0, color: '#94A3B8' },
+    ];
   }, [statusCounts]);
 
   // 2. Selection Funnel Progression (Step through)
@@ -149,7 +161,7 @@ export const RecruiterAnalytics: React.FC = () => {
         </div>
       </div>
 
-      {/* Row 1: Funnel & Donut Charts */}
+      {/* Row 1: Funnel & Compact Status Distribution */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-7">
           <ChartFunnel
@@ -160,14 +172,20 @@ export const RecruiterAnalytics: React.FC = () => {
           />
         </div>
 
-        <div className="lg:col-span-5">
-          <ChartPieDonut
+        <div className="lg:col-span-5 space-y-6">
+          <ChartSegmentedBar
             title="Candidate Pipeline Status"
-            description="Proportion of applicants by current evaluation stage."
-            data={statusDonutData}
-            centerLabel="Candidates"
-            centerValue={totalApps}
-            height={320}
+            description="Distribution of applicant submissions across live recruitment stages."
+            segments={pipelineSegments}
+            totalLabel="Applicants"
+          />
+
+          <ChartBarHorizontal
+            title="Job Postings by Applicant Volume"
+            description="Ranked volume of candidate applications received per active job drive."
+            data={jobPostingsData}
+            barColor="#0284C7"
+            height={220}
           />
         </div>
       </div>

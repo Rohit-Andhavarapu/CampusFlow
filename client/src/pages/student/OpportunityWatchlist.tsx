@@ -203,7 +203,7 @@ export const OpportunityWatchlist: React.FC = () => {
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-stone-400">Min CGPA:</span>
-                        <span className="font-mono font-medium">{job.minCgpa} CGPA</span>
+                        <span className="font-mono font-medium">{job.minCgpa > 0 ? `${job.minCgpa.toFixed(1)} CGPA` : 'No Min CGPA'}</span>
                       </div>
                     </div>
 

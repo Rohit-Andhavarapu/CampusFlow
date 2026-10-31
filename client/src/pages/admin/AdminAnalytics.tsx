@@ -21,6 +21,7 @@ import { adminService } from '../../services/campusflowService';
 import { ChartPieDonut } from '../../components/charts/ChartPieDonut';
 import { ChartBarHorizontal } from '../../components/charts/ChartBarHorizontal';
 import { ChartFunnel } from '../../components/charts/ChartFunnel';
+import { InterviewTimeline } from '../../components/charts/InterviewTimeline';
 
 export const AdminAnalytics: React.FC = () => {
   const { jobs, applications } = useApp();
@@ -124,13 +125,39 @@ export const AdminAnalytics: React.FC = () => {
     ];
   }, []);
 
-  // 4. Salary Tier Distribution
+  // 4. Salary Tier Distribution (Clean separation of full-time CTC vs internship stipends)
   const salaryTierData = [
-    { name: 'Super Dream (> ₹15 LPA)', value: 4 },
-    { name: 'Dream (₹10 – ₹15 LPA)', value: 5 },
-    { name: 'Core Engineering (₹6 – ₹10 LPA)', value: 3 },
-    { name: 'Pre-Placement Internship / PPO', value: 2 },
+    { name: 'Super Dream (> ₹15 LPA CTC)', value: 4 },
+    { name: 'Dream (₹10 – ₹15 LPA CTC)', value: 5 },
+    { name: 'Core Engineering (₹6 – ₹10 LPA CTC)', value: 3 },
+    { name: 'Pre-Placement Internship / PPO (₹20K–₹35K/mo)', value: 2 },
   ];
+
+  // 5. Company Hiring Ranking
+  const companyHiringData = useMemo(() => {
+    const compMap: Record<string, number> = {};
+    syntheticStudents.forEach((s) => {
+      if (s.status === 'Placed' && s.company) {
+        compMap[s.company] = (compMap[s.company] || 0) + 1;
+      }
+    });
+    return Object.entries(compMap)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value);
+  }, []);
+
+  // 6. Recruitment Drive & Timeline Milestones
+  const upcomingDriveTimeline = useMemo(() => {
+    return jobs.map((j) => ({
+      id: j.id,
+      jobTitle: j.title,
+      companyName: j.companyName,
+      dateTime: j.applyBy,
+      round: j.type.toLowerCase().includes('full') ? 'Campus Recruitment Drive' : 'Internship Drive',
+      mode: (j.workMode === 'Remote' ? 'Virtual' : 'In-Person') as 'Virtual' | 'In-Person',
+      locationOrLink: `${j.location} • Cutoff: ${j.minCgpa > 0 ? `Min ${j.minCgpa.toFixed(1)} CGPA` : 'Open Cutoff'}`,
+    }));
+  }, [jobs]);
 
   // Distinct company list for filter
   const companyOptions = useMemo(() => {
@@ -401,6 +428,27 @@ export const AdminAnalytics: React.FC = () => {
             data={salaryTierData}
             barColor="#0284C7"
             height={320}
+          />
+        </div>
+      </div>
+
+      {/* Row 3: Corporate Partner Hiring Rankings & Drive Schedule Timeline */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="lg:col-span-6">
+          <ChartBarHorizontal
+            title="Top Recruiting Partners by Verified Hires"
+            description="Ranking of corporate employers by volume of students successfully placed."
+            data={companyHiringData}
+            barColor="#0F766E"
+            height={320}
+          />
+        </div>
+
+        <div className="lg:col-span-6">
+          <InterviewTimeline
+            title="Placement Drive Milestones & Cutoff Deadlines"
+            description="Active institutional recruitment drives with official qualification thresholds."
+            interviews={upcomingDriveTimeline as any}
           />
         </div>
       </div>

@@ -18,7 +18,7 @@ import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { formatDate, getStatusBadgeStyle } from '../../utils/formatters';
-import { ChartPieDonut } from '../../components/charts/ChartPieDonut';
+import { ChartSegmentedBar } from '../../components/charts/ChartSegmentedBar';
 
 export const RecruiterDashboard: React.FC = () => {
   const { currentUser, jobs, applications, interviews } = useApp();
@@ -264,14 +264,18 @@ export const RecruiterDashboard: React.FC = () => {
 
         {/* Right 1 Col: Urgent Attention / Recent Applicants */}
         <div className="space-y-6">
-          {/* Candidate Pipeline Donut */}
-          <ChartPieDonut
+          {/* Candidate Pipeline Segmented Bar */}
+          <ChartSegmentedBar
             title="Application Pipeline Status"
-            description="Real-time distribution across active stages."
-            data={pipelineData}
-            centerLabel="Total Applicants"
-            centerValue={totalApplicants}
-            height={260}
+            description="Real-time distribution across active candidate evaluation stages."
+            segments={[
+              { name: 'Screening', count: statusCounts['Applied'] || 0, color: '#0284C7' },
+              { name: 'Shortlisted', count: statusCounts['Shortlisted'] || 0, color: '#6366F1' },
+              { name: 'Interview', count: statusCounts['Interview Scheduled'] || 0, color: '#D97706' },
+              { name: 'Offered', count: statusCounts['Selected'] || 0, color: '#059669' },
+              { name: 'Declined', count: statusCounts['Rejected'] || 0, color: '#94A3B8' },
+            ]}
+            totalLabel="Applicants"
           />
 
           <Card elevation={1} className="p-5 bg-surface border-slate-200/80">

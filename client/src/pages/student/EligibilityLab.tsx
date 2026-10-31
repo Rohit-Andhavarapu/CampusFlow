@@ -450,7 +450,7 @@ export const EligibilityLab: React.FC = () => {
                         <XCircle className="w-3.5 h-3.5 text-rose-500 shrink-0" />
                       )}
                       <span className={cgpaPass ? 'text-stone-700' : 'text-rose-700 font-medium'}>
-                        Min {job.minCgpa} CGPA ({hypoCgpa.toFixed(2)})
+                        {job.minCgpa > 0 ? `Min ${job.minCgpa.toFixed(1)} CGPA (${hypoCgpa.toFixed(2)})` : `No Min CGPA (${hypoCgpa.toFixed(2)})`}
                       </span>
                     </div>
 

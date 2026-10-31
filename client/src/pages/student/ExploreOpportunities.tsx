@@ -342,7 +342,7 @@ export const ExploreOpportunities: React.FC = () => {
                     {/* Distinctive Transparent Eligibility Manifest */}
                     <div className="mt-1 flex items-center gap-1.5 text-[11px] text-slate-600 bg-slate-50 border border-slate-200/70 px-2 py-1 rounded-md">
                       <ShieldCheck className="w-3.5 h-3.5 text-teal-700 flex-shrink-0" />
-                      <span>Cutoff: Min CGPA {job.minCgpa} • Eligible: {job.eligibleBranches.join(', ')}</span>
+                      <span>Cutoff: {job.minCgpa > 0 ? `Min CGPA ${job.minCgpa.toFixed(1)}` : 'No Minimum CGPA'} • Eligible: {job.eligibleBranches.join(', ')}</span>
                     </div>
                   </div>
 

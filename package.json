@@ -24,5 +24,10 @@
   "devDependencies": {
     "@electric-sql/pglite": "^0.2.16",
     "pgsql-parser": "^14.0.0"
+  },
+  "dependencies": {
+    "groq-sdk": "^1.6.0",
+    "pdf-parse": "^2.4.5",
+    "zod": "^4.6.7"
   }
 }
