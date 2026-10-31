@@ -35,6 +35,23 @@ export function isDemoUserId(userId?: string | null): boolean {
   return DEMO_USER_IDS.has(userId);
 }
 
+/**
+ * Resolves the backend Functions/API endpoint URL dynamically.
+ * Defaults to relative '/functions/v1' in local dev proxy, or uses VITE_API_URL if configured.
+ */
+export function getFunctionsApiUrl(endpoint: string): string {
+  const base = (import.meta.env.VITE_API_URL as string | undefined)?.trim();
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  if (base) {
+    const normalizedBase = base.endsWith('/') ? base.slice(0, -1) : base;
+    if (normalizedBase.endsWith('/functions/v1')) {
+      return `${normalizedBase}${cleanEndpoint}`;
+    }
+    return `${normalizedBase}/functions/v1${cleanEndpoint}`;
+  }
+  return `/functions/v1${cleanEndpoint}`;
+}
+
 // ==============================================================================
 // 1. Authentication Service
 // ==============================================================================
@@ -1192,7 +1209,7 @@ export const resumeIntelligenceService = {
         return { success: false, error: 'Authentication required. Please sign in to analyze your resume.' };
       }
 
-      const res = await fetch('/functions/v1/analyze-resume', {
+      const res = await fetch(getFunctionsApiUrl('analyze-resume'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1217,7 +1234,7 @@ export const resumeIntelligenceService = {
     try {
       const token = await this.getAuthToken();
       if (token) {
-        const res = await fetch('/functions/v1/analyze-resume', {
+        const res = await fetch(getFunctionsApiUrl('analyze-resume'), {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -1321,7 +1338,7 @@ export const recruiterManagementService = {
       const token = await this.getAuthToken();
       if (!token) return { success: false, recruiters: [], error: 'Authentication required' };
 
-      const res = await fetch('/functions/v1/manage-recruiter', {
+      const res = await fetch(getFunctionsApiUrl('manage-recruiter'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1353,7 +1370,7 @@ export const recruiterManagementService = {
       const token = await this.getAuthToken();
       if (!token) return { success: false, error: 'Authentication required' };
 
-      const res = await fetch('/functions/v1/manage-recruiter', {
+      const res = await fetch(getFunctionsApiUrl('manage-recruiter'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1378,7 +1395,7 @@ export const recruiterManagementService = {
       const token = await this.getAuthToken();
       if (!token) return { success: false, error: 'Authentication required' };
 
-      const res = await fetch('/functions/v1/manage-recruiter', {
+      const res = await fetch(getFunctionsApiUrl('manage-recruiter'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1399,7 +1416,7 @@ export const recruiterManagementService = {
       const token = await this.getAuthToken();
       if (!token) return { success: false, error: 'Authentication required' };
 
-      const res = await fetch('/functions/v1/manage-recruiter', {
+      const res = await fetch(getFunctionsApiUrl('manage-recruiter'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

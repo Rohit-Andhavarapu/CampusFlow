@@ -15,6 +15,7 @@ import {
 import { useApp } from '../../context/AppContext';
 import { UserRole } from '../../types';
 import { cn } from '../../utils/cn';
+import { isDemoUserId } from '../../services/campusflowService';
 
 interface HeaderProps {
   onOpenMobileMenu: () => void;
@@ -29,8 +30,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileMenu }) => {
     notifications,
     markNotificationRead,
     markAllNotificationsRead,
+    isDatabaseConnected,
   } = useApp();
   const navigate = useNavigate();
+
+  const isDemo = isDemoUserId(currentUser?.id);
+  const showDemoSwitcher = !isDatabaseConnected || isDemo || import.meta.env.DEV;
 
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false);
@@ -94,71 +99,78 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileMenu }) => {
       {/* Right: Demo Role Switcher, Notifications, Persona Chip */}
       <div className="flex items-center gap-2 sm:gap-3">
         {/* DEMO / JUDGES PERSONA SWITCHER */}
-        <div className="relative" ref={roleRef}>
-          <button
-            onClick={() => setIsRoleDropdownOpen(!isRoleDropdownOpen)}
-            className="btn-press flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-ink-800 text-xs font-medium hover:border-slate-300 hover:bg-slate-200/50 transition-colors"
-            title="Switch demo role perspective"
-          >
-            <span className="w-2 h-2 rounded-full bg-teal-600 flex-shrink-0 animate-pulse" />
-            <span className="capitalize">{roleMeta[currentRole].title}</span>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
-          </button>
+        {showDemoSwitcher ? (
+          <div className="relative" ref={roleRef}>
+            <button
+              onClick={() => setIsRoleDropdownOpen(!isRoleDropdownOpen)}
+              className="btn-press flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-ink-800 text-xs font-medium hover:border-slate-300 hover:bg-slate-200/50 transition-colors"
+              title="Switch demo role perspective"
+            >
+              <span className="w-2 h-2 rounded-full bg-teal-600 flex-shrink-0 animate-pulse" />
+              <span className="capitalize">{roleMeta[currentRole].title}</span>
+              <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+            </button>
 
-          {isRoleDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-64 bg-surface rounded-card shadow-elevation-3 border border-slate-200 py-1.5 z-50 animate-in fade-in zoom-in-95 origin-top-right duration-150">
-              <div className="px-3 py-1.5 border-b border-slate-100">
-                <p className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold">
-                  Demo Perspectives
-                </p>
-                <p className="text-[11px] text-slate-500">
-                  Switch viewpoint instantly to test role-based access.
-                </p>
-              </div>
+            {isRoleDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-64 bg-surface rounded-card shadow-elevation-3 border border-slate-200 py-1.5 z-50 animate-in fade-in zoom-in-95 origin-top-right duration-150">
+                <div className="px-3 py-1.5 border-b border-slate-100">
+                  <p className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold">
+                    Demo Perspectives
+                  </p>
+                  <p className="text-[11px] text-slate-500">
+                    Switch viewpoint instantly to test role-based access.
+                  </p>
+                </div>
 
-              {(['student', 'recruiter', 'admin'] as UserRole[]).map((role) => {
-                const isCurrent = currentRole === role;
-                return (
-                  <button
-                    key={role}
-                    onClick={() => handleSelectRole(role)}
-                    className={cn(
-                      'w-full px-3 py-2 text-left flex items-start gap-2.5 hover:bg-slate-50 transition-colors',
-                      isCurrent && 'bg-teal-50/50'
-                    )}
-                  >
-                    <div
+                {(['student', 'recruiter', 'admin'] as UserRole[]).map((role) => {
+                  const isCurrent = currentRole === role;
+                  return (
+                    <button
+                      key={role}
+                      onClick={() => handleSelectRole(role)}
                       className={cn(
-                        'w-2 h-2 rounded-full mt-1.5 flex-shrink-0',
-                        isCurrent ? 'bg-teal-600' : 'bg-transparent border border-slate-300'
+                        'w-full px-3 py-2 text-left flex items-start gap-2.5 hover:bg-slate-50 transition-colors',
+                        isCurrent && 'bg-teal-50/50'
                       )}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <p
-                          className={cn(
-                            'text-xs font-semibold',
-                            isCurrent ? 'text-teal-900' : 'text-ink-950'
-                          )}
-                        >
-                          {roleMeta[role].title}
-                        </p>
-                        {isCurrent && (
-                          <span className="text-[10px] font-mono font-medium text-teal-700 bg-teal-50 px-1 rounded border border-teal-200">
-                            Active
-                          </span>
+                    >
+                      <div
+                        className={cn(
+                          'w-2 h-2 rounded-full mt-1.5 flex-shrink-0',
+                          isCurrent ? 'bg-teal-600' : 'bg-transparent border border-slate-300'
                         )}
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <p
+                            className={cn(
+                              'text-xs font-semibold',
+                              isCurrent ? 'text-teal-900' : 'text-ink-950'
+                            )}
+                          >
+                            {roleMeta[role].title}
+                          </p>
+                          {isCurrent && (
+                            <span className="text-[10px] font-mono font-medium text-teal-700 bg-teal-50 px-1 rounded border border-teal-200">
+                              Active
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[11px] text-slate-500 truncate">
+                          {roleMeta[role].sub}
+                        </p>
                       </div>
-                      <p className="text-[11px] text-slate-500 truncate">
-                        {roleMeta[role].sub}
-                      </p>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-ink-800 text-xs font-medium">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 flex-shrink-0" />
+            <span className="capitalize">{roleMeta[currentRole].title}</span>
+          </div>
+        )}
 
         {/* Notifications Icon with Popover */}
         <div className="relative" ref={notifRef}>

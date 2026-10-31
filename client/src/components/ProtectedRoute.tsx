@@ -1,9 +1,10 @@
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
+import { isDemoUserId } from '../services/campusflowService';
 
 export const ProtectedRoute: React.FC = () => {
-  const { isAuthenticated, isDatabaseConnected, isAuthLoading } = useApp();
+  const { currentUser, isAuthenticated, isDatabaseConnected, isAuthLoading } = useApp();
   const location = useLocation();
 
   // If in pure offline demo mode without Supabase, allow access
@@ -22,6 +23,22 @@ export const ProtectedRoute: React.FC = () => {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // Real user role-based route guard:
+  // Pre-seeded hackathon demo accounts retain multi-role evaluation ability.
+  // Real registered accounts are strictly guarded within their authorized portal.
+  if (currentUser && !isDemoUserId(currentUser.id)) {
+    const pathname = location.pathname;
+    const role = currentUser.role;
+
+    if (role === 'student' && (pathname.startsWith('/admin') || pathname.startsWith('/recruiter'))) {
+      return <Navigate to="/student/dashboard" replace />;
+    }
+
+    if (role === 'recruiter' && pathname.startsWith('/admin')) {
+      return <Navigate to="/recruiter/dashboard" replace />;
+    }
   }
 
   return <Outlet />;
