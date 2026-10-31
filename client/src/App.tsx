@@ -15,6 +15,7 @@ import { StudentNotifications } from './pages/student/StudentNotifications';
 import { StudentSettings } from './pages/student/StudentSettings';
 import { EligibilityLab } from './pages/student/EligibilityLab';
 import { OpportunityWatchlist } from './pages/student/OpportunityWatchlist';
+import { ResumeIntelligence } from './pages/student/ResumeIntelligence';
 
 // Recruiter Pages
 import { RecruiterDashboard } from './pages/recruiter/RecruiterDashboard';
@@ -30,6 +31,7 @@ import { RecruiterAnalytics } from './pages/recruiter/RecruiterAnalytics';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { AdminStudents } from './pages/admin/AdminStudents';
 import { AdminCompanies } from './pages/admin/AdminCompanies';
+import { AdminRecruiters } from './pages/admin/AdminRecruiters';
 import { AdminDrives } from './pages/admin/AdminDrives';
 import { AdminApplications } from './pages/admin/AdminApplications';
 import { AdminInterviews } from './pages/admin/AdminInterviews';
@@ -79,6 +81,7 @@ export const App: React.FC = () => {
                 <Route path="applications" element={<MyApplications />} />
                 <Route path="applications/:id" element={<ApplicationDetails />} />
                 <Route path="interviews" element={<StudentInterviews />} />
+                <Route path="resume-intelligence" element={<ResumeIntelligence />} />
                 <Route path="profile" element={<StudentProfile />} />
                 <Route path="resume" element={<StudentProfile activeTabProp="resume" />} />
                 <Route path="notifications" element={<StudentNotifications />} />
@@ -104,6 +107,7 @@ export const App: React.FC = () => {
                 <Route path="dashboard" element={<AdminDashboard />} />
                 <Route path="students" element={<AdminStudents />} />
                 <Route path="companies" element={<AdminCompanies />} />
+                <Route path="recruiters" element={<AdminRecruiters />} />
                 <Route path="drives" element={<AdminDrives />} />
                 <Route path="applications" element={<AdminApplications />} />
                 <Route path="interviews" element={<AdminInterviews />} />

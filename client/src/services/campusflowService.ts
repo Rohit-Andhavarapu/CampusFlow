@@ -1027,3 +1027,294 @@ export const calendarExportService = {
     URL.revokeObjectURL(url);
   },
 };
+
+// ==============================================================================
+// 10. Company Directory Service
+// ==============================================================================
+export const companyService = {
+  async fetchCompanies(): Promise<Array<{ id: string; name: string; industry?: string; logo_path?: string | null }>> {
+    if (!isSupabaseConfigured()) {
+      return [
+        { id: '22222222-2222-4222-a222-222222222222', name: 'NovaTech Systems', industry: 'Enterprise Software' },
+        { id: '33333333-3333-4333-a333-333333333333', name: 'Nexus Data Cloud', industry: 'Cloud & AI' },
+        { id: '44444444-4444-4444-a444-444444444444', name: 'Quantum Leap Labs', industry: 'DeepTech' },
+      ];
+    }
+    const { data, error } = await supabase.from('companies').select('id, name, industry, logo_path').order('name');
+    if (error || !data || data.length === 0) {
+      return [
+        { id: '22222222-2222-4222-a222-222222222222', name: 'NovaTech Systems', industry: 'Enterprise Software' },
+        { id: '33333333-3333-4333-a333-333333333333', name: 'Nexus Data Cloud', industry: 'Cloud & AI' },
+        { id: '44444444-4444-4444-a444-444444444444', name: 'Quantum Leap Labs', industry: 'DeepTech' },
+      ];
+    }
+    return data;
+  },
+};
+
+// ==============================================================================
+// 11. Resume Intelligence Types & Service (Groq AI)
+// ==============================================================================
+export interface SkillItem {
+  name: string;
+  category: string;
+  evidence?: string;
+  is_explicit: boolean;
+}
+
+export interface CareerMatch {
+  role_title: string;
+  fit_percentage: number;
+  reasoning: string;
+  missing_competencies: string[];
+  recommended_action: string;
+}
+
+export interface SkillGap {
+  missing_skill: string;
+  importance: 'Critical' | 'Beneficial' | 'Nice to have';
+  relevant_roles: string[];
+  recommendation: string;
+}
+
+export interface JobSuitabilityMatch {
+  job_id: string;
+  title: string;
+  company_name: string;
+  location: string;
+  suitability_score: number;
+  matching_skills: string[];
+  missing_skills: string[];
+  reasoning: string;
+  academic_eligibility: {
+    eligible: boolean;
+    cgpa_met: boolean;
+    branch_met: boolean;
+    backlogs_met: boolean;
+    cgpa_cutoff: number;
+    student_cgpa: number;
+    reason: string;
+  };
+}
+
+export interface ResumeAnalysisResult {
+  analysisId: string;
+  studentId: string;
+  model: string;
+  extractedSkills: SkillItem[];
+  careerMatches: CareerMatch[];
+  matchedJobs: JobSuitabilityMatch[];
+  skillGaps: SkillGap[];
+  totalExtractedSkills: number;
+  summary: string;
+  cached?: boolean;
+  analyzedAt: string;
+}
+
+export const resumeIntelligenceService = {
+  async getAuthToken(): Promise<string | null> {
+    const { data } = await supabase.auth.getSession();
+    return data?.session?.access_token || null;
+  },
+
+  async analyzeResume(params: {
+    resumeFileId?: string;
+    storagePath?: string;
+    pdfBase64?: string;
+    consent: boolean;
+    forceReanalyze?: boolean;
+  }): Promise<{ success: boolean; data?: ResumeAnalysisResult; error?: string }> {
+    try {
+      const token = await this.getAuthToken();
+      if (!token) {
+        return { success: false, error: 'Authentication required. Please sign in to analyze your resume.' };
+      }
+
+      const res = await fetch('/functions/v1/analyze-resume', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(params),
+      });
+
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        return { success: false, error: json.error || 'Failed to analyze resume' };
+      }
+
+      return { success: true, data: json };
+    } catch (err: any) {
+      console.error('Error invoking resume intelligence:', err);
+      return { success: false, error: err.message || 'Network error communicating with Groq Resume Intelligence' };
+    }
+  },
+
+  async getStoredAnalysis(studentId?: string): Promise<ResumeAnalysisResult | null> {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return null;
+
+      const { data, error } = await (supabase as any)
+        .from('resume_analyses')
+        .select('*')
+        .eq('student_id', studentId || user.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (data && data.structured_analysis) {
+        return {
+          analysisId: data.id,
+          studentId: data.student_id,
+          model: data.model_name || 'openai/gpt-oss-20b',
+          extractedSkills: data.structured_analysis.skills || [],
+          careerMatches: data.structured_analysis.career_matches || [],
+          matchedJobs: data.matched_jobs || [],
+          skillGaps: data.structured_analysis.skill_gaps || [],
+          totalExtractedSkills: data.structured_analysis.skills?.length || 0,
+          summary: data.structured_analysis.summary || '',
+          cached: true,
+          analyzedAt: data.completed_at || data.created_at,
+        };
+      }
+    } catch {
+      // Graceful fallback
+    }
+    return null;
+  },
+
+  async deleteStoredAnalysis(analysisId: string): Promise<boolean> {
+    try {
+      const { error } = await (supabase as any)
+        .from('resume_analyses')
+        .delete()
+        .eq('id', analysisId);
+      return !error;
+    } catch {
+      return false;
+    }
+  },
+};
+
+// ==============================================================================
+// 12. Recruiter Access Management Service
+// ==============================================================================
+export interface ManagedRecruiter {
+  id: string;
+  email: string;
+  fullName: string;
+  companyId: string;
+  companyName: string;
+  designation: string;
+  status: 'active' | 'pending' | 'invited' | 'accepted';
+  createdAt: string;
+  acceptedAt?: string;
+}
+
+export const recruiterManagementService = {
+  async getAuthToken(): Promise<string | null> {
+    const { data } = await supabase.auth.getSession();
+    return data?.session?.access_token || null;
+  },
+
+  async listRecruiters(): Promise<{ success: boolean; recruiters: ManagedRecruiter[]; error?: string }> {
+    try {
+      const token = await this.getAuthToken();
+      if (!token) return { success: false, recruiters: [], error: 'Authentication required' };
+
+      const res = await fetch('/functions/v1/manage-recruiter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ action: 'list' }),
+      });
+
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        return { success: false, recruiters: [], error: json.error || 'Failed to fetch recruiters' };
+      }
+
+      return { success: true, recruiters: json.recruiters || [] };
+    } catch (err: any) {
+      console.error('Error fetching recruiters:', err);
+      return { success: false, recruiters: [], error: err.message };
+    }
+  },
+
+  async inviteRecruiter(payload: {
+    email: string;
+    fullName: string;
+    companyId: string;
+    companyName?: string;
+    designation: string;
+  }): Promise<{ success: boolean; recruiter?: ManagedRecruiter; message?: string; error?: string }> {
+    try {
+      const token = await this.getAuthToken();
+      if (!token) return { success: false, error: 'Authentication required' };
+
+      const res = await fetch('/functions/v1/manage-recruiter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ action: 'invite', ...payload }),
+      });
+
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        return { success: false, error: json.error || 'Failed to provision recruiter' };
+      }
+
+      return { success: true, recruiter: json.recruiter, message: json.message };
+    } catch (err: any) {
+      return { success: false, error: err.message };
+    }
+  },
+
+  async resendInvitation(email: string): Promise<{ success: boolean; message?: string; error?: string }> {
+    try {
+      const token = await this.getAuthToken();
+      if (!token) return { success: false, error: 'Authentication required' };
+
+      const res = await fetch('/functions/v1/manage-recruiter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ action: 'resend', email }),
+      });
+
+      const json = await res.json();
+      return { success: res.ok && json.success, message: json.message, error: json.error };
+    } catch (err: any) {
+      return { success: false, error: err.message };
+    }
+  },
+
+  async revokeRecruiter(recruiterUserId: string): Promise<{ success: boolean; message?: string; error?: string }> {
+    try {
+      const token = await this.getAuthToken();
+      if (!token) return { success: false, error: 'Authentication required' };
+
+      const res = await fetch('/functions/v1/manage-recruiter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ action: 'revoke', recruiterUserId }),
+      });
+
+      const json = await res.json();
+      return { success: res.ok && json.success, message: json.message, error: json.error };
+    } catch (err: any) {
+      return { success: false, error: err.message };
+    }
+  },
+};
