@@ -48,6 +48,10 @@ import { AuthCallbackPage } from './pages/auth/AuthCallbackPage';
 import { DemoLoginPage } from './pages/auth/DemoLoginPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
+// Public Legal Pages
+import { PrivacyPolicyPage } from './pages/legal/PrivacyPolicyPage';
+import { TermsOfServicePage } from './pages/legal/TermsOfServicePage';
+
 import { NotFound } from './pages/common/NotFound';
 
 export const App: React.FC = () => {
@@ -66,6 +70,10 @@ export const App: React.FC = () => {
           {/* Isolated Hackathon Evaluation Persona Sandbox */}
           <Route path="/demo" element={<DemoLoginPage />} />
           <Route path="/demo-login" element={<Navigate to="/demo" replace />} />
+
+          {/* Public Legal & Compliance Folios */}
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms" element={<TermsOfServicePage />} />
 
           {/* Authenticated Workspace Shell Protected Routes */}
           <Route element={<ProtectedRoute />}>

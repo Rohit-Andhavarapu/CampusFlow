@@ -279,6 +279,15 @@ export const LoginPage: React.FC = () => {
             >
               Register as Student →
             </Link>
+            <div className="mt-4 pt-3 flex items-center justify-center gap-3 text-[11px] text-[#9CA3AF]">
+              <Link to="/privacy" className="hover:text-[#14432A] transition-colors">
+                Privacy Policy
+              </Link>
+              <span>•</span>
+              <Link to="/terms" className="hover:text-[#14432A] transition-colors">
+                Terms of Service
+              </Link>
+            </div>
           </div>
         </div>
       </div>

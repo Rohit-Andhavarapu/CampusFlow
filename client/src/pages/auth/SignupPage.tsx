@@ -332,7 +332,7 @@ export const SignupPage: React.FC = () => {
                   className="mt-0.5 rounded border-[#E8E4DC] text-[#14432A] focus:ring-[#14432A]"
                 />
                 <span>
-                  I agree to the <Link to="/" className="text-[#14432A] underline">Campus Placement Guidelines</Link> and <Link to="/" className="text-[#14432A] underline">Privacy Principles</Link>.
+                  I agree to the <Link to="/terms" target="_blank" className="text-[#14432A] font-semibold underline">Terms of Service</Link> and <Link to="/privacy" target="_blank" className="text-[#14432A] font-semibold underline">Privacy Policy</Link>.
                 </span>
               </label>
             </div>
@@ -365,6 +365,15 @@ export const SignupPage: React.FC = () => {
             >
               Sign In to Portal →
             </Link>
+            <div className="mt-4 pt-3 flex items-center justify-center gap-3 text-[11px] text-[#9CA3AF]">
+              <Link to="/privacy" className="hover:text-[#14432A] transition-colors">
+                Privacy Policy
+              </Link>
+              <span>•</span>
+              <Link to="/terms" className="hover:text-[#14432A] transition-colors">
+                Terms of Service
+              </Link>
+            </div>
           </div>
         </div>
       </div>

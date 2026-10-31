@@ -73,11 +73,11 @@ export const EditorialFooter: React.FC = () => {
             © {new Date().getFullYear()} CampusFlow Architecture. All rights reserved.
           </div>
           <div className="flex items-center gap-6">
-            <a href="#platform" className="hover:text-[#14432A] transition-colors">Privacy Principles</a>
+            <Link to="/privacy" className="hover:text-[#14432A] transition-colors">Privacy Policy</Link>
             <span>•</span>
-            <a href="#platform" className="hover:text-[#14432A] transition-colors">Terms of Placement</a>
+            <Link to="/terms" className="hover:text-[#14432A] transition-colors">Terms of Service</Link>
             <span>•</span>
-            <a href="#platform" className="hover:text-[#14432A] transition-colors">System Architecture</a>
+            <Link to="/demo" className="hover:text-[#14432A] transition-colors">Evaluation Sandbox</Link>
           </div>
         </div>
 
