@@ -61,6 +61,13 @@ serve(async (req) => {
   const groqApiKey = Deno.env.get("GROQ_API_KEY") ?? "";
   const groqModel = Deno.env.get("GROQ_MODEL") ?? "openai/gpt-oss-120b";
 
+  if (!groqApiKey && req.method === "POST") {
+    return new Response(
+      JSON.stringify({ error: "Configuration Error: GROQ_API_KEY secret is not configured in Supabase Edge Functions." }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  }
+
   try {
     const authHeader = req.headers.get("Authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {

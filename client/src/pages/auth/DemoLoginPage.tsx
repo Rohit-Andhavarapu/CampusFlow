@@ -7,6 +7,7 @@ export const DemoLoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { login, showToast } = useApp();
   const [loadingRole, setLoadingRole] = useState<string | null>(null);
+  const [passphrase, setPassphrase] = useState<string>(import.meta.env.VITE_DEMO_PASSWORD || '');
 
   const demoAccounts = [
     {
@@ -42,9 +43,15 @@ export const DemoLoginPage: React.FC = () => {
   ];
 
   const handleDemoSignIn = async (account: typeof demoAccounts[0]) => {
+    const activePass = passphrase.trim();
+    if (!activePass) {
+      showToast('error', 'Passphrase Required', 'Please enter the evaluation passphrase to access demo personas.');
+      return;
+    }
+
     setLoadingRole(account.role);
     try {
-      const res = await login(account.email, 'CampusFlow2026!');
+      const res = await login(account.email, activePass);
       if (res.success) {
         navigate(`/${account.role}/dashboard`);
       } else {
@@ -78,6 +85,31 @@ export const DemoLoginPage: React.FC = () => {
             <p className="text-xs text-slate-300 mt-1 leading-relaxed">
               This controlled test console is isolated from the public website for jury inspection. Selecting a persona creates an authentic Supabase session backed by Row Level Security policies.
             </p>
+          </div>
+        </div>
+
+        {/* Passphrase Input */}
+        <div className="mb-6 p-4 rounded-2xl bg-white/[0.03] border border-white/10">
+          <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+            Evaluation Passphrase
+          </label>
+          <div className="flex items-center gap-2">
+            <input
+              type="password"
+              value={passphrase}
+              onChange={(e) => setPassphrase(e.target.value)}
+              placeholder="Enter evaluation passphrase..."
+              className="flex-1 px-3.5 py-2 text-xs bg-black/40 border border-white/15 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:border-teal-500 transition-colors"
+            />
+            {passphrase ? (
+              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/50 border border-emerald-500/30 px-2.5 py-1.5 rounded-lg whitespace-nowrap">
+                Passphrase Ready
+              </span>
+            ) : (
+              <span className="text-[10px] font-mono text-amber-400 bg-amber-950/50 border border-amber-500/30 px-2.5 py-1.5 rounded-lg whitespace-nowrap">
+                Input Required
+              </span>
+            )}
           </div>
         </div>
 

@@ -115,10 +115,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [toasts, setToasts] = useState<ToastInfo[]>([]);
   const isDatabaseConnected = isSupabaseConfigured();
 
-  const demoRoleCredentials: Record<UserRole, { email: string; pass: string }> = {
-    student: { email: 'aarav.sharma@campus.edu', pass: 'CampusFlow2026!' },
-    recruiter: { email: 'priya.nair@novatech.io', pass: 'CampusFlow2026!' },
-    admin: { email: 'placements@campus.edu', pass: 'CampusFlow2026!' },
+  const demoRoleCredentials: Record<UserRole, { email: string; pass?: string }> = {
+    student: { email: 'aarav.sharma@campus.edu', pass: import.meta.env.VITE_DEMO_PASSWORD || '' },
+    recruiter: { email: 'priya.nair@novatech.io', pass: import.meta.env.VITE_DEMO_PASSWORD || '' },
+    admin: { email: 'placements@campus.edu', pass: import.meta.env.VITE_DEMO_PASSWORD || '' },
   };
 
   // Inspect existing authenticated session on mount without forced demo login
@@ -237,9 +237,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const switchRole = async (role: UserRole, silent = false) => {
-    // If a real non-demo user is logged in, DO NOT overwrite their session with demo credentials
+    // If a real non-demo user is logged in, DO NOT permit switching roles!
     if (activeUser && !isDemoUserId(activeUser.id)) {
-      setCurrentRole(role);
+      if (role !== activeUser.role) {
+        showToast('error', 'Action Restricted', 'Real user accounts are strictly bound to their provisioned role.');
+      }
       return;
     }
 
@@ -256,7 +258,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (isDatabaseConnected) {
       try {
         const creds = demoRoleCredentials[role];
-        await authService.signIn(creds.email, creds.pass);
+        const pass = creds.pass || import.meta.env.VITE_DEMO_PASSWORD || '';
+        if (pass) {
+          await authService.signIn(creds.email, pass);
+        }
         const remoteUser = await authService.getCurrentUser();
         if (remoteUser) setActiveUser(remoteUser);
         const [remoteApps, remoteInts, remoteNotifs] = await Promise.all([

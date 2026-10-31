@@ -37,19 +37,53 @@ export function isDemoUserId(userId?: string | null): boolean {
 
 /**
  * Resolves the backend Functions/API endpoint URL dynamically.
- * Defaults to relative '/functions/v1' in local dev proxy, or uses VITE_API_URL if configured.
+ * - In local dev (Vite dev server), routes to relative '/functions/v1' which proxies to localhost:3001.
+ * - In production without VITE_API_URL, automatically targets the configured Supabase Cloud Edge Functions URL.
+ * - Never returns a relative URL in production to prevent silently hitting Vercel static hosting (returning 404/HTML).
  */
 export function getFunctionsApiUrl(endpoint: string): string {
   const base = (import.meta.env.VITE_API_URL as string | undefined)?.trim();
-  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
+
   if (base) {
     const normalizedBase = base.endsWith('/') ? base.slice(0, -1) : base;
     if (normalizedBase.endsWith('/functions/v1')) {
-      return `${normalizedBase}${cleanEndpoint}`;
+      return `${normalizedBase}/${cleanEndpoint}`;
     }
-    return `${normalizedBase}/functions/v1${cleanEndpoint}`;
+    return `${normalizedBase}/functions/v1/${cleanEndpoint}`;
   }
-  return `/functions/v1${cleanEndpoint}`;
+
+  // In development mode, allow relative path to hit Vite dev proxy (/functions/v1 -> localhost:3001)
+  if (import.meta.env.DEV) {
+    return `/functions/v1/${cleanEndpoint}`;
+  }
+
+  // In production builds, resolve directly to Supabase Cloud Edge Functions
+  const sbUrl = (import.meta.env.VITE_SUPABASE_URL as string | undefined)?.trim();
+  if (sbUrl && !sbUrl.includes('placeholder')) {
+    const normalizedSb = sbUrl.endsWith('/') ? sbUrl.slice(0, -1) : sbUrl;
+    return `${normalizedSb}/functions/v1/${cleanEndpoint}`;
+  }
+
+  return `/functions/v1/${cleanEndpoint}`;
+}
+
+/**
+ * Constructs authoritative headers for Edge Function / API requests.
+ * Passes apikey for Supabase Cloud Kong gateway along with Bearer token for RLS/Auth.
+ */
+export function getFunctionHeaders(token?: string | null): Record<string, string> {
+  const apiKey = (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY || '') as string;
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+  if (apiKey) {
+    headers['apikey'] = apiKey;
+  }
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  return headers;
 }
 
 // ==============================================================================
@@ -1209,12 +1243,26 @@ export const resumeIntelligenceService = {
         return { success: false, error: 'Authentication required. Please sign in to analyze your resume.' };
       }
 
+      // In production against Supabase directly without custom proxy, prefer supabase.functions.invoke()
+      if (!import.meta.env.VITE_API_URL && !import.meta.env.DEV && isSupabaseConfigured()) {
+        try {
+          const { data, error } = await supabase.functions.invoke('analyze-resume', {
+            body: params,
+          });
+          if (!error && data && data.success) {
+            return { success: true, data };
+          }
+          if (error) {
+            console.warn('supabase.functions.invoke notice, falling back to direct URL fetch:', error);
+          }
+        } catch (invokeErr: any) {
+          console.warn('supabase.functions.invoke exception, falling back to direct URL fetch:', invokeErr.message);
+        }
+      }
+
       const res = await fetch(getFunctionsApiUrl('analyze-resume'), {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+        headers: getFunctionHeaders(token),
         body: JSON.stringify(params),
       });
 
@@ -1235,9 +1283,7 @@ export const resumeIntelligenceService = {
       const token = await this.getAuthToken();
       if (token) {
         const res = await fetch(getFunctionsApiUrl('analyze-resume'), {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: getFunctionHeaders(token),
         });
 
         if (res.ok) {
@@ -1338,12 +1384,20 @@ export const recruiterManagementService = {
       const token = await this.getAuthToken();
       if (!token) return { success: false, recruiters: [], error: 'Authentication required' };
 
+      if (!import.meta.env.VITE_API_URL && !import.meta.env.DEV && isSupabaseConfigured()) {
+        try {
+          const { data, error } = await supabase.functions.invoke('manage-recruiter', {
+            body: { action: 'list' },
+          });
+          if (!error && data && data.success) {
+            return { success: true, recruiters: data.recruiters || [] };
+          }
+        } catch {}
+      }
+
       const res = await fetch(getFunctionsApiUrl('manage-recruiter'), {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+        headers: getFunctionHeaders(token),
         body: JSON.stringify({ action: 'list' }),
       });
 
@@ -1370,12 +1424,20 @@ export const recruiterManagementService = {
       const token = await this.getAuthToken();
       if (!token) return { success: false, error: 'Authentication required' };
 
+      if (!import.meta.env.VITE_API_URL && !import.meta.env.DEV && isSupabaseConfigured()) {
+        try {
+          const { data, error } = await supabase.functions.invoke('manage-recruiter', {
+            body: { action: 'invite', ...payload },
+          });
+          if (!error && data && data.success) {
+            return { success: true, recruiter: data.recruiter, message: data.message };
+          }
+        } catch {}
+      }
+
       const res = await fetch(getFunctionsApiUrl('manage-recruiter'), {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+        headers: getFunctionHeaders(token),
         body: JSON.stringify({ action: 'invite', ...payload }),
       });
 
@@ -1397,10 +1459,7 @@ export const recruiterManagementService = {
 
       const res = await fetch(getFunctionsApiUrl('manage-recruiter'), {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+        headers: getFunctionHeaders(token),
         body: JSON.stringify({ action: 'resend', email }),
       });
 
@@ -1418,10 +1477,7 @@ export const recruiterManagementService = {
 
       const res = await fetch(getFunctionsApiUrl('manage-recruiter'), {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+        headers: getFunctionHeaders(token),
         body: JSON.stringify({ action: 'revoke', recruiterUserId }),
       });
 
