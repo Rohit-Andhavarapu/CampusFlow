@@ -23,8 +23,30 @@
 
 ---
 
+## 🚀 Live Evaluation & Demo Accounts
+
+> **Live Production URL:** [https://campusflow-sand.vercel.app](https://campusflow-sand.vercel.app)  
+> **Evaluation Sandbox:** [https://campusflow-sand.vercel.app/demo](https://campusflow-sand.vercel.app/demo)  
+> **Evaluation Passphrase / Default Password:** `CampusFlow2026!`
+
+CampusFlow includes three pre-seeded, cryptographically authenticated demonstration personas provisioned for hackathon evaluation and feature inspection. Each persona is backed by PostgreSQL Row Level Security (RLS) policies and dedicated seed datasets:
+
+| Perspective | Demo Account Email | Password / Passphrase | Persona Details & Verification Highlights |
+| :--- | :--- | :--- | :--- |
+| **🎓 Student** | `aarav.sharma@campus.edu` | `CampusFlow2026!` | **Aarav Sharma** &bull; B.Tech CSE (8.85 CGPA, 0 backlogs)<br>&bull; Master Resume: `Aarav_Sharma_Resume_2026.pdf`<br>&bull; Active Applications (NovaTech Systems, AgNext Technologies)<br>&bull; Groq LPU™ Resume Intelligence & What-If Eligibility Lab |
+| **💼 Corporate Recruiter** | `priya.nair@novatech.io` | `CampusFlow2026!` | **Priya Nair** &bull; Talent Acquisition Lead, **NovaTech Systems**<br>&bull; Active Postings (Software Engineer Trainee, Cloud Infra Specialist)<br>&bull; Candidate Kanban Pipeline, Resume PDF Review & Shortlisting<br>&bull; Automated Google Meet Interview Scheduling & Dispatch |
+| **🏛️ Placement Dean / Admin** | `placements@campus.edu` | `CampusFlow2026!` | **Dr. Rajesh Rao** &bull; Head of Training & Placement Cell<br>&bull; Institutional Placement Pulse (Zero Double-Counting NIRF Analytics)<br>&bull; Recruiter Account Provisioning & Access Control<br>&bull; Campus Recruitment Drive & University Policy Orchestration |
+
+### Quick Access Options
+1. **One-Click Sandbox (Recommended for Judges):** Visit [`/demo`](https://campusflow-sand.vercel.app/demo), confirm the evaluation passphrase `CampusFlow2026!`, and click **Launch** on any persona to authenticate directly without typing credentials.
+2. **Standard Authentication:** Visit [`/login`](https://campusflow-sand.vercel.app/login), enter any demo email above with password `CampusFlow2026!`, and sign in directly into that role's portal.
+3. **Real User Isolation:** Any newly registered student via Google OAuth or standard registration ([`/signup`](https://campusflow-sand.vercel.app/signup)) is strictly isolated under Row Level Security with clean state (0 applications, 0 interviews, empty document repository).
+
+---
+
 ## Table of Contents
 
+- [🚀 Live Evaluation & Demo Accounts](#-live-evaluation--demo-accounts)
 - [1. Executive Summary & Problem Context](#1-executive-summary--problem-context)
 - [2. Architectural Highlights & Engineering Innovations](#2-architectural-highlights--engineering-innovations)
 - [3. Feature Matrix & Implementation Status](#3-feature-matrix--implementation-status)
